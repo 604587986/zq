@@ -30,6 +30,9 @@
           <li class="float-left">
             <router-link to="../pages/admin/Login" class="underline-hover">后台登录</router-link>
           </li>
+          <!-- <li class="float-left">
+            <router-link to="../pages/Systemsettings/welcome" class="underline-hover">系统设置</router-link>
+          </li> -->
         </ul>
       </div>
       <!-- 只在前台搜索页面展示 -->
@@ -67,7 +70,7 @@
       <!-- 只在后台页面展示 -->
       <div v-if="adminNavShow">
         <div class="admin-index-btn float-left">
-          <router-link to="/pages/administrators/Administrators" class="underline-hover">工作台</router-link>
+          <router-link to="./pages/administrators/Administrators" class="underline-hover">工作台</router-link>
         </div>
         <ul class="notice-list float-right">
           <li class="float-left">
@@ -97,7 +100,8 @@
           <router-link to="/pages/system_administrators/System_Administrators/SiteList" class="underline-hover">站点管理</router-link>
         </div>
         <div class="admin-index-btn xitong-left float-left">
-          <a href="javascript:void(0);" class="underline-hover">系统设置</a>
+         <!--  <a href="javascript:void(0);" class="underline-hover">系统设置</a> -->
+          <router-link to="../../pages/Systemsettings/welcome" class="underline-hover">系统设置</router-link>
         </div>
         <div class="admin-index-btn float-right">
           <a href="javascript:void(0);" class="underline-hover" @click="system_info = true">系统信息</a>

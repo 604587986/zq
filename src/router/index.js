@@ -28,12 +28,14 @@ import UserGroupList from '@/pages/system_administrators/UserGroupList' //用户
 import DepartmentList from '@/pages/system_administrators/DepartmentList' //部门列表
 import SiteInfo from '@/pages/system_administrators/SiteInfo' //站点信息
 import LoginLog from '@/pages/system_administrators/LoginLog' //登陆日志
+//系统设置页
+import welcome from '@/pages/Systemsettings/welcome'//系统设置欢迎页
 Vue.use(Router)
 
 export default new Router({
     routes: [{
             path: '/',
-            component: Home
+            component: Home           
         },
         {
             path: '/pages/index/Home',
@@ -135,6 +137,10 @@ export default new Router({
                     component: LoginLog
                 },
             ]
+        },
+        {
+            path: '/pages/Systemsettings/welcome',
+            component: welcome
         },
         {
             path: '*',
