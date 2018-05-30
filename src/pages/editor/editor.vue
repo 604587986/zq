@@ -1,15 +1,13 @@
 <template>
-  <div id="system_admin" class="public-wap">
+  <div id="editor" class="public-wap">
     <!-- Header -->
     <Header></Header>
+    <!-- nav -->
+    <Nav :adminNavShow="true"></Nav>
 
-    <!-- 顶部导航 -->
-    <Nav :systemNavShow="true"></Nav>
     <div class="main">
-      <!-- 侧边导航 -->
-      <SideBar></SideBar>
       <!-- Subject -->
-      <div class="subject public-container float-right">
+      <div class="subject no-public-container">
         <router-view></router-view>
       </div>
     </div>
@@ -20,14 +18,13 @@
 
 <script>
 /* 引入组件 */
-import Nav from "@/components/Nav";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SideBar from "@/components/SideBar";
+import Nav from "@/components/Nav";
 
 /* 后台首页 */
 export default {
-  name: "System_Administrators",
+  name: "editor",
   data() {
     return {
       systemNavShow: true, //本页面需要展示在nav的元素
@@ -36,9 +33,8 @@ export default {
   },
   components: {
     Header,
-    Nav,
     Footer,
-    SideBar,
+    Nav
   },
   mounted: function() {}
 };

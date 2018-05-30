@@ -1,12 +1,8 @@
-[{
+[
+    {
         "iconName": "icon-fawenzhang",
         "entryName": "发文章",
         "entryUrl": "/pages/editor/editor/publish_article"
-    },
-    {
-        "iconName": "icon-daishenwenzhang",
-        "entryName": "待审文章",
-        "entryUrl": "/pages/editor/editor/pending_article"
     },
     {
         "iconName": "icon-wenzhangliebiao",
@@ -14,14 +10,44 @@
         "entryUrl": "/pages/editor/editor/article_list"
     },
     {
+        "iconName": "icon-wenzhangliebiao",
+        "entryName": "回收站",
+        "entryUrl": "/pages/editor/editor/recycle_bin"
+    },
+    {
+        "iconName": "icon-wenzhangliebiao",
+        "entryName": "单页列表",
+        "entryUrl": "/pages/editor/editor/singlepage_list"
+    },
+    {
         "iconName": "icon-lanmuliebiao",
         "entryName": "栏目列表",
         "entryUrl": "/pages/editor/editor/column_list"
     },
     {
+        "iconName": "icon-wenzhangliebiao",
+        "entryName": "网页生成",
+        "entryUrl": "/pages/editor/editor/page_generation"
+    },
+    {
+        "iconName": "icon-wenzhangliebiao",
+        "entryName": "网页模板",
+        "entryUrl": "/pages/editor/editor/page_template"
+    },
+    {
+        "iconName": "icon-wenzhangliebiao",
+        "entryName": "附件管理",
+        "entryUrl": "/pages/editor/editor/enclosure_management"
+    },
+    {
         "iconName": "icon-huandengpian",
         "entryName": "轮播图",
         "entryUrl": "/pages/editor/editor/carousel_list"
+    },
+    {
+        "iconName": "icon-huandengpian",
+        "entryName": "友情链接",
+        "entryUrl": "/pages/editor/editor/friendly_link"
     },
     {
         "iconName": "icon-piaofuguanggao",
@@ -32,21 +58,6 @@
         "iconName": "icon-huodongyugao",
         "entryName": "活动预告",
         "entryUrl": "/pages/editor/editor/activity_preview"
-    },
-    {
-        "iconName": "icon-jiaoshifengcai",
-        "entryName": "教师风采",
-        "entryUrl": "/pages/editor/editor/teachers_list"
-    },
-    {
-        "iconName": "icon-shujukanban",
-        "entryName": "数据看板",
-        "entryUrl": "/pages/editor/editor/data_board"
-    },
-    {
-        "iconName": "icon-wenzhangpaihang",
-        "entryName": "文章排行",
-        "entryUrl": "/pages/editor/editor/article_rank"
     },
     {
         "iconName": "icon-zhandianxinxi",

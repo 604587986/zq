@@ -1,10 +1,3 @@
-/*
- * @Author: alex (chenzeyongjsj@163.com) 
- * @Date: 2018-01-17 18:14:52 
- * @Last Modified by: Alex chenzeyongjsj@163.com
- * @Last Modified time: 2018-01-30 17:16:21
- */
-
 <template>
   <div id="admin">
     <!-- Header -->
@@ -15,10 +8,10 @@
     <div id="entry-list" :class="listClass">
       <div class="float-left" :class="{'editor-list':editor}">
         <div v-for="(list,index) in entryList" :key="list.id" class="float-left entry-box" :class="list.show?'div-not-show':'div-show'">
-          <a :href="list.entryUrl">
+          <router-link :to="list.entryUrl">
             <i class="iconfont" :class="list.iconName"></i>
             <span>{{list.entryName}}</span>
-          </a>
+          </router-link>
         </div>
       </div>
       <div class="editor-article float-right" v-if="editor">
@@ -152,11 +145,12 @@ export default {
   position: relative;
   #entry-list {
     width: 1200px;
-    margin-left: 5px;
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    // margin-left: 5px;
+    // position: absolute;
+    // top: 55%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
+    margin: 20px auto;
     &::after {
       content: "";
       display: block;
@@ -275,9 +269,7 @@ export default {
     }
   }
   #Footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    margin-top: 20px;
   }
 }
 </style>

@@ -14,6 +14,14 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
+//编辑器
+import  VueQuillEditor from 'vue-quill-editor'
+// require styles 引入样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+Vue.use(VueQuillEditor)
+
 //引入外部资源
 import public_css from './assets/css/public.css'
 import icon_css from './assets/iconfont/iconfont.css' //阿里巴巴图标库

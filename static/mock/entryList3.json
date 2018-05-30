@@ -3,21 +3,21 @@
     {
         "iconName": "icon-wenzhangliebiao",
         "entryName": "文章列表",
-        "entryUrl": "articles_list.html"
+        "entryUrl": "/pages/editor/editor/article_list"
     },
     {
         "iconName": "icon-daishenwenzhang",
         "entryName": "待审文章",
-        "entryUrl": "pending_articles.html"
+        "entryUrl": "/pages/editor/editor/pending_article"
     },
     {
         "iconName": "icon-shujukanban",
         "entryName": "数据看板",
-        "entryUrl": "data_board.html"
+        "entryUrl": "/pages/editor/editor/data_board"
     },
     {
         "iconName": "icon-wenzhangpaihang",
         "entryName": "文章排行",
-        "entryUrl": "article_rank.html"
+        "entryUrl": "/pages/editor/editor/article_rank"
     }
 ]

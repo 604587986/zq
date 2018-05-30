@@ -1,10 +1,3 @@
-/*
- * @Author: alex (chenzeyongjsj@163.com) 
- * @Date: 2018-01-17 18:14:52 
- * @Last Modified by: Alex chenzeyongjsj@163.com
- * @Last Modified time: 2018-01-31 18:18:26
- */
-
 <template>
   <div id="login" class="public-wap">
     <div class="login-header" id="canvas-box">
@@ -260,8 +253,8 @@ export default {
           that.login.username == "admin4" &&
           that.login.password == "admin4"
         ) {
-          window.localStorage.setItem("headerName", "杜海峰(主站管理员)");
-          window.localStorage.setItem("jsonUrl", "entryList4.json");
+          window.localStorage.setItem("headerName", "测试");
+          window.localStorage.setItem("jsonUrl", "entryList5.json");
         } else if (
           that.login.username == "admin5" &&
           that.login.password == "admin5"

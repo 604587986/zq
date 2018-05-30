@@ -1,21 +1,21 @@
 [{
         "iconName": "icon-fawenzhang",
         "entryName": "发文章",
-        "entryUrl": "publish_articles.html"
+        "entryUrl": "/pages/editor/editor/publish_article"
     },
     {
         "iconName": "icon-wenzhangliebiao",
         "entryName": "文章列表",
-        "entryUrl": "articles_list.html"
+        "entryUrl": "/pages/editor/editor/article_list"
     },
     {
         "iconName": "icon-lanmuliebiao",
         "entryName": "栏目列表",
-        "entryUrl": "column_list.html"
+        "entryUrl": "/pages/editor/editor/column_list"
     },
     {
         "iconName": "icon-huandengpian",
         "entryName": "轮播图",
-        "entryUrl": "carousel_list.html"
+        "entryUrl": "/pages/editor/editor/carousel_list"
     }
 ]

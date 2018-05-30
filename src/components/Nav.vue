@@ -70,7 +70,7 @@
       <!-- 只在后台页面展示 -->
       <div v-if="adminNavShow">
         <div class="admin-index-btn float-left">
-          <router-link to="./pages/administrators/Administrators" class="underline-hover">工作台</router-link>
+          <router-link to="/pages/administrators/Administrators" class="underline-hover">工作台</router-link>
         </div>
         <ul class="notice-list float-right">
           <li class="float-left">
