@@ -1,5 +1,5 @@
 <template>
-  <div id="AddSite">
+  <div id="EditSite">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
@@ -89,19 +89,22 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
-/* 添加站点 */
 export default {
-  name: "AddSite",
+  name: "EditSite",
   data() {
     return {
       //面包屑
       crumbs: [
         {
           name: "工作台",
-          url: "/pages/administrators/Administrators"
+          url: "/pages/system_administrators/System_Administrators"
         },
         {
-          name: "添加站点",
+          name: "站点管理",
+          url: ""
+        },
+        {
+          name: "编辑站点",
           url: ""
         }
       ],
@@ -120,12 +123,12 @@ export default {
       subLoading: false,
       //表单
       form: {
-        title: "", //站点名称
-        categoryValue: "", //所属类别
+        title: "中国美术学院", //站点名称
+        categoryValue: "机关部门", //所属类别
         subordinateDepartmentValue: "", //所属部门
-        code: "", //编码
-        alias: "", //别名
-        domain_name: "", //域名
+        code: "9401", //编码
+        alias: "caa", //别名
+        domain_name: "www.caa.edu.cn", //域名
         siteAdministratorValue: "", //站点管理员
         keyword: "", //网站关键字
         describe: "", //网站描述
@@ -133,8 +136,8 @@ export default {
         footer_info: "", //底部信息
         wechat_img: "", //微信公众号二维码
         weibo_img: "", //新浪微博二维码
-        sort: "", //排序
-        remarks: "", //备注
+        sort: "1", //排序
+        remarks: "学院官网", //备注
         open: true, //是否开启
         close_info: "系统维护 暂时关闭" //关闭原因
       },

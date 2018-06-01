@@ -1,5 +1,5 @@
 <template>
-  <div id="SiteInfo">
+  <div id="MailSetting">
     <!-- 内层菜单 -->
     <InnerMenu :innerMenu="innerMenu"></InnerMenu>
     <!-- 面包屑 -->
@@ -56,7 +56,7 @@ import Instructions from "@/components/Instructions";
 import InnerMenu from "@/components/InnerMenu";
 /* 添加站点 */
 export default {
-  name: "SiteInfo",
+  name: "MailSetting",
   data() {
     return {
       //面包屑
@@ -74,7 +74,7 @@ export default {
           url: ""
         },
         {
-          name: "站点信息",
+          name: "邮件设置",
           url: ""
         }
       ],
@@ -96,7 +96,7 @@ export default {
           {
             name: "站点信息",
             url: "/pages/system_administrators/System_Administrators/SiteInfo",
-            list_active: true
+            list_active: false
           },
           {
             name: "安全设置",
@@ -111,7 +111,7 @@ export default {
           {
             name: "邮件设置",
             url: "/pages/system_administrators/System_Administrators/MailSetting",
-            list_active: false
+            list_active: true
           },
           {
             name: "后台登录页设置",

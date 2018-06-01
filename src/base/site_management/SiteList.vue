@@ -31,23 +31,21 @@
               <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.count"></el-input>
             </div>
           </el-table-column>
-          <el-table-column label="操作" width="500" fixed="right">
+          <el-table-column label="操作" width="500" resizable>
             <div slot-scope="scope" class="control-btn">
-              <el-button size="mini">
-                <router-link :to="scope.row.url">访问</router-link>
-              </el-button>
-              <el-button size="mini">切换</el-button>
-              <el-button size="mini">编辑</el-button>
-              <el-button size="mini">更新缓存</el-button>
-              <el-button size="mini">数据备份</el-button>
-              <el-button size="mini">数据恢复</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="mini" class="control-btn-del">删除</el-button>
+              <el-button size="mini" @click="visit(scope.row.domain_name)">访问</el-button>
+              <el-button size="mini" @click="change(scope.row.uid)">切换</el-button>
+              <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditSite',query:scope.row.uid}"><el-button size="mini">编辑</el-button></router-link>
+              <el-button size="mini" @click="update(scope.row.uid)">更新缓存</el-button>
+              <el-button size="mini" @click="backup(scope.row.uid)">数据备份</el-button>
+              <el-button size="mini" @click="recover(scope.row.uid)">数据恢复</el-button>
+              <el-button size="mini" @click="del(scope.row.uid)" class="control-btn-del">删除</el-button>
             </div>
           </el-table-column>
         </el-table>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -57,6 +55,9 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
+
+import { getSiteList } from "@/api/site_management/SiteList"; //获取表格信息
+
 /* 站点列表 */
 export default {
   name: "SiteList",
@@ -77,6 +78,13 @@ export default {
           url: ""
         }
       ],
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
       //使用说明
       instructionsInfo: [
         {
@@ -91,140 +99,7 @@ export default {
       //栏目检索
       titleSearchValue: "",
       //表格
-      tableInfo: [
-        {
-          uid: 0,
-          title: "中国美术学院",
-          category: "机关单位",
-          code: 9104,
-          alias: "caa",
-          domain_name: "www.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 1,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 1,
-          title: "教务处",
-          category: "机关单位",
-          code: 9109,
-          alias: "caa",
-          domain_name: "jwc.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 2,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 2,
-          title: "党院办",
-          category: "机关单位",
-          code: 9104,
-          alias: "caa",
-          domain_name: "www.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 1,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 3,
-          title: "组织人事部",
-          category: "机关单位",
-          code: 9109,
-          alias: "caa",
-          domain_name: "jwc.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 2,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 4,
-          title: "纪监审办公室",
-          category: "机关单位",
-          code: 9104,
-          alias: "caa",
-          domain_name: "www.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 1,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 5,
-          title: "宣传部",
-          category: "机关单位",
-          code: 9109,
-          alias: "caa",
-          domain_name: "jwc.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 2,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 6,
-          title: "研究生工作部",
-          category: "机关单位",
-          code: 9104,
-          alias: "caa",
-          domain_name: "www.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 1,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 7,
-          title: "学生工作部",
-          category: "机关单位",
-          code: 9109,
-          alias: "caa",
-          domain_name: "jwc.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 2,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 8,
-          title: "网络中心",
-          category: "机关单位",
-          code: 9104,
-          alias: "caa",
-          domain_name: "www.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 1,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 9,
-          title: "发展规划与学科建设处",
-          category: "机关单位",
-          code: 9109,
-          alias: "caa",
-          domain_name: "jwc.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 2,
-          url: "javascript:void(0);"
-        },
-        {
-          uid: 10,
-          title: "招生办公室",
-          category: "机关单位",
-          code: 9104,
-          alias: "caa",
-          domain_name: "www.caa.edu.cn",
-          date: "2017-02-20",
-          state: "正常",
-          count: 1,
-          url: "javascript:void(0);"
-        }
-      ],
+      tableInfo: [],
       tableList: []
     };
   },
@@ -234,37 +109,56 @@ export default {
     Paging
   },
   mounted: function() {
+    //获取默认数据
+    this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 1);
     this.$store.commit("update_system_menu_idx", 1);
   },
   methods: {
+    //获取站点列表
+    getData() {
+      let data = {a:1,b:2};
+      getSiteList(data).then(res => {
+        if (res.data.code == 1) {
+          this.tableInfo = res.data.message;
+        }
+      });
+    },
+    //访问
+    visit(url) {
+      window.open("//" + url);
+    },
+    //切换
+    change(id) {
+      this.$message("切换：" + id);
+    },
+    //更新缓存
+    update(id) {
+      this.$message("更新缓存：" + id);
+    },
+    //数据备份
+    backup(id) {
+      this.$message("数据备份：" + id);
+    },
+    //数据恢复
+    recover(id) {
+      this.$message("数据恢复：" + id);
+    },
+    //删除
+    del(id) {
+      this.$message("删除：" + id);
+    },
     //检索
     articleSearch() {},
-    //删除表格行
-    deleteRow(index, rows) {
-      this.$confirm("此操作将删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          rows.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+    //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
     },
-    //表格排序
-    sortBlur(a, b) {
-      console.log(b[a].uid);
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
     }
   }
 };
@@ -272,5 +166,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 </style>

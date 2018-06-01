@@ -54,7 +54,7 @@
         <el-button type="primary" size="mini">批量审核</el-button>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -84,6 +84,13 @@ export default {
           url: ""
         }
       ],
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
       //使用说明
       instructionsInfo: [
         {
@@ -291,6 +298,15 @@ export default {
           });
         });
     },
+    //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
+    },
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
+    },
     //选中的时候触发
     handleSelectionChange(val) {
       this.tableList = val;
@@ -338,5 +354,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 </style>

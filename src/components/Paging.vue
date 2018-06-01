@@ -1,9 +1,3 @@
-/*
- * @Author: alex (chenzeyongjsj@163.com) 
- * @Date: 2018-01-25 22:03:48 
- * @Last Modified by: alex (chenzeyongjsj@163.com)
- * @Last Modified time: 2018-02-02 00:38:00
- */
 <template>
   <div id="paging">
     <center>
@@ -16,43 +10,16 @@
 <script>
 export default {
   name: "Paging",
-  props: {},
-  data() {
-    return {
-      //分页
-      currentPaging: {}
-    };
-  },
-  watch: {
-    //分页
-    total: function(newVal, oldVal) {
-      console.log(newVal);
-    }
-  },
-  mounted: function() {
-    //获取分页数据
-    this.$http({
-      method: "get",
-      url: "./static/mock/paging.json"
-    })
-      .then(response => {
-        var cw =
-          window.innerWidth ||
-          document.documentElement.clientWidth ||
-          document.body.clientWidth;
-        this.currentPaging = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  props: {
+    currentPaging: {}
   },
   methods: {
     //分页
     handleSizeChange(val) {
-      this.currentPaging.pageSize = val; // 设置每页显示的条数
+      this.$emit('sizeChange',val)
     },
     handleCurrentChange(val) {
-      this.currentPaging.currentPage = val; // 设置当前页
+      this.$emit('currentChange',val)
     }
   }
 };

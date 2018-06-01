@@ -1,5 +1,5 @@
 <template>
-  <div id="SiteInfo">
+  <div id="SecuritySetting">
     <!-- 内层菜单 -->
     <InnerMenu :innerMenu="innerMenu"></InnerMenu>
     <!-- 面包屑 -->
@@ -10,35 +10,41 @@
     <div class="form-container">
       <!-- 表单 -->
       <el-form ref="form" :model="form" :rules="rules" status-icon label-width="110px" size="mini" label-position="right">
-        <el-form-item label="站点名称：" class="form-item" prop="title">
+        <el-form-item label="禁止访问网站IP列表" class="form-item" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="域名：" class="form-item">
+        <el-form-item label="禁止登录后台IP列表：" class="form-item">
           <el-input v-model="form.domain_name"></el-input>
         </el-form-item>
-        <el-form-item label="主办单位：" class="form-item">
+        <el-form-item label="后台登录失败次数锁定（锁定IP）：" class="form-item">
           <el-input v-model="form.host_unit"></el-input>
         </el-form-item>
-        <el-form-item label="网站关键字：" class="form-item">
+        <el-form-item label="解除锁定IP时间：" class="form-item">
           <el-input v-model="form.keyword"></el-input>
         </el-form-item>
-        <el-form-item label="网站描述：" class="form-item">
+        <el-form-item label="是否启用防CC攻击：" class="form-item">
           <el-input v-model="form.describe" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="访问统计代码：" class="form-item">
+        <el-form-item label="同一IP每3秒钟超过多少次访问视为CC攻击：" class="form-item">
           <el-input v-model="form.access_statistics_code" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="底部信息：" class="form-item">
+        <el-form-item label="针对攻击IP,隔多久才允许访问：" class="form-item">
           <el-input v-model="form.footer_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="是否开启：" class="form-item">
+        <el-form-item label="IP验证功能：" class="form-item">
           <el-switch v-model="form.open" active-color="#13ce66" inactive-color="#aaa"></el-switch>
         </el-form-item>
-        <el-form-item label="关闭原因：" class="form-item" prop="close_info" v-if="!form.open">
+        <el-form-item label="敏感词设置：" class="form-item" prop="close_info" v-if="!form.open">
           <el-input v-model="form.close_info" type="textarea" :rows="2"></el-input>
           <span class="site-item-info">必须填写，最多50个字符</span>
         </el-form-item>
-        <el-form-item label="备注：" class="form-item">
+        <el-form-item label="内容包含敏感词提示：" class="form-item">
+          <el-input v-model="form.remarks" type="textarea" :rows="2"></el-input>
+        </el-form-item>
+        <el-form-item label="后台登录启用验证码：" class="form-item">
+          <el-input v-model="form.remarks" type="textarea" :rows="2"></el-input>
+        </el-form-item>
+        <el-form-item label="启用后台操作日志：" class="form-item">
           <el-input v-model="form.remarks" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item class="form-control-btn">
@@ -56,7 +62,7 @@ import Instructions from "@/components/Instructions";
 import InnerMenu from "@/components/InnerMenu";
 /* 添加站点 */
 export default {
-  name: "SiteInfo",
+  name: "SecuritySetting",
   data() {
     return {
       //面包屑
@@ -74,7 +80,7 @@ export default {
           url: ""
         },
         {
-          name: "站点信息",
+          name: "安全设置",
           url: ""
         }
       ],
@@ -96,12 +102,12 @@ export default {
           {
             name: "站点信息",
             url: "/pages/system_administrators/System_Administrators/SiteInfo",
-            list_active: true
+            list_active: false
           },
           {
             name: "安全设置",
             url: "/pages/system_administrators/System_Administrators/SecuritySetting",
-            list_active: false
+            list_active: true
           },
           {
             name: "附件设置",

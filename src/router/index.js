@@ -15,6 +15,7 @@ import Workbench from '@/base/workbench/Workbench'
 //站点管理
 import AddSite from '@/base/site_management/AddSite' //添加站点
 import SiteList from '@/base/site_management/SiteList' //站点列表
+import EditSite from '@/base/site_management/EditSite' //编辑站点
 import ContentManagement from '@/base/site_management/ContentManagement' //内容管理
 import DataBackup from '@/base/site_management/DataBackup' //数据备份
 //附件管理
@@ -33,8 +34,13 @@ import AddUserGroup from '@/base/authority_management/AddUserGroup' //添加用�
 import UserGroupList from '@/base/authority_management/UserGroupList' //用户组列表
 //系统设置
 import DepartmentList from '@/base/system_setup/DepartmentList' //部门列表
-import SiteInfo from '@/base/system_setup/SiteInfo' //站点信息
 import LoginLog from '@/base/system_setup/LoginLog' //登陆日志
+import SiteInfo from '@/base/system_setup/SiteInfo' //站点信息
+import SecuritySetting from '@/base/system_setup/SecuritySetting' //安全设置
+import EnclosureSetting from '@/base/system_setup/EnclosureSetting' //附件设置
+import MailSetting from '@/base/system_setup/MailSetting' //邮件设置
+import LoginPageSetting from '@/base/system_setup/LoginPageSetting' //后台登录页设置
+import AutomationSetting from '@/base/system_setup/AutomationSetting' //自动化设置
 //系统欢迎页
 import welcome from '@/pages/Systemsettings/welcome'//系统设置欢迎页
 Vue.use(Router)
@@ -75,6 +81,12 @@ import SinglepageList from '@/edit/singlepage_list/SinglepageList'
 import PageGeneration from '@/edit/page_generation/PageGeneration'
 //网页模板
 import PageTemplate from '@/edit/page_template/PageTemplate'
+//添加模板
+import AddTemplate2 from '@/edit/page_template/AddTemplate'
+//编辑模板
+import EditTemplate2 from '@/edit/page_template/EditTemplate'
+//更新模板
+import UpdateTemplate2 from '@/edit/page_template/UpdateTemplate'
 //附件管理
 import Enclosure from '@/edit/enclosure_management/EnclosureList'
 //添加附件
@@ -128,6 +140,10 @@ export default new Router({
                 {
                     path: 'SiteList',
                     component: SiteList
+                },
+                {
+                    path: 'EditSite',
+                    component: EditSite
                 },
                 {
                     path: 'ContentManagement',
@@ -184,6 +200,26 @@ export default new Router({
                 {
                     path: 'SiteInfo',
                     component: SiteInfo
+                },
+                {
+                    path: 'SecuritySetting',
+                    component: SecuritySetting
+                },
+                {
+                    path: 'EnclosureSetting',
+                    component: EnclosureSetting
+                },
+                {
+                    path: 'MailSetting',
+                    component: MailSetting
+                },
+                {
+                    path: 'LoginPageSetting',
+                    component: LoginPageSetting
+                },
+                {
+                    path: 'AutomationSetting',
+                    component: AutomationSetting
                 },
                 {
                     path: 'LoginLog',
@@ -267,6 +303,18 @@ export default new Router({
                 {
                 path: 'page_template',
                 component: PageTemplate
+            },
+                {
+                path: 'add_template',
+                component: AddTemplate2
+            },
+                {
+                path: 'edit_template',
+                component: EditTemplate2
+            },
+                {
+                path: 'update_template',
+                component: UpdateTemplate2
             },
                 {
                 path: 'enclosure_management',
