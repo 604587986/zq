@@ -1,10 +1,3 @@
-/*
- * @Author: alex (chenzeyongjsj@163.com) 
- * @Date: 2018-01-17 18:14:52 
- * @Last Modified by: Alex chenzeyongjsj@163.com
- * @Last Modified time: 2018-02-02 15:25:14
- */
-
 <template>
   <div id="Header">
     <div class="header-container">
@@ -17,7 +10,7 @@
           <router-link to="/" class="underline-hover" target="_blank">前台首页</router-link>
         </p>
       </div>
-      <div class="float-right header-right">
+      <div class="float-right header-right" v-if="user">
         <div class="user float-left">
           <i class="iconfont icon-user float-left"></i>
           <span class="float-left header-name">欢迎您，{{user}}</span>
@@ -28,27 +21,40 @@
           <a href="javascript:void(0);" class="underline-hover float-left" @click="clear_local()">退出</a>
         </div>
       </div>
+      <div class="float-right header-right" v-else>
+          <router-link to="/pages/admin/Login">
+            <div class="user float-left">
+              <i class="iconfont icon-user float-left"></i>
+              <span class="float-left header-name">登录</span>
+            </div>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { toLogout } from "@/api/login/login.js";
 export default {
   name: "Header",
   data() {
     return {
-      user: "(管理员)",
-      site: "学院官网"
+      user: "",
+      site: ""
     };
   },
   mounted: function() {
-    this.user = localStorage.getItem("headerName");
+    this.user = JSON.parse(localStorage.getItem("userInfo")).nickname;
   },
   methods: {
     clear_local() {
-      localStorage.clear(); //退出登录清除登录信息
-      sessionStorage.setItem("system_menu_idx", 0); //退出登录清除登录信息
-      this.$router.push({ path: "/" });
+      toLogout().then(res => {
+        if (res.data.code == 200) {
+          localStorage.removeItem("userInfo"); //退出登录清除登录信息
+          sessionStorage.setItem("system_menu_idx", 0);
+          this.$router.push({ path: "/pages/admin/Login" });
+        }
+      });
     }
   }
 };

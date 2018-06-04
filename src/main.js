@@ -13,26 +13,27 @@ Vue.use(ElementUI)
 //引入axios
 import axios from 'axios'
 //axios拦截器设置
-//1.添加token请求头
-// axios.interceptors.request.use(
-//     config => {
-//         if (token) {
-//             config.headers.Authorization = token;
-//         }
-//         return config
-//     },
-//     error => {
-//         return Promise.reject(error)
-//     }
-// );
+// 1.添加token请求头
+axios.interceptors.request.use(
+    config => {
+        // if (token) {
+        //     config.headers.Authorization = token;
+        // }
+        // config.headers.Host = 'webmaster'
+        return config
+    },
+    error => {
+        return Promise.reject(error)
+    }
+);
 //2.判断是否登录
 axios.interceptors.response.use(
     response => {
-        if (response.data.code == 0) {
+        if (response.data.code == 401) {
             ElementUI.MessageBox.alert('请先登录！', '提示', {
                 confirmButtonText: '确定',
                 callback: () => {
-                    localStorage.removeItem('headerUrl');
+                    localStorage.removeItem('userInfo');
                     router.push('/pages/admin/Login')
                 }
             })
@@ -40,18 +41,23 @@ axios.interceptors.response.use(
             return response;
     },
     error => {
-        if (error.response) {
-            switch (error.response.status) {
-                // case 401:
-                //     // 返回 401 清除token信息并跳转到登录页面
-                //     store.commit(types.LOGOUT);
-                //     router.replace({
-                //         path: 'login',
-                //         query: { redirect: router.currentRoute.fullPath }
-                //     })
-                case 404:
-                    console.log(error.response.data);
-            }
+        // if (error.response) {
+        //     switch (error.response.status) {
+        //         // case 401:
+        //         //     // 返回 401 清除token信息并跳转到登录页面
+        //         //     store.commit(types.LOGOUT);
+        //         //     router.replace({
+        //         //         path: 'login',
+        //         //         query: { redirect: router.currentRoute.fullPath }
+        //         //     })
+        //         case 404:
+        //             console.log(error.response.data);
+        //     }
+        // }
+        if(error.response.message){
+            window.alert(error.response.message)
+        }else{
+            window.alert('发生了错误')
         }
         return Promise.reject(error.response.data)   // 返回接口返回的错误信息
     });

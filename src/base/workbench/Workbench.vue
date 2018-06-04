@@ -90,6 +90,8 @@
 /* 引入组件 */
 import DataChart from "@/components/DataChart";
 import Crumb from "@/components/Crumb";
+
+import {init} from "@/api/workbench/init.js"
 /* 工作台 */
 export default {
   name: "Workbench",
@@ -159,23 +161,23 @@ export default {
       data_all: [
         {
           name: "站点数量(个)",
-          count: 38
+          count: ''
         },
         {
           name: "文章总数(篇)",
-          count: 54896
+          count: ''
         },
         {
           name: "栏目总数(个)",
-          count: 470
+          count: ''
         },
         {
           name: "附件总数(个)",
-          count: 48949
+          count: ''
         },
         {
           name: "管理员数量(位)",
-          count: 15
+          count: ''
         }
       ],
       //切换控制
@@ -193,6 +195,16 @@ export default {
     Crumb
   },
   mounted: function() {
+    //初始化获取数据
+    init().then(res=>{
+      if(res.data.code == 200){
+        this.data_all[0].count = res.data.data.statistics.SiteCount
+        this.data_all[1].count = res.data.data.statistics.ArticleCount
+        this.data_all[2].count = res.data.data.statistics.PageCount
+        this.data_all[3].count = res.data.data.statistics.AttachmentSize
+        this.data_all[4].count = res.data.data.statistics.ManagerCount
+      }
+    })
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 0);
     this.$store.commit("update_system_menu_idx", 0);

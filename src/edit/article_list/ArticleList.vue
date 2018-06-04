@@ -8,35 +8,40 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter">
-          <el-select v-model="stateValue" clearable placeholder="发布状态" size="mini" class="float-left state-selection">
+          <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-              <el-button slot="append" icon="el-icon-search" @click=""></el-button>
+              <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
           </el-input>
       </div>
       <!-- 表格 -->
       <div class="table-body">
-          <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange">
+          <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
               <el-table-column type="selection"></el-table-column>
-              <el-table-column prop="uid" label="ID" width="70"></el-table-column>
+              <el-table-column prop="id" label="ID" width="70"></el-table-column>
               <el-table-column prop="title" label="标题" resizable></el-table-column>
-              <el-table-column prop="column" label="栏目" width="100"></el-table-column>
-              <el-table-column prop="state" label="发布状态" width="90" :filters="[{ text: '已发', value: '已发' }, { text: '待审', value: '待审' }, { text: '草稿', value: '草稿' }]"
-                  :filter-method="filterState" filter-placement="bottom-end">
+              <el-table-column prop="category" label="栏目" width="100">
+                <div slot-scope="scope">
+                  {{scope.row.category.title}}
+                </div>
+              </el-table-column>
+              <el-table-column label="文章状态" width="90">
                   <div slot-scope="scope">
-                      <el-tag close-transition :class="scope.row.stateClass" size="mini">{{scope.row.state}}</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state==-1">已删除</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state==0">临时(草稿)</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state==1">正常</el-tag>
                   </div>
               </el-table-column>
-              <el-table-column prop="date" label="创建日期" width="100"></el-table-column>
+              <el-table-column prop="create_time" label="创建日期" width="100"></el-table-column>
               <el-table-column prop="author" label="创建人" width="85"></el-table-column>
               <el-table-column prop="count" label="浏览次数" width="70"></el-table-column>
               <el-table-column label="排序" width="65">
                   <div slot-scope="scope" class="table-sort-input">
-                      <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)"></el-input>
+                      <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>
                   </div>
               </el-table-column>
               <el-table-column label="操作" width="250">
@@ -57,7 +62,7 @@
           <el-button type="primary" size="mini">批量删除</el-button>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -68,7 +73,7 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
 
-/* 添加用户 */
+import { getArticleList } from "@/api/article/ArticleList";
 export default {
   name: "ArticeList",
   data() {
@@ -95,22 +100,31 @@ export default {
           content: "添加站点使用说明"
         }
       ],
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
+      //表格loading
+      table_loading: false,
       //选择发布状态
       stateSelection: [
         {
-          value: 0,
-          label: "已发"
+          value: -1,
+          label: "驳回"
         },
         {
-          value: 1,
+          value: 0,
           label: "待审"
         },
         {
-          value: 2,
-          label: "草稿"
+          value: 1,
+          label: "正常"
         }
       ],
-      stateValue: "",
+      stateValue: 1,
       //选择栏目
       columnSelection: [
         {
@@ -134,118 +148,7 @@ export default {
       //搜索关键字
       titleSearchValue: "",
       //表格数据
-      tableInfo: [
-        {
-          uid: 0,
-          title: "郎朗独奏音乐会",
-          column: "学术交流",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "已发",
-          stateClass: "state1",
-          count: "56",
-          zip: 200333
-        },
-        {
-          uid: 1,
-          title: "中国美术学院工会工作奖励和配套资助办法",
-          column: "学术交流",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "已发",
-          stateClass: "state1",
-          count: "656",
-          zip: 200333
-        },
-        {
-          uid: 2,
-          title: "中国美术学院举行纪念建团95周年活动",
-          column: "学术交流",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "待审",
-          stateClass: "state2",
-          count: "1",
-          zip: 200333
-        },
-        {
-          uid: 3,
-          title: "“治水最前线”中国美术学院下乡创作实践展开幕",
-          column: "联系我们",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "已发",
-          stateClass: "state1",
-          count: "684",
-          zip: 200333
-        },
-        {
-          uid: 4,
-          title: "「民族翰骨——潘天寿诞辰120年纪念大展」在中国美术馆开幕",
-          column: "联系我们",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "草稿",
-          stateClass: "state3",
-          count: "78",
-          zip: 200333
-        },
-        {
-          uid: 5,
-          title: "纪念潘天寿诞辰120周年座谈会举行 刘延东出席并讲话",
-          column: "通知公告",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "待审",
-          stateClass: "state2",
-          count: "5",
-          zip: 200333
-        },
-        {
-          uid: 6,
-          title: "中国美术学院第八届教代会、第十六届工代会第三次会议隆重举行",
-          column: "下载中心",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "草稿",
-          stateClass: "state3",
-          count: "875",
-          zip: 200333
-        },
-        {
-          uid: 7,
-          title: "中国美术学院2017-2018年教职工蛋糕（券）供应商",
-          column: "通知公告",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "已发",
-          stateClass: "state1",
-          count: "54",
-          zip: 200333
-        },
-        {
-          uid: 8,
-          title: "中国美术学院民艺博物馆物业服务项目预中标公告",
-          column: "下载中心",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "已发",
-          stateClass: "state1",
-          count: "0",
-          zip: 200333
-        },
-        {
-          uid: 9,
-          title: "中国美术学院2017年接受国内访问学者简章",
-          column: "通知公告",
-          date: "2017-02-20",
-          author: "吴晓棣",
-          state: "已发",
-          stateClass: "state1",
-          count: "1456",
-          zip: 200333
-        }
-      ],
+      tableInfo: [],
       //用于全选
       tableList: []
     };
@@ -255,8 +158,30 @@ export default {
     Instructions,
     Paging
   },
-  mounted: function() {},
+  mounted() {
+    this.getData();
+  },
   methods: {
+    //获取表格信息
+    getData() {
+      let data = {
+        page: this.currentPaging.currentPage,
+        size: this.currentPaging.pageSize,
+        keyword: this.titleSearchValue,
+        state: this.stateValue
+      };
+      this.table_loading = true;
+      getArticleList(data).then(res => {
+        this.table_loading = false;
+        if (res.data.code == 200) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count
+        }else{
+          this.$message.error(res.data.message)
+        }
+      });
+    },
+
     //选中的时候触发
     handleSelectionChange(val) {
       this.tableList = [];
@@ -274,6 +199,17 @@ export default {
       } else {
         that.$refs.multipleTable.clearSelection();
       }
+    },
+    //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
+      this.getData();
+    },
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
+      this.getData();
     }
   }
 };

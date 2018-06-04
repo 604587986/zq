@@ -53,6 +53,8 @@ import PublishArticle from '@/edit/publish_article/PublishArticle'
 import ArticleList from '@/edit/article_list/ArticleList'
 //栏目列表
 import ColumnList from '@/edit/column_list/ColumnList'
+//编辑栏目
+import EditColumn from '@/edit/column_list/EditColumn'
 //轮播图列表
 import CarouselList from '@/edit/carousel_list/CarouselList'
 //待审文章
@@ -247,6 +249,10 @@ export default new Router({
                 {
                 path: 'column_list',
                 component: ColumnList
+            },
+                {
+                path: 'edit_column',
+                component: EditColumn
             },
                 {
                 path: 'carousel_list',
