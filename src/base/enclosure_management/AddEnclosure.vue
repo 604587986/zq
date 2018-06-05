@@ -26,10 +26,14 @@
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="上传文件：">
-          <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-          </el-upload>
+          <uploader :options="options" :fileStatusText="fileStatusText" :autoStart="false" @file-added="fileAdd" class="uploader-example" ref="uploader">
+            <uploader-unsupport></uploader-unsupport>
+              <uploader-drop>
+                <p>拖动文件或者选择文件</p>
+                <uploader-btn>选择文件</uploader-btn>
+              </uploader-drop>
+              <uploader-list></uploader-list>
+          </uploader>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
@@ -103,21 +107,18 @@ export default {
           }
         ]
       },
-      //upload
-      fileList: [
-        {
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-          status: "finished"
-        },
-        {
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-          status: "finished"
-        }
-      ]
+      //upload配置
+      options: {
+        target: "//jsonplaceholder.typicode.com/posts/",
+        testChunks: false
+      },
+      fileStatusText: {
+        success: "成功",
+        error: "错误",
+        uploading: "正在上传",
+        paused: "暂停",
+        waiting: "等待中"
+      }
     };
   },
   components: {
@@ -148,22 +149,14 @@ export default {
         }
       });
     },
-    //upload
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+    fileAdd(file){
+      var dataURL = window.URL.createObjectURL(file.file) 
+      var image = new Image();
+      image.setAttribute('src',dataURL) ;
+      image.onload = function(){
+      console.log(image.width)        
+      console.log(image.height)        
+      }
     }
   }
 };
@@ -181,6 +174,22 @@ export default {
     .title {
       font-size: 16px;
     }
+  }
+  .uploader-example {
+    width: 100%;
+    padding: 15px;
+    margin: 40px auto 0;
+    font-size: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  }
+  .uploader-example .uploader-btn {
+    margin-right: 4px;
+  }
+  .uploader-example .uploader-list {
+    max-height: 440px;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 </style>

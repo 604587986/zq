@@ -139,6 +139,7 @@ export default {
           this.table_loading = false;
         }else{
           this.table_loading = false;
+          this.$message.error(res.data.message)
         }
       });
     },

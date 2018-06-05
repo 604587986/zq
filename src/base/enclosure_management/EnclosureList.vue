@@ -23,25 +23,29 @@
       </div>
       <!-- 表格 -->
       <div class="table-body carousel_container">
-        <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
           <el-table-column type="selection"></el-table-column>
-          <el-table-column prop="uid" label="ID" width="40"></el-table-column>
+          <el-table-column prop="id" label="ID" width="40"></el-table-column>
           <el-table-column prop="title" label="文件名称" width="160"></el-table-column>
           <el-table-column prop="preview" label="预览" width="150">
             <div slot-scope="scope">
-              <div v-if="scope.row.is_img" class="carousel-img">
-                <img :src="scope.row.preview" />
+              <div v-if="scope.row.type == 1" class="carousel-img">
+                <img :src="scope.row.url"/>
               </div>
               <div v-else>
                 <a :href="scope.row.preview_url">{{scope.row.preview}}</a>
               </div>
             </div>
           </el-table-column>
-          <el-table-column prop="file_size" label="文件大小" width="80"></el-table-column>
-          <el-table-column prop="uploading_person" label="上传人" width="80"></el-table-column>
-          <el-table-column prop="date" label="添加时间" width="90"></el-table-column>
-          <el-table-column prop="site" label="所属站点" width="100"></el-table-column>
-          <el-table-column prop="file_type" label="文件类型" width="70"></el-table-column>
+          <el-table-column label="文件大小" width="80">
+            <div slot-scope="scope">
+              {{scope.row.size/1000}}kb
+            </div>
+          </el-table-column>
+          <el-table-column prop="user_id" label="上传人" width="80"></el-table-column>
+          <el-table-column prop="create_time" label="添加时间" width="90"></el-table-column>
+          <el-table-column prop="site_id" label="所属站点" width="100"></el-table-column>
+          <el-table-column prop="ext" label="文件类型" width="70"></el-table-column>
           <el-table-column label="操作" width="130">
             <div slot-scope="scope" class="control-btn">
               <el-button size="small">更改</el-button>
@@ -56,7 +60,7 @@
         <el-button type="primary" size="mini" @click="batchDeleting()">批量删除</el-button>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -66,9 +70,11 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
+
+import { getEnclosureList } from "@/api/enclosure/EnclosureList.js";
 /* 附件列表 */
 export default {
-  name: "ContentManagement",
+  name: "EnclosureList",
   data() {
     return {
       //面包屑
@@ -86,6 +92,13 @@ export default {
           url: ""
         }
       ],
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
       //使用说明
       instructionsInfo: [
         {
@@ -97,6 +110,9 @@ export default {
           content: "添加站点使用说明"
         }
       ],
+      //表格loading
+      table_loading: false,
+      // 站点列表
       siteList: [
         {
           value: 0,
@@ -145,32 +161,7 @@ export default {
       //栏目检索
       titleSearchValue: "",
       //表格
-      tableInfo: [
-        {
-          uid: 2,
-          title: "1-1F41ZTZ60-L.jpg",
-          file_size: "547KB",
-          uploading_person: "admin",
-          site: "学院官网",
-          date: "2017-02-20",
-          preview: "./static/img/test1.jpg",
-          preview_url: "",
-          file_type: "图片",
-          is_img: true
-        },
-        {
-          uid: 1,
-          title: "2018新年活动通知.pdf",
-          file_size: "842KB",
-          uploading_person: "admin",
-          site: "学院官网",
-          date: "2017-02-20",
-          preview: "/attachment/Mon_1801/20180106-1349.pdf",
-          preview_url: "javascript:void(0);",
-          file_type: "文档",
-          is_img: false
-        }
-      ],
+      tableInfo: [],
       tableList: []
     };
   },
@@ -179,12 +170,34 @@ export default {
     Instructions,
     Paging
   },
-  mounted: function() {
+  mounted() {
+    //获取默认数据
+    this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 2);
     this.$store.commit("update_system_menu_idx", 2);
   },
   methods: {
+    //获取表格数据
+    getData() {
+      let data = {
+        site_id: "",
+        type: "",
+        page: this.currentPaging.currentPage,
+        size: this.currentPaging.pageSize
+      };
+      this.table_loading = true;
+      getEnclosureList(data).then(res => {
+        if (res.data.code == 200) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count;
+          this.table_loading = false;
+        } else {
+          this.table_loading = false;
+          this.$message.error(res.data.message);
+        }
+      });
+    },
     //检索
     articleSearch() {},
     //删除表格行
@@ -248,6 +261,17 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
+      this.getData();
+    },
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
+      this.getData();
     }
   }
 };
@@ -255,5 +279,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 </style>

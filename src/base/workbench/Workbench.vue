@@ -389,6 +389,7 @@ export default {
             font-size: 34px;
             white-space: nowrap;
             margin-top: 11px;
+            overflow: hidden;
           }
           p {
             color: @base_grey;

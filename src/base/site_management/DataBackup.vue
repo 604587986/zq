@@ -28,10 +28,13 @@
         </el-form-item>
       </el-form>
     </div>
+    <file-picker :url="'static/test/files.json'" @select-file="handleSelect"></file-picker>
   </div>
 </template>
 
 <script>
+import FilePicker from "@/components/FilePicker";
+
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
@@ -110,7 +113,8 @@ export default {
   components: {
     Crumb,
     Instructions,
-    InnerMenu
+    InnerMenu,
+    FilePicker
   },
   mounted: function() {
     //侧边导航定位
@@ -125,6 +129,10 @@ export default {
       } else if (value == "全备份（包含所有站点文件数据及数据库）") {
         this.form.backup_type = 1;
       }
+    },
+    handleSelect(item) {
+      console.log(item);
+      this.show = false;
     }
   }
 };

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import uploader from 'vue-simple-uploader'
 
 //引入element
 import ElementUI from 'element-ui'
@@ -63,7 +64,8 @@ axios.interceptors.response.use(
     });
 Vue.prototype.$http = axios // 通过修改原型链，来更方便的使用
 
-
+//上传组件
+Vue.use(uploader)
 
 
 //富文本编辑器
