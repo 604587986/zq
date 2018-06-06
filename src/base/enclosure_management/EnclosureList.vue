@@ -175,7 +175,7 @@ export default {
     this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 2);
-    this.$store.commit("update_system_menu_idx", 2);
+    this.$store.commit("update_system_menu_idx", );
   },
   methods: {
     //获取表格数据

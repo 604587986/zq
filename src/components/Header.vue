@@ -51,6 +51,9 @@ export default {
       toLogout().then(res => {
         if (res.data.code == 200) {
           localStorage.removeItem("userInfo"); //退出登录清除登录信息
+          localStorage.removeItem("group"); //退出登录清除登录信息
+          localStorage.removeItem("jsonUrl"); //退出登录清除登录信息
+          localStorage.removeItem("isEditor"); //退出登录清除登录信息
           sessionStorage.setItem("system_menu_idx", 0);
           this.$router.push({ path: "/pages/admin/Login" });
         }

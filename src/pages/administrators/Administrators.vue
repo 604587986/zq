@@ -150,7 +150,7 @@ export default {
     // top: 55%;
     // left: 50%;
     // transform: translate(-50%, -50%);
-    margin: 20px auto;
+    margin: 110px auto;
     &::after {
       content: "";
       display: block;

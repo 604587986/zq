@@ -34,7 +34,7 @@ axios.interceptors.response.use(
             ElementUI.MessageBox.alert('请先登录！', '提示', {
                 confirmButtonText: '确定',
                 callback: () => {
-                    localStorage.removeItem('userInfo');
+                    localStorage.clear();
                     router.push('/pages/admin/Login')
                 }
             })

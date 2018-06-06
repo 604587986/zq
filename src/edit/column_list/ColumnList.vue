@@ -30,7 +30,13 @@
                                             <div v-show="scope.row.type==3">链接</div>
                                           </div>
                                         </el-table-column>
-                                        <el-table-column prop="state" width=""></el-table-column>
+                                        <el-table-column prop="state" width="">
+                                          <div slot-scope="scope">
+                                            <div v-show="scope.row.state==-1">删除</div>
+                                            <div v-show="scope.row.state==0">隐藏</div>
+                                            <div v-show="scope.row.state==1">正常</div>
+                                          </div>
+                                        </el-table-column>
                                         <el-table-column prop="level" width="80"></el-table-column>
                                         <el-table-column width="60">
                                             <div slot-scope="scope" class="table-sort-input">
@@ -56,7 +62,13 @@
                                 <div v-show="scope.row.type==3">链接</div>
                               </div>
                             </el-table-column>
-                            <el-table-column prop="state" width=""></el-table-column>
+                            <el-table-column prop="state" width="">
+                             <div slot-scope="scope">
+                              <div v-show="scope.row.state==-1">删除</div>
+                              <div v-show="scope.row.state==0">隐藏</div>
+                              <div v-show="scope.row.state==1">正常</div>
+                            </div>
+                            </el-table-column>
                             <el-table-column prop="level" width="80"></el-table-column>
                             <el-table-column width="60">
                                 <div slot-scope="scope" class="table-sort-input">
@@ -405,6 +417,11 @@ export default {
     .el-table__header-wrapper {
       display: none;
     }
+    .el-table__row > td {
+      background: #f5f7fa;
+    }
+  }
+  .third-table{
     .el-table__row > td {
       background: #e7e7e7;
     }

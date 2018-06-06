@@ -62,7 +62,7 @@ import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
 
-import { getSiteList } from "@/api/site_management/SiteList"; //获取表格信息
+import { getSiteList } from "@/api/site_management/SiteList";
 
 /* 站点列表 */
 export default {

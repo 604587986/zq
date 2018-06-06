@@ -105,7 +105,13 @@ export default {
     //判断是否已登录
     isLogin() {
       if (window.localStorage.getItem("userInfo")) {
-        this.$router.push("/pages/system_administrators/System_Administrators");
+        if (window.localStorage.getItem("group") == 0) {
+          this.$router.push(
+            "/pages/system_administrators/System_Administrators"
+          );
+        } else {
+          this.$router.push("/pages/administrators/Administrators");
+        }
       }
     },
     //表单提交
@@ -121,14 +127,27 @@ export default {
                 "userInfo",
                 JSON.stringify(res.data.data.user)
               );
-              window.localStorage.setItem(
-                "group",
-                res.data.data.group.level
-              );
-              //进入工作台
-              that.$router.push(
-                "/pages/system_administrators/System_Administrators"
-              );
+              //存储角色组
+              window.localStorage.setItem("group", res.data.data.group.level);
+              //根据角色组进入不同工作台
+              if (res.data.data.group.level == 0) {
+                that.$router.push(
+                  "/pages/system_administrators/System_Administrators"
+                );
+              } else if (res.data.data.group.level == 1) {
+                window.localStorage.setItem("jsonUrl", "main_administrator.json");
+                that.$router.push("/pages/administrators/Administrators");
+              } else if (res.data.data.group.level == 2) {
+                window.localStorage.setItem("jsonUrl", "administrator.json");
+                that.$router.push("/pages/administrators/Administrators");
+              } else if (res.data.data.group.level == 3) {
+                window.localStorage.setItem("jsonUrl", "leader.json");
+                that.$router.push("/pages/administrators/Administrators");
+              } else if (res.data.data.group.level == 4) {
+                window.localStorage.setItem("jsonUrl", "editor.json");
+                window.localStorage.setItem("isEditor", true);
+                that.$router.push("/pages/administrators/Administrators");
+              }
             } else {
               that.$message.error(res.data.message);
             }

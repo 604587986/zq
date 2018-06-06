@@ -19,6 +19,11 @@
         "entryUrl": "/pages/editor/editor/column_list"
     },
     {
+        "iconName": "icon-lanmuliebiao",
+        "entryName": "分类列表",
+        "entryUrl": "/pages/editor/editor/category_list"
+    },
+    {
         "iconName": "icon-huandengpian",
         "entryName": "轮播图",
         "entryUrl": "/pages/editor/editor/carousel_list"

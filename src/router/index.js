@@ -18,6 +18,7 @@ import SiteList from '@/base/site_management/SiteList' //站点列表
 import EditSite from '@/base/site_management/EditSite' //编辑站点
 import ContentManagement from '@/base/site_management/ContentManagement' //内容管理
 import DataBackup from '@/base/site_management/DataBackup' //数据备份
+
 //附件管理
 import AddEnclosure from '@/base/enclosure_management/AddEnclosure' //添加附件
 import EnclosureList from '@/base/enclosure_management/EnclosureList' //附件列表
@@ -52,9 +53,13 @@ import PublishArticle from '@/edit/publish_article/PublishArticle'
 //文章列表
 import ArticleList from '@/edit/article_list/ArticleList'
 //栏目列表
-import ColumnList from '@/edit/column_list/ColumnList'
+import ColumnList2 from '@/edit/column_list/ColumnList'
+
+//分类操作
+import CategoryList from '@/edit/category/CategoryList'//分类列表
+import AddCategory from '@/edit/category/AddCategory'//添加分类
 //编辑栏目
-import EditColumn from '@/edit/column_list/EditColumn'
+import EditColumn2 from '@/edit/column_list/EditColumn'
 //轮播图列表
 import CarouselList from '@/edit/carousel_list/CarouselList'
 //待审文章
@@ -248,11 +253,19 @@ export default new Router({
             },
                 {
                 path: 'column_list',
-                component: ColumnList
+                component: ColumnList2
+            },
+                {
+                path: 'category_list',
+                component: CategoryList
+            },
+                {
+                path: 'add_category',
+                component: AddCategory
             },
                 {
                 path: 'edit_column',
-                component: EditColumn
+                component: EditColumn2
             },
                 {
                 path: 'carousel_list',
