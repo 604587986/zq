@@ -59,27 +59,11 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <el-select v-model="form.qr_wechat" size="mini">
-            <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <file-picker :url="'/api/attachment/index'" v-model="form.qr_wechat"></file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <el-select v-model="form.qr_weibo" size="mini">
-            <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <file-picker :url="'/api/attachment/index'" v-model="form.qr_weibo"></file-picker>
         </el-form-item>
-        <!-- <el-form-item label="微信公众号二维码：">
-          <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-            <img v-if="form.wechat_img" :src="form.wechat_img" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="新浪微博二维码：">
-          <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-            <img v-if="form.weibo_img" :src="form.weibo_img" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item> -->
         <el-form-item label="网站状态：" prop="state">
           <el-radio-group v-model="form.state">
             <el-radio :label="-1">关闭</el-radio>
@@ -109,6 +93,7 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
+import FilePicker from "@/components/FilePicker";
 
 import {toAddSite} from "@/api/site_management/AddSite"
 /* 添加站点 */
@@ -116,6 +101,7 @@ export default {
   name: "AddSite",
   data() {
     return {
+      haha:'',
       //面包屑
       crumbs: [
         {
@@ -278,7 +264,8 @@ export default {
   },
   components: {
     Crumb,
-    Instructions
+    Instructions,
+    FilePicker
   },
   mounted: function() {
     //侧边导航定位
@@ -286,6 +273,10 @@ export default {
     this.$store.commit("update_system_menu_idx", 1);
   },
   methods: {
+    doinput(value){
+      console.log(value);
+      
+    },
     //图片上传
     handleAvatarSuccess(res, file) {
       this.form.wechat_img = URL.createObjectURL(file.raw);

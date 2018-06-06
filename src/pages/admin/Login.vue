@@ -121,6 +121,10 @@ export default {
                 "userInfo",
                 JSON.stringify(res.data.data.user)
               );
+              window.localStorage.setItem(
+                "group",
+                res.data.data.group.level
+              );
               //进入工作台
               that.$router.push(
                 "/pages/system_administrators/System_Administrators"
