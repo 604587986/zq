@@ -127,13 +127,13 @@
         <el-form-item label="英文名称：">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="所属站点：">
+        <!-- <el-form-item label="所属站点：">
           <el-select v-model="form.site_id" size="mini">
             <el-option v-for="item in siteList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="类型：">
-          <el-select v-model="form.type" size="mini">
+          <el-select v-model="form.type" size="mini" @change="clearData">
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -144,18 +144,24 @@
         </el-form-item>
         </el-form-item>
         <el-form-item label="小图标：">
-          <el-select v-model="form.icon_id" size="mini">
-            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <file-picker :url="'/api/attachment/index'" v-model="form.icon_id"></file-picker>
         </el-form-item>
         </el-form-item>
         <el-form-item label="排序：">
             <el-input-number v-model="form.sort"></el-input-number>
         </el-form-item>
-        <el-form-item label="数据：">
-          <el-select v-model="form.data" size="mini">
-            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-form-item label="数据：" v-if="form.type == 1">
+          <el-select v-model="form.data" size="mini" placeholder="请输入文章关键词" filterable remote :remote-method="remoteArticle" :popper-append-to-body="false">
+            <el-option v-for="item in articleList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="数据：" v-if="form.type == 2">
+          <el-select v-model="form.data" size="mini" placeholder="请选择分类" :popper-append-to-body="false">
+            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数据：" v-if="form.type == 3">
+          <el-input v-model="form.data" placeholder="请输入链接地址" size="mini"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,9 +175,14 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
+import FilePicker from "@/components/FilePicker";
 
 import { getColumnList } from "@/api/column/ColumnList";
 import { AddColumn } from "@/api/column/ColumnList";
+
+import { getArticleList } from "@/api/article/ArticleList";
+import { getCategoryList } from "@/api/category/category";
+
 export default {
   name: "ColumnList",
   data() {
@@ -201,13 +212,20 @@ export default {
       //存储pid和level和显示标题
       pid: "",
       level: "",
-      show_title:'',
+      show_title: "",
       //弹出框
       dialogFormVisible: false,
       //弹出框的表单
-      form: {},
+      form: {
+        data:''
+      },
       //站点列表
       siteList: [{ label: "站点1", value: 1 }, { label: "站点2", value: 2 }],
+      //类型为单页时的文章列表
+      articleList: [],
+      //类型为列表时的分类列表
+      categoryList: [],
+      articleList: [],
       //栏目类型列表
       typeList: [
         { label: "单页/模板", value: 1 },
@@ -215,10 +233,7 @@ export default {
         { label: "链接", value: 3 }
       ],
       //栏目状态列表
-      stateList: [
-        { label: "隐藏", value: 0 },
-        { label: "正常", value: 1 }
-      ],
+      stateList: [{ label: "隐藏", value: 0 }, { label: "正常", value: 1 }],
       //表格loading
       table_loading: false,
       //提交按钮loading
@@ -340,11 +355,14 @@ export default {
   },
   components: {
     Crumb,
-    Instructions
+    Instructions,
+    FilePicker
   },
   mounted() {
     //获取表格数据
     this.getData();
+    //获取分类列表
+    this.getCategory()
   },
   methods: {
     //获取表格数据
@@ -364,11 +382,47 @@ export default {
       });
     },
     //打开弹出框并存储pid和level
-    add_child(id, level,title) {
+    add_child(id, level, title) {
       this.dialogFormVisible = true;
       this.pid = id;
       this.level = level;
-      this.show_title = '添加'+title;
+      this.show_title = "添加" + title;
+      //将文章列表清空
+      this.articleList = [];
+    },
+    //远程搜索文章列表
+    remoteArticle(query) {
+      this.articleList = [];
+      let data = {
+        keyword: query
+      };
+      if (query == "") {
+        this.articleList = [];
+      } else {
+        getArticleList(data).then(res => {
+          if (res.data.code == 200 || res.data.code == 404) {
+            this.articleList = res.data.data.list;
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
+      }
+    },
+    //获取分类列表
+    getCategory() {
+      let data = {};
+      getCategoryList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //切换类型时清空一些数据
+    clearData() {
+      this.form.data = '';
+      this.articleList = [];
     },
     //表单提交
     submitForm(formName) {
@@ -394,7 +448,7 @@ export default {
               that.$message.success("添加成功");
               that.form = {};
               that.dialogFormVisible = false;
-              that.getData()
+              that.getData();
             } else {
               that.$message.error(res.data.message);
             }
@@ -421,13 +475,18 @@ export default {
       background: #f5f7fa;
     }
   }
-  .third-table{
+  .third-table {
     .el-table__row > td {
       background: #e7e7e7;
     }
   }
   .el-table__expanded-cell[class*="cell"] {
     padding: 0 0 20px 0;
+  }
+  .el-select-dropdown {
+    &.el-popper {
+      max-width: 300px;
+    }
   }
 }
 </style>

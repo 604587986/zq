@@ -28,7 +28,7 @@
               <el-table-column prop="content_pattern" label="内容页文件命名规则" width="90"></el-table-column>
               <el-table-column label="操作" width="250">
                   <div slot-scope="scope" class="control-btn">
-                      <el-button size="small">编辑</el-button>
+                     <router-link :to="{path:'/pages/editor/editor/edit_category',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link> 
                       <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
                   </div>
               </el-table-column>

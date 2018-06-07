@@ -1,3 +1,4 @@
+//修改图片url，以获取指定大小的图片
 export function formatUrl(url, size) {
     if (url) {
         var i = url.lastIndexOf('.');

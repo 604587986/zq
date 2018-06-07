@@ -8,7 +8,7 @@
     <div id="entry-list" :class="listClass">
       <div class="float-left" :class="{'editor-list':editor}">
         <div v-for="(list,index) in entryList" :key="list.id" class="float-left entry-box" :class="list.show?'div-not-show':'div-show'">
-          <router-link :to="list.entryUrl">
+          <router-link :to="list.entryUrl?list.entryUrl:''">
             <i class="iconfont" :class="list.iconName"></i>
             <span>{{list.entryName}}</span>
           </router-link>

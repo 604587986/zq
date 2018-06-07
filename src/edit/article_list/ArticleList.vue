@@ -53,8 +53,6 @@
       <!-- 表格筛选 -->
       <div class="table-filter">
           <el-button type="primary" size="mini" @click="selection(tableInfo)">全选</el-button>
-          <el-button type="primary" size="mini">转移</el-button>
-          <el-button type="primary" size="mini">推送</el-button>
           <el-button type="primary" size="mini">批量删除</el-button>
       </div>
       <!-- 分页 -->
@@ -169,7 +167,7 @@ export default {
       this.table_loading = true;
       getArticleList(data).then(res => {
         this.table_loading = false;
-        if (res.data.code == 200) {
+        if (res.data.code == 200 ||res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count
         }else{

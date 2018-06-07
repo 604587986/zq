@@ -120,7 +120,9 @@ export default {
       let data = { account: that.login.username, passwd: that.login.password };
       that.$refs[formName].validate(function(valid) {
         if (valid) {
+          that.subLoading = true;
           toLogin(data).then(res => {
+            that.subLoading = false;
             if (res.data.code == 200) {
               //存储用户信息
               window.localStorage.setItem(
@@ -135,7 +137,10 @@ export default {
                   "/pages/system_administrators/System_Administrators"
                 );
               } else if (res.data.data.group.level == 1) {
-                window.localStorage.setItem("jsonUrl", "main_administrator.json");
+                window.localStorage.setItem(
+                  "jsonUrl",
+                  "main_administrator.json"
+                );
                 that.$router.push("/pages/administrators/Administrators");
               } else if (res.data.data.group.level == 2) {
                 window.localStorage.setItem("jsonUrl", "administrator.json");
@@ -152,6 +157,8 @@ export default {
               that.$message.error(res.data.message);
             }
           });
+        } else {
+          that.subLoading = false;
         }
       });
     },

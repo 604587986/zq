@@ -70,25 +70,17 @@ export default {
       level: window.localStorage.getItem("group") == 0 ? true : false,
       // 站点列表
       siteList: [],
-      siteValue: ""
+      siteValue: "",
+      //请求附件的地址
+      url: "/api/attachment/index",
+      //请求附带参数
+      data: {
+        type: 1,
+        keyword: ""
+      }
     };
   },
   props: {
-    //请求地址
-    url: {
-      type: String,
-      default: ""
-    },
-    //请求附带参数
-    data: {
-      type: Object,
-      default() {
-        return {
-          type: 1,
-          keyword: ""
-        };
-      }
-    },
     //v-model双向绑定
     value: [String, Number]
   },
@@ -125,8 +117,8 @@ export default {
       });
     },
     //获取指定大小图片的方法
-    formatUrl(url,size){
-      return formatUrl(url,size)
+    formatUrl(url, size) {
+      return formatUrl(url, size);
     },
     //获取站点列表
     getSite() {
@@ -192,9 +184,9 @@ export default {
       font-size: 16px;
       cursor: pointer;
       text-align: right;
-      transition: all .4s;
-      &:hover{
-        color:#409EFF;
+      transition: all 0.4s;
+      &:hover {
+        color: #409eff;
       }
     }
     .my-input-wrapper {

@@ -59,10 +59,10 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <file-picker :url="'/api/attachment/index'" v-model="form.qr_wechat"></file-picker>
+          <file-picker v-model="form.qr_wechat"></file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <file-picker :url="'/api/attachment/index'" v-model="form.qr_weibo"></file-picker>
+          <file-picker v-model="form.qr_weibo"></file-picker>
         </el-form-item>
         <el-form-item label="网站状态：" prop="state">
           <el-radio-group v-model="form.state">
@@ -110,7 +110,7 @@ export default {
         },
         {
           name: "站点管理",
-          url: ""
+          url: "/pages/system_administrators/System_Administrators/SiteList"
         },
         {
           name: "添加站点",

@@ -59,14 +59,10 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <el-select v-model="form.qr_wechat" size="mini">
-            <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <file-picker v-model="form.qr_wechat"></file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <el-select v-model="form.qr_weibo" size="mini">
-            <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <file-picker v-model="form.qr_weibo"></file-picker>
         </el-form-item>
         <!-- <el-form-item label="微信公众号二维码：">
           <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
@@ -109,6 +105,7 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
+import FilePicker from "@/components/FilePicker";
 
 import { getSiteInfo } from "@/api/site_management/EditSite";
 import { updateSiteInfo } from "@/api/site_management/EditSite";
@@ -124,7 +121,7 @@ export default {
         },
         {
           name: "站点管理",
-          url: ""
+          url: "/pages/system_administrators/System_Administrators/SiteList"
         },
         {
           name: "编辑站点",
@@ -140,6 +137,21 @@ export default {
         {
           title: "标题2",
           content: "添加站点使用说明"
+        }
+      ],
+      //部门列表
+      department_list: [
+        {
+          label: "部门1",
+          id: 1
+        },
+        {
+          label: "部门2",
+          id: 2
+        },
+        {
+          label: "部门3",
+          id: 3
         }
       ],
       //提交按钮loading
@@ -321,7 +333,8 @@ export default {
   },
   components: {
     Crumb,
-    Instructions
+    Instructions,
+    FilePicker
   },
   mounted: function() {
     //获取站点信息
@@ -337,8 +350,8 @@ export default {
       getSiteInfo(data).then(res => {
         if (res.data.code == 200) {
           this.form = res.data.data;
-        }else{
-          this.$message.error(res.data.message)
+        } else {
+          this.$message.error(res.data.message);
         }
       });
     },
@@ -364,15 +377,15 @@ export default {
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-         updateSiteInfo(that.form).then(res=>{
-           that.subLoading = false;
-           if(res.data.code == 200){
-             that.$message.success("修改成功");
-             that.getData();
-           }else{
-             that.$message.error(res.data.message);
-           }
-         })
+          updateSiteInfo(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("修改成功");
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");

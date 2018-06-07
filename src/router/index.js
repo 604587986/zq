@@ -58,6 +58,7 @@ import ColumnList2 from '@/edit/column_list/ColumnList'
 //分类操作
 import CategoryList from '@/edit/category/CategoryList'//分类列表
 import AddCategory from '@/edit/category/AddCategory'//添加分类
+import EditCategory from '@/edit/category/EditCategory'//添加分类
 //编辑栏目
 import EditColumn2 from '@/edit/column_list/EditColumn'
 //轮播图列表
@@ -262,6 +263,10 @@ export default new Router({
                 {
                 path: 'add_category',
                 component: AddCategory
+            },
+                {
+                path: 'edit_category',
+                component: EditCategory
             },
                 {
                 path: 'edit_column',

@@ -8,6 +8,14 @@
     <div class="main">
       <!-- Subject -->
       <div class="subject no-public-container">
+        <div class="my-nav">
+          <router-link to="/pages/administrators/Administrators">
+            <el-button size="mini">工作台</el-button>
+          </router-link>
+          <router-link :to="item.entryUrl" v-for="item in nav_column_list" :key="item.entryUrl">
+            <el-button size="mini">{{item.entryName}}</el-button>
+          </router-link>
+        </div>       
         <router-view></router-view>
       </div>
     </div>
@@ -28,7 +36,8 @@ export default {
   data() {
     return {
       systemNavShow: true, //本页面需要展示在nav的元素
-      systemFooterShow: false //本页面在Footer需要隐藏的元素
+      systemFooterShow: false, //本页面在Footer需要隐藏的元素
+      nav_column_list: []
     };
   },
   components: {
@@ -36,18 +45,33 @@ export default {
     Footer,
     Nav
   },
-  mounted: function() {}
+  mounted: function() {
+    this.$http
+      .get("./static/mock/" + localStorage.getItem("jsonUrl"))
+      .then(res => {
+        this.nav_column_list = res.data;
+      });
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 @import "../../assets/css/less_config.less";
-#system_admin {
+#editor {
   width: 100%;
-  .main {
-    background: transparent;
-    padding: 0;
+  .my-nav {
+    margin: 20px 0;
+    font-size: 0;
+    a {
+      margin-right: 10px;
+      &.router-link-exact-active {
+        button {
+          background: #409eff;
+          color: #fff;
+        }
+      }
+    }
   }
 }
 </style>
