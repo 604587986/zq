@@ -1,5 +1,5 @@
 <template>
-  <div id="AddSite">
+  <div id="EditSite">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
@@ -11,15 +11,15 @@
         <el-form-item label="站点名称：" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="所属类别：" prop="categoryValue">
+        <!-- <el-form-item label="所属类别：" prop="categoryValue">
           <el-select v-model="form.categoryValue" clearable placeholder="所属类别" size="mini">
             <el-option v-for="item in category" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <a href="javascript:void(0);" class="item-a">类别管理</a>
-        </el-form-item>
-        <el-form-item label="所属部门：" prop="subordinateDepartmentValue">
-          <el-select v-model="form.subordinateDepartmentValue" clearable placeholder="所属部门" size="mini">
-            <el-option v-for="item in subordinateDepartment" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-form-item> -->
+        <el-form-item label="所属部门：" prop="department_id">
+          <el-select v-model="form.department_id" placeholder="所属部门" size="mini">
+            <el-option v-for="item in department_list" :key="item.id" :label="item.label" :value="item.id"></el-option>
           </el-select>
           <a href="javascript:void(0);" class="item-a">部门管理</a>
         </el-form-item>
@@ -31,28 +31,40 @@
           <span class="site-item-info">不能重复，并且只能英文及数字组成，例：caajwc，不能使用中文或其他符号</span>
         </el-form-item>
         <el-form-item label="域名：">
-          <el-input v-model="form.domain_name"></el-input>
+          <el-input v-model="form.domain"></el-input>
           <span class="site-item-info">网站绑定的域名。必须以http开头，例：http://jwc.caa.edu.cn</span>
         </el-form-item>
-        <el-form-item label="网站关键字：">
-          <el-input v-model="form.keyword"></el-input>
+        <el-form-item label="是否启用HTTPS：">
+          <el-radio-group v-model="form.domain_https">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">不启用</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="选择站点管理员：" prop="siteAdministratorValue">
-          <el-select v-model="form.siteAdministratorValue" clearable placeholder="选择站点管理员" size="mini">
+        <el-form-item label="网站关键字：">
+          <el-input v-model="form.keywords"></el-input>
+        </el-form-item>
+        <el-form-item label="选择站点管理员：">
+          <el-select v-model="form.user_id" placeholder="选择站点管理员" size="mini">
             <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <a href="javascript:void(0);" class="item-a">新建管理员</a>
         </el-form-item>
         <el-form-item label="网站描述：">
-          <el-input v-model="form.describe" type="textarea" :rows="2"></el-input>
+          <el-input v-model="form.description" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="访问统计代码：">
-          <el-input v-model="form.access_statistics_code" type="textarea" :rows="2"></el-input>
+          <el-input v-model="form.analytics" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="底部信息：">
-          <el-input v-model="form.footer_info" type="textarea" :rows="2"></el-input>
+          <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
+          <file-picker v-model="form.qr_wechat"></file-picker>
+        </el-form-item>
+        <el-form-item label="新浪微博二维码：">
+          <file-picker v-model="form.qr_weibo"></file-picker>
+        </el-form-item>
+        <!-- <el-form-item label="微信公众号二维码：">
           <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="form.wechat_img" :src="form.wechat_img" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -63,19 +75,23 @@
             <img v-if="form.weibo_img" :src="form.weibo_img" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+        </el-form-item> -->
+        <el-form-item label="网站状态：" prop="state">
+          <el-radio-group v-model="form.state">
+            <el-radio :label="-1">关闭</el-radio>
+            <el-radio :label="0">建设中</el-radio>
+            <el-radio :label="1">正常</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否开启：">
-          <el-switch v-model="form.open" active-color="#13ce66" inactive-color="#aaa"></el-switch>
-        </el-form-item>
-        <el-form-item label="关闭原因：" prop="close_info" v-if="!form.open">
-          <el-input v-model="form.close_info" type="textarea" :rows="2"></el-input>
+        <el-form-item label="关闭原因：" prop="stop_info" v-if="form.state == -1">
+          <el-input v-model="form.stop_info" type="textarea" :rows="2"></el-input>
           <span class="site-item-info">必须填写，最多50个字符</span>
         </el-form-item>
-        <el-form-item label="排序：" prop="sort">
+        <el-form-item label="排序：">
           <el-input v-model.number="form.sort"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="form.remarks" type="textarea" :rows="2"></el-input>
+          <el-input v-model="form.comment" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
@@ -89,9 +105,12 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
-/* 添加站点 */
+import FilePicker from "@/components/FilePicker";
+
+import { getSiteInfo } from "@/api/site_management/EditSite";
+import { updateSiteInfo } from "@/api/site_management/EditSite";
 export default {
-  name: "AddSite",
+  name: "EditSite",
   data() {
     return {
       //面包屑
@@ -101,7 +120,7 @@ export default {
           url: "/pages/administrators/Administrators"
         },
         {
-          name: "添加站点",
+          name: "站点信息",
           url: ""
         }
       ],
@@ -116,28 +135,25 @@ export default {
           content: "添加站点使用说明"
         }
       ],
+      //部门列表
+      department_list: [
+        {
+          label: "部门1",
+          id: 1
+        },
+        {
+          label: "部门2",
+          id: 2
+        },
+        {
+          label: "部门3",
+          id: 3
+        }
+      ],
       //提交按钮loading
       subLoading: false,
       //表单
-      form: {
-        title: "", //站点名称
-        categoryValue: "", //所属类别
-        subordinateDepartmentValue: "", //所属部门
-        code: "", //编码
-        alias: "", //别名
-        domain_name: "", //域名
-        siteAdministratorValue: "", //站点管理员
-        keyword: "", //网站关键字
-        describe: "", //网站描述
-        access_statistics_code: "", //访问统计代码
-        footer_info: "", //底部信息
-        wechat_img: "", //微信公众号二维码
-        weibo_img: "", //新浪微博二维码
-        sort: "", //排序
-        remarks: "", //备注
-        open: true, //是否开启
-        close_info: "系统维护 暂时关闭" //关闭原因
-      },
+      form: {},
       //表单验证
       rules: {
         title: [
@@ -313,14 +329,28 @@ export default {
   },
   components: {
     Crumb,
-    Instructions
+    Instructions,
+    FilePicker
   },
   mounted: function() {
+    //获取站点信息
+    this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 1);
     this.$store.commit("update_system_menu_idx", 1);
   },
   methods: {
+    //获取站点信息
+    getData() {
+      // let data = { id: this.$route.query.id };
+      getSiteInfo().then(res => {
+        if (res.data.code == 200) {
+          this.form = res.data.data;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
     //图片上传
     handleAvatarSuccess(res, file) {
       this.form.wechat_img = URL.createObjectURL(file.raw);
@@ -343,10 +373,14 @@ export default {
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-          that.subLoading = false;
-          that.$message({
-            type: "success",
-            message: "提交成功!"
+          updateSiteInfo(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("修改成功");
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
+            }
           });
         } else {
           that.subLoading = false;
@@ -361,5 +395,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 </style>

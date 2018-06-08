@@ -103,7 +103,7 @@ export default {
         }
       ],
       //表格loading
-      table_loading:false,
+      table_loading: false,
       //栏目检索
       titleSearchValue: "",
       //表格
@@ -127,19 +127,19 @@ export default {
     //获取站点列表
     getData() {
       let data = {
-        page:this.currentPaging.currentPage,
-        size:this.currentPaging.pageSize,
-        keyword:this.titleSearchValue
+        page: this.currentPaging.currentPage,
+        size: this.currentPaging.pageSize,
+        keyword: this.titleSearchValue
       };
-      this.table_loading = true;      
+      this.table_loading = true;
       getSiteList(data).then(res => {
         if (res.data.code == 200) {
           this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count
+          this.currentPaging.totals = res.data.data.count;
           this.table_loading = false;
-        }else{
+        } else {
           this.table_loading = false;
-          this.$message.error(res.data.message)
+          this.$message.error(res.data.message);
         }
       });
     },
@@ -173,12 +173,12 @@ export default {
     handleSizeChange(val) {
       this.currentPaging.pageSize = val;
       this.currentPaging.currentPage = 1;
-      this.getData()
+      this.getData();
     },
     //处理currentChange
     handleCurrentChange(val) {
       this.currentPaging.currentPage = val;
-      this.getData()      
+      this.getData();
     }
   }
 };

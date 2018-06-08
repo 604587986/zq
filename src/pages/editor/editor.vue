@@ -8,7 +8,7 @@
     <div class="main">
       <!-- Subject -->
       <div class="subject no-public-container">
-        <div class="my-nav">
+        <div class="my-nav">>
           <router-link to="/pages/administrators/Administrators">
             <el-button size="mini">工作台</el-button>
           </router-link>

@@ -8,10 +8,10 @@
     <div class="table-container">
         <!-- 表格筛选 -->
         <div class="table-filter">
-          <el-button type="primary" size="mini">添加广告</el-button>
+          <router-link to="/pages/editor/editor/add_advertisement"><el-button type="primary" size="mini">添加广告</el-button></router-link>
         </div>
         <!-- 表格筛选 -->
-        <div class="table-filter">
+        <!-- <div class="table-filter">
             <el-select v-model="columnSelectionValue" clearable placeholder="分类" size="mini" class="float-left column-selection">
                 <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
@@ -21,7 +21,7 @@
             <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
                 <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
             </el-input>
-        </div>
+        </div> -->
         <!-- 表格 -->
         <div class="table-body carousel_container">
             <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange">
@@ -36,11 +36,6 @@
                 </el-table-column>
                 <el-table-column prop="imgUrl" label="链接" width="150">
                     <a :href="scope.row.imgUrl" slot-scope="scope" target="_blank" class="carousel-link">{{scope.row.imgUrl}}</a>
-                </el-table-column>
-                <el-table-column label="排序" width="65">
-                    <div slot-scope="scope" class="table-sort-input">
-                        <el-input type="text" size="mini" @blur="sortBlur(scope.$index, carouselInfo)" :value="scope.row.count"></el-input>
-                    </div>
                 </el-table-column>
                 <el-table-column prop="open" label="启用" width="70"></el-table-column>
                 <el-table-column prop="date" label="添加时间" width="100"></el-table-column>

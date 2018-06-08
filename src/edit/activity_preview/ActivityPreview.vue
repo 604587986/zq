@@ -8,8 +8,8 @@
     <div class="table-container">
         <!-- 表格筛选 -->
         <div class="table-filter">
-          <el-button type="primary" size="mini">添加活动</el-button>
-          <el-button type="primary" size="mini">活动分类</el-button>
+          <router-link to="/pages/editor/editor/add_activity"><el-button type="primary" size="mini">添加活动</el-button></router-link>
+          <!-- <el-button type="primary" size="mini">活动分类</el-button> -->
         </div>
         <!-- 表格筛选 -->
         <div class="table-filter">
@@ -29,15 +29,15 @@
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column prop="uid" label="ID" width="65"></el-table-column>
                 <el-table-column prop="title" label="标题" resizable></el-table-column>
-                <el-table-column prop="column" label="分类" width="65"></el-table-column>
+                <el-table-column prop="organizer" label="主办方"></el-table-column>
+                <el-table-column prop="introduce" label="介绍"></el-table-column>
                 <el-table-column prop="img" label="图片">
                     <div slot-scope="scope" class="carousel-img">
                         <img :src="scope.row.img" />
                     </div>
                 </el-table-column>
-                <el-table-column prop="imgUrl" label="链接" width="150">
-                    <a :href="scope.row.imgUrl" slot-scope="scope" target="_blank" class="carousel-link">{{scope.row.imgUrl}}</a>
-                </el-table-column>
+                <el-table-column prop="date" label="活动时间"></el-table-column>                
+                <el-table-column prop="place" label="地点"></el-table-column>                
                 <el-table-column label="排序" width="65">
                     <div slot-scope="scope" class="table-sort-input">
                         <el-input type="text" size="mini" @blur="sortBlur(scope.$index, carouselInfo)" :value="scope.row.count"></el-input>
@@ -59,7 +59,7 @@
           <el-button type="primary" size="mini">批量删除</el-button>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <!-- <Paging></Paging> -->
 </div>
   </div>
 </template>

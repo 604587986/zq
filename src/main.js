@@ -42,19 +42,6 @@ axios.interceptors.response.use(
             return response;
     },
     error => {
-        // if (error.response) {
-        //     switch (error.response.status) {
-        //         // case 401:
-        //         //     // 返回 401 清除token信息并跳转到登录页面
-        //         //     store.commit(types.LOGOUT);
-        //         //     router.replace({
-        //         //         path: 'login',
-        //         //         query: { redirect: router.currentRoute.fullPath }
-        //         //     })
-        //         case 404:
-        //             console.log(error.response.data);
-        //     }
-        // }
         if(error.response.message){
             window.alert(error.response.message)
         }else{

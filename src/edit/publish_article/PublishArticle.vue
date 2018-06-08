@@ -2,8 +2,10 @@
   <div id="PublishArtice">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
-    <el-button type="primary" size="mini">发文章</el-button>
-    <el-button type="primary" size="mini">发链接</el-button>
+    <div class="btn-wrapper" style="margin-left:108px;">
+      <el-button type="primary" size="mini">发文章</el-button>
+      <el-button type="primary" size="mini">发链接</el-button>
+    </div>
     <!-- Form -->
     <div class="form-container">
       <!-- 表单 -->

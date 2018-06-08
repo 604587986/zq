@@ -29,5 +29,10 @@
         "iconName": "icon-chakanwenzhang",
         "entryName": "查看文章",
         "entryUrl": "/pages/editor/editor/article_list"
+    },
+    {
+        "iconName": "icon-wenzhangliebiao",
+        "entryName": "网页生成",
+        "entryUrl": "/pages/editor/editor/page_generation"
     }
 ]

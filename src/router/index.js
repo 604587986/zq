@@ -46,7 +46,7 @@ import AutomationSetting from '@/base/system_setup/AutomationSetting' //自动�
 import welcome from '@/pages/Systemsettings/welcome'//系统设置欢迎页
 Vue.use(Router)
 
-//编辑后台
+//非系统管理员后台
 import Editor from '@/pages/editor/editor'
 //写文章
 import PublishArticle from '@/edit/publish_article/PublishArticle'
@@ -58,17 +58,20 @@ import ColumnList2 from '@/edit/column_list/ColumnList'
 //分类操作
 import CategoryList from '@/edit/category/CategoryList'//分类列表
 import AddCategory from '@/edit/category/AddCategory'//添加分类
-import EditCategory from '@/edit/category/EditCategory'//添加分类
+import EditCategory from '@/edit/category/EditCategory'//编辑分类
 //编辑栏目
 import EditColumn2 from '@/edit/column_list/EditColumn'
-//轮播图列表
-import CarouselList from '@/edit/carousel_list/CarouselList'
+//轮播图管理
+import CarouselList from '@/edit/carousel_list/CarouselList'//轮播图列表
+import AddCarousel from '@/edit/carousel_list/AddCarousel'//添加轮播图
 //待审文章
 import PendingArticle from '@/edit/pending_article/PendingArticle'
-//漂浮广告
-import AdvertisementList from '@/edit/advertisement_list/AdvertisementList'
+//广告管理
+import AdvertisementList from '@/edit/advertisement_list/AdvertisementList'//广告列表
+import AddAdvertisement from '@/edit/advertisement_list/AddAdvertisement'//添加广告
 //活动预告
-import ActivityPreview from '@/edit/activity_preview/ActivityPreview'
+import ActivityPreview from '@/edit/activity_preview/ActivityPreview'//活动列表
+import AddActivity from '@/edit/activity_preview/AddActivity'//添加活动
 //教师风采
 import TeachersList from '@/edit/teachers_list/TeachersList'
 //数据看板
@@ -125,10 +128,6 @@ export default new Router({
         {
             path: '/pages/admin/Login',
             component: Login
-        },
-        {
-            path: '/pages/administrators/Administrators',
-            component: Administrators
         },
         {
             path: '/pages/system_administrators/System_Administrators',
@@ -239,7 +238,11 @@ export default new Router({
             path: '/pages/Systemsettings/welcome',
             component: welcome
         },
-        //编辑
+        {
+            path: '/pages/administrators/Administrators',
+            component: Administrators
+        },
+        //非系统管理员
         {
             path:'/pages/editor/editor',
             component:Editor,
@@ -277,6 +280,10 @@ export default new Router({
                 component: CarouselList
             },
                 {
+                path: 'add_carousel',
+                component: AddCarousel
+            },
+                {
                 path: 'pending_article',
                 component: PendingArticle
             },
@@ -285,8 +292,16 @@ export default new Router({
                 component: AdvertisementList
             },
                 {
+                path: 'add_advertisement',
+                component: AddAdvertisement
+            },
+                {
                 path: 'activity_preview',
                 component: ActivityPreview
+            },
+                {
+                path: 'add_activity',
+                component: AddActivity
             },
                 {
                 path: 'teachers_list',

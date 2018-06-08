@@ -1,10 +1,3 @@
-/*
- * @Author: Alex chenzeyongjsj@163.com 
- * @Date: 2018-01-31 14:35:20 
- * @Last Modified by: Alex chenzeyongjsj@163.com
- * @Last Modified time: 2018-02-02 18:27:03
- */
-
 <template>
   <div id="SideBar" class="float-left">
     <ul class="side-ul">

@@ -11,13 +11,13 @@
         <el-form-item label="用户组名：" class="form-item" prop="user_group_name">
           <el-input v-model="form.uesr_group_name"></el-input>
         </el-form-item>
-        <el-form-item label="是否开启：" class="form-item">
-          <el-switch v-model="form.open" active-color="#13ce66" inactive-color="#aaa"></el-switch>
+        <el-form-item label="状态：" class="form-item">
+          <el-radio-group v-model="form.open">
+            <el-radio :label="1">开启</el-radio>
+            <el-radio :label="0">关闭</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="关闭原因：" class="form-item" prop="close_info" v-if="!form.open">
-          <el-input v-model="form.close_info" type="textarea" :rows="2"></el-input>
-          <span class="site-item-info">必须填写，最多50个字符</span>
-        </el-form-item>
+
         <el-form-item label="备注：" class="form-item">
           <el-input v-model="form.remarks" type="textarea" :rows="2"></el-input>
         </el-form-item>

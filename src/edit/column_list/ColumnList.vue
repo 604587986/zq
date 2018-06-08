@@ -474,6 +474,9 @@ export default {
     .el-table__row > td {
       background: #f5f7fa;
     }
+    .el-icon-arrow-right{
+      left: 56%;
+    }
   }
   .third-table {
     .el-table__row > td {
@@ -487,6 +490,16 @@ export default {
     &.el-popper {
       max-width: 300px;
     }
+  }
+  .el-table__expand-icon>.el-icon{
+    font-size: 20px;
+    margin-top: -8px;
+  }
+  .second-table{
+    .el-table__expand-icon>.el-icon{
+    font-size: 14px;
+    margin-top: -5px;
+  }
   }
 }
 </style>

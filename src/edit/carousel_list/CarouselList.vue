@@ -8,8 +8,8 @@
     <div class="table-container">
         <!-- 表格筛选 -->
         <div class="table-filter">
-          <el-button type="primary" size="mini">添加轮播图</el-button>
-          <el-button type="primary" size="mini">轮播图分类</el-button>
+         <router-link to="/pages/editor/editor/add_carousel"><el-button type="primary" size="mini">添加轮播图</el-button></router-link>
+          <!-- <el-button type="primary" size="mini">轮播图分类</el-button> -->
         </div>
         <!-- 表格筛选 -->
         <div class="table-filter">
@@ -59,7 +59,7 @@
           <el-button type="primary" size="mini">批量删除</el-button>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <!-- <Paging></Paging> -->
 </div>
   </div>
 </template>
@@ -70,7 +70,7 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
 
-/* 添加用户 */
+/* 轮播图列表 */
 export default {
   name: "CarouselList",
   data() {

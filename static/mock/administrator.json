@@ -30,7 +30,7 @@
     },
     {
         "iconName": "icon-piaofuguanggao",
-        "entryName": "漂浮广告",
+        "entryName": "广告管理",
         "entryUrl": "/pages/editor/editor/advertisement_list"
     },
     {
