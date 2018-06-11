@@ -8,8 +8,8 @@
     <div class="table-container">
         <!-- 表格筛选 -->
         <div class="table-filter">
-          <el-button type="primary" size="mini">添加友情链接</el-button>
-          <el-button type="primary" size="mini">友情链接分类</el-button>
+          <router-link to="/pages/editor/editor/add_friendly_link"><el-button type="primary" size="mini">添加友情链接</el-button></router-link>
+          <!-- <el-button type="primary" size="mini">友情链接分类</el-button> -->
         </div>
         <!-- 表格筛选 -->
         <div class="table-filter">
@@ -70,7 +70,7 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
 
-/* 添加用户 */
+/* 友情链接 */
 export default {
   name: "FriendlyLink",
   data() {

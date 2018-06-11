@@ -133,12 +133,11 @@ export default {
       };
       this.table_loading = true;
       getSiteList(data).then(res => {
-        if (res.data.code == 200) {
+          this.table_loading = false;        
+        if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
-          this.table_loading = false;
         } else {
-          this.table_loading = false;
           this.$message.error(res.data.message);
         }
       });

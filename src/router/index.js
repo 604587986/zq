@@ -31,6 +31,7 @@ import TemplateList from '@/base/site_template/TemplateList' //模板列表
 //权限管理
 import AddUser from '@/base/authority_management/AddUser' //添加用户
 import UserList from '@/base/authority_management/UserList' //用户列表
+import EditUser from '@/base/authority_management/EditUser' //编辑用户
 import AddUserGroup from '@/base/authority_management/AddUserGroup' //添加用户组
 import UserGroupList from '@/base/authority_management/UserGroupList' //用户组列表
 //系统设置
@@ -102,9 +103,9 @@ import UpdateTemplate2 from '@/edit/page_template/UpdateTemplate'
 import Enclosure from '@/edit/enclosure_management/EnclosureList'
 //添加附件
 import AddEnclosure2 from '@/edit/enclosure_management/AddEnclosure'
-
 //友情链接
-import FriendlyLink from '@/edit/friendly_link/FriendlyLink'
+import FriendlyLink from '@/edit/friendly_link/FriendlyLink'//友情链接列表
+import AddFriendlyLink from '@/edit/friendly_link/AddFriendlyLink'//添加友情链接
 
 
 
@@ -191,6 +192,10 @@ export default new Router({
                 {
                     path: 'UserList',
                     component: UserList
+                },
+                {
+                    path: 'EditUser',
+                    component: EditUser
                 },
                 {
                     path: 'AddUserGroup',
@@ -366,6 +371,10 @@ export default new Router({
                 {
                 path: 'friendly_link',
                 component: FriendlyLink
+            },
+                {
+                path: 'add_friendly_link',
+                component: AddFriendlyLink
             },
         
             ]

@@ -64,7 +64,9 @@ export default {
     margin: 20px 0;
     font-size: 0;
     a {
+      display: inline-block;
       margin-right: 10px;
+      margin-bottom: 10px;
       &.router-link-exact-active {
         button {
           background: #409eff;

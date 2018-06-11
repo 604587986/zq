@@ -26,7 +26,7 @@
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="上传文件：">
-          <uploader :options="options" :fileStatusText="fileStatusText" :autoStart="false" @file-added="fileAdd" class="uploader-example" ref="uploader">
+          <uploader :options="options" :fileStatusText="fileStatusText"  @file-added="fileAdd" class="uploader-example" ref="uploader">
             <uploader-unsupport></uploader-unsupport>
               <uploader-drop>
                 <p>拖动文件或者选择文件</p>

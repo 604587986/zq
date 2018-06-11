@@ -12,31 +12,38 @@
           <el-button size="mini" type="primary">添加用户</el-button>
         </router-link>
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-          <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
         </el-input>
       </div>
       <!-- 表格 -->
       <div class="table-body">
-        <el-table ref="multipleTable" :data="tableInfo" stripe size="small">
-          <el-table-column prop="uid" label="ID" width="50"></el-table-column>
-          <el-table-column prop="uesr_name" label="登录用户名"></el-table-column>
-          <el-table-column prop="name" label="姓名"></el-table-column>
-          <el-table-column prop="user_group" label="用户组"></el-table-column>
-          <el-table-column prop="subordinateDepartmentValue" label="所属部门"></el-table-column>
-          <el-table-column prop="site" label="管理站点"></el-table-column>
-          <el-table-column prop="count" label="登陆次数"></el-table-column>
-          <el-table-column prop="ip" label="最后一次登录IP" width="120"></el-table-column>
-          <el-table-column prop="state" label="状态"></el-table-column>
+        <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
+          <el-table-column prop="id" label="ID" width="50"></el-table-column>
+          <el-table-column prop="account" label="登录用户名"></el-table-column>
+          <el-table-column prop="nickname" label="姓名"></el-table-column>
+          <el-table-column prop="group_id" label="用户组"></el-table-column>
+          <el-table-column prop="department_id" label="所属部门"></el-table-column>
+          <el-table-column prop="site_id" label="管理站点"></el-table-column>
+          <!-- <el-table-column prop="count" label="登陆次数"></el-table-column> -->
+          <el-table-column prop="last_time" label="最后一次登录时间" width="120"></el-table-column>
+          <el-table-column prop="state" label="状态">
+            <div slot-scope="scope">
+              <div v-show="scope.row.state==-2">删除</div>
+              <div v-show="scope.row.state==-1">禁用</div>
+              <div v-show="scope.row.state==0">未激活</div>
+              <div v-show="scope.row.state==1">正常</div>
+            </div>
+          </el-table-column>
           <el-table-column label="操作" width="130">
             <div slot-scope="scope" class="control-btn">
-              <el-button size="mini">更改</el-button>
+              <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditUser',query:{id:scope.row.id}}"><el-button size="mini">更改</el-button></router-link>
               <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="mini" class="control-btn-del">删除</el-button>
             </div>
           </el-table-column>
         </el-table>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -46,6 +53,9 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
+
+import { userList } from "@/api/user/user";
+
 /* 用户列表 */
 export default {
   name: "UserList",
@@ -70,6 +80,15 @@ export default {
           url: ""
         }
       ],
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
+      //表格loading
+      table_loading: false,
       //使用说明
       instructionsInfo: [
         {
@@ -84,41 +103,7 @@ export default {
       //栏目检索
       titleSearchValue: "",
       //表格
-      tableInfo: [
-        {
-          uid: 1,
-          uesr_name: "admin",
-          name: "乔立",
-          user_group: "系统管理员",
-          subordinateDepartmentValue: "网络中心",
-          site: "站群主页",
-          count: 115,
-          ip: "115.192.201.17",
-          state: "启用"
-        },
-        {
-          uid: 2,
-          uesr_name: "jwc",
-          name: "赵老师",
-          user_group: "分站管理员",
-          subordinateDepartmentValue: "教务处",
-          site: "教务处",
-          count: 52,
-          ip: "115.193.158.234",
-          state: "启用"
-        },
-        {
-          uid: 3,
-          uesr_name: "jwc02",
-          name: "李刚",
-          user_group: "编辑",
-          subordinateDepartmentValue: "教务处",
-          site: "教务处",
-          count: 32,
-          ip: "192.168.199.221",
-          state: "关闭"
-        }
-      ],
+      tableInfo: [],
       tableList: []
     };
   },
@@ -128,37 +113,41 @@ export default {
     Paging
   },
   mounted: function() {
+    //获取默认数据
+    this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 5);
     this.$store.commit("update_system_menu_idx", 5);
   },
   methods: {
-    //检索
-    articleSearch() {},
-    //删除表格行
-    deleteRow(index, rows) {
-      this.$confirm("此操作将删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          rows.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+    //获取站点列表
+    getData() {
+      let data = {
+        page: this.currentPaging.currentPage,
+        size: this.currentPaging.pageSize,
+        keyword: this.titleSearchValue
+      };
+      this.table_loading = true;
+      userList(data).then(res => {
+        this.table_loading = false;
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     },
-    //表格排序
-    sortBlur(a, b) {
-      console.log(b[a].uid);
+    //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
+      this.getData();
+    },
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
+      this.getData();
     }
   }
 };
@@ -166,5 +155,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 </style>

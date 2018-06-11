@@ -1,5 +1,5 @@
 <template>
-  <div id="AddUser">
+  <div id="EditUser">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
@@ -17,7 +17,15 @@
         <el-form-item label="账号：" class="form-item">
           <el-input v-model="form.account"></el-input>
         </el-form-item>
-        <el-form-item label="登录密码：" class="form-item" prop="passwd">
+        <el-form-item label="修改密码：" class="form-item">
+          <el-switch
+            v-model="modify_pwd"
+            @change="modify()"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="登录密码：" class="form-item" prop="passwd" v-if="modify_pwd">
           <el-input v-model="form.passwd" type="password"></el-input>
           <span class="site-item-info">最少6位，英文与数字或下划线组合</span>
         </el-form-item>
@@ -55,13 +63,14 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
+import FilePicker from "@/components/FilePicker";
 
-import { addUser } from "@/api/user/user";
+import { editUser } from "@/api/user/user";
+import { updateUser } from "@/api/user/user";
 import { getSiteList } from "@/api/site_management/SiteList";
 
-/* 添加用户 */
 export default {
-  name: "AddUser",
+  name: "EditUser",
   data() {
     return {
       //面包屑
@@ -71,15 +80,11 @@ export default {
           url: "/pages/system_administrators/System_Administrators"
         },
         {
-          name: "权限管理",
-          url: ""
+          name: "站点管理",
+          url: "/pages/system_administrators/System_Administrators/SiteList"
         },
         {
-          name: "用户管理",
-          url: ""
-        },
-        {
-          name: "添加用户",
+          name: "编辑站点",
           url: ""
         }
       ],
@@ -94,13 +99,7 @@ export default {
           content: "添加站点使用说明"
         }
       ],
-      //提交按钮loading
-      subLoading: false,
-      //表单
-      form: {
-        group_id: 1,
-        department_id: 1,
-      },
+      modify_pwd:false,
       //表单验证
       rules: {
         passwd: [
@@ -122,21 +121,137 @@ export default {
           }
         ]
       },
-      siteList: []
+      //提交按钮loading
+      subLoading: false,
+      //表单
+      form: {},
+      //所属类别
+      category: [
+        {
+          value: 0,
+          label: "机关部门"
+        },
+        {
+          value: 1,
+          label: "教辅与研创单位"
+        },
+        {
+          value: 2,
+          label: "教学单位"
+        },
+        {
+          value: 3,
+          label: "其他"
+        }
+      ],
+      //所属部门
+      subordinateDepartment: [
+        {
+          value: 0,
+          label: "党员办"
+        },
+        {
+          value: 1,
+          label: "组织人事"
+        },
+        {
+          value: 2,
+          label: "纪监审办公室"
+        },
+        {
+          value: 3,
+          label: "宣传部"
+        },
+        {
+          value: 4,
+          label: "研究生工作部"
+        },
+        {
+          value: 5,
+          label: "学生工作部"
+        },
+        {
+          value: 6,
+          label: "网络中心"
+        },
+        {
+          value: 7,
+          label: "教务处"
+        },
+        {
+          value: 8,
+          label: "招生办公室"
+        },
+        {
+          value: 9,
+          label: "科研创作处"
+        },
+        {
+          value: 10,
+          label: "外事处"
+        },
+        {
+          value: 11,
+          label: "计划财务处"
+        },
+        {
+          value: 12,
+          label: "校园建设和管理处"
+        },
+        {
+          value: 13,
+          label: "工会"
+        },
+        {
+          value: 14,
+          label: "保卫处"
+        }
+      ],
+      //站点列表
+      siteList: [],
+      //站点管理员
+      siteAdministrator: [
+        {
+          value: 0,
+          label: "系统超级管理员"
+        },
+        {
+          value: 1,
+          label: "分站管理员"
+        },
+        {
+          value: 2,
+          label: "编辑"
+        }
+      ]
     };
   },
   components: {
     Crumb,
-    Instructions
+    Instructions,
+    FilePicker
   },
   mounted: function() {
+    //获取站点信息
+    this.getData();
     //获取站点列表
     this.getSite();
     //侧边导航定位
-    sessionStorage.setItem("system_menu_idx", 5);
-    this.$store.commit("update_system_menu_idx", 5);
+    sessionStorage.setItem("system_menu_idx", 1);
+    this.$store.commit("update_system_menu_idx", 1);
   },
   methods: {
+    //获取站点信息
+    getData() {
+      let data = { id: this.$route.query.id };
+      editUser(data).then(res => {
+        if (res.data.code == 200) {
+          this.form = res.data.data;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
     //获取站点列表
     getSite() {
       let data = {
@@ -156,10 +271,11 @@ export default {
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-          addUser(that.form).then(res => {
+          updateUser(that.form).then(res => {
             that.subLoading = false;
             if (res.data.code == 200) {
-              that.$message.success("添加成功");
+              that.$message.success("修改成功");
+              that.getData();
             } else {
               that.$message.error(res.data.message);
             }
@@ -170,6 +286,11 @@ export default {
           return false;
         }
       });
+    },
+    modify(val){
+      if(!val){
+        delete this.form.passwd
+      }
     }
   }
 };

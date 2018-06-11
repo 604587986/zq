@@ -30,7 +30,7 @@
           <el-table-column prop="preview" label="预览" width="150">
             <div slot-scope="scope">
               <div v-if="scope.row.type == 1" class="carousel-img">
-                <img :src="scope.row.url"/>
+                <img :src="'//webmaster'+format(scope.row.url,'/128')"/>
               </div>
               <div v-else>
                 <a :href="scope.row.preview_url">{{scope.row.preview}}</a>
@@ -71,6 +71,7 @@ import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
 
+import { formatUrl } from "@/utils";
 import { getEnclosureList } from "@/api/enclosure/EnclosureList.js";
 /* 附件列表 */
 export default {
@@ -175,7 +176,7 @@ export default {
     this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 2);
-    this.$store.commit("update_system_menu_idx", );
+    this.$store.commit("update_system_menu_idx",2);
   },
   methods: {
     //获取表格数据
@@ -188,15 +189,18 @@ export default {
       };
       this.table_loading = true;
       getEnclosureList(data).then(res => {
-        if (res.data.code == 200) {
+        this.table_loading = false;
+        if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
-          this.table_loading = false;
         } else {
-          this.table_loading = false;
           this.$message.error(res.data.message);
         }
       });
+    },
+    //格式化图片url
+    format(url, size) {
+      return formatUrl(url, size);
     },
     //检索
     articleSearch() {},

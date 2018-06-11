@@ -29,6 +29,11 @@
         "entryUrl": "/pages/editor/editor/carousel_list"
     },
     {
+        "iconName": "icon-huandengpian",
+        "entryName": "友情链接",
+        "entryUrl": "/pages/editor/editor/friendly_link"
+    },
+    {
         "iconName": "icon-piaofuguanggao",
         "entryName": "广告管理",
         "entryUrl": "/pages/editor/editor/advertisement_list"
@@ -40,8 +45,8 @@
     },
     {
         "iconName": "icon-jiaoshifengcai",
-        "entryName": "教师风采",
-        "entryUrl": "/pages/editor/editor/teachers_list"
+        "entryName": "单页列表",
+        "entryUrl": "/pages/editor/editor/singlepage_list"
     },
     {
         "iconName": "icon-shujukanban",

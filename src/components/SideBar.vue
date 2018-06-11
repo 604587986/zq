@@ -67,11 +67,11 @@ export default {
           column_open: false,
           no_second: false,
           second_class_column: [
-            {
-              column_name: "添加附件",
-              column_url: "AddEnclosure",
-              column_active: false
-            },
+            // {
+            //   column_name: "添加附件",
+            //   column_url: "AddEnclosure",
+            //   column_active: false
+            // },
             {
               column_name: "附件列表",
               column_url: "EnclosureList",
