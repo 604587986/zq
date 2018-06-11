@@ -245,6 +245,7 @@ export default {
     getData() {
       let data = { id: this.$route.query.id };
       editUser(data).then(res => {
+        this.modify_pwd = false
         if (res.data.code == 200) {
           this.form = res.data.data;
         } else {
