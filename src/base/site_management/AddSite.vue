@@ -43,12 +43,12 @@
         <el-form-item label="网站关键字：">
           <el-input v-model="form.keywords"></el-input>
         </el-form-item>
-        <el-form-item label="选择站点管理员：">
+        <!-- <el-form-item label="选择站点管理员：">
           <el-select v-model="form.user_id" placeholder="选择站点管理员" size="mini">
-            <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in userList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
-          <a href="javascript:void(0);" class="item-a">新建管理员</a>
-        </el-form-item>
+          <router-link to="/pages/system_administrators/System_Administrators/AddUser" class="item-a">新建管理员</router-link>
+        </el-form-item> -->
         <el-form-item label="网站描述：">
           <el-input v-model="form.description" type="textarea" :rows="2"></el-input>
         </el-form-item>
@@ -95,13 +95,15 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
 
-import {toAddSite} from "@/api/site_management/AddSite"
+import { toAddSite } from "@/api/site_management/AddSite";
+import { userList } from "@/api/user/user";
+
 /* 添加站点 */
 export default {
   name: "AddSite",
   data() {
     return {
-      haha:'',
+      haha: "",
       //面包屑
       crumbs: [
         {
@@ -154,7 +156,6 @@ export default {
         alias: "", //别名
         domain: "", //域名
         domain_https: "", //是否启用HTTPS
-        user_id: "", //站点管理员
         keywords: "", //网站关键字
         description: "", //网站描述
         analytics: "", //统计代码
@@ -246,20 +247,7 @@ export default {
         }
       ],
       //站点管理员
-      siteAdministrator: [
-        {
-          value: 0,
-          label: "系统超级管理员"
-        },
-        {
-          value: 1,
-          label: "分站管理员"
-        },
-        {
-          value: 2,
-          label: "编辑"
-        }
-      ]
+      userList: []
     };
   },
   components: {
@@ -268,14 +256,30 @@ export default {
     FilePicker
   },
   mounted: function() {
+    // 获取系统用户列表
+    this.getUserList()
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 1);
     this.$store.commit("update_system_menu_idx", 1);
   },
   methods: {
-    doinput(value){
-      console.log(value);
-      
+    // 获取系统用户列表
+    getUserList() {
+      let data = {
+        // page: this.currentPaging.currentPage,
+        // size: this.currentPaging.pageSize,
+        // keyword: this.titleSearchValue
+      };
+      this.table_loading = true;
+      userList(data).then(res => {
+        this.table_loading = false;
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.userList = res.data.data.list;
+          // this.currentPaging.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     },
     //图片上传
     handleAvatarSuccess(res, file) {
@@ -299,14 +303,14 @@ export default {
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-          toAddSite(that.form).then(res=>{
+          toAddSite(that.form).then(res => {
             that.subLoading = false;
-            if(res.data.code == 200){              
-              that.$message.success('添加成功')
-            }else{
-              that.$message.error(res.data.message)
+            if (res.data.code == 200) {
+              that.$message.success("添加成功");
+            } else {
+              that.$message.error(res.data.message);
             }
-          })
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");

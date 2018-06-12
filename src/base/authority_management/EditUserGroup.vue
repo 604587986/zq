@@ -1,5 +1,5 @@
 <template>
-  <div id="EditUser">
+  <div id="EditUserGroup">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
@@ -11,46 +11,18 @@
         <el-form-item label="名称：" class="form-item">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="昵称：" class="form-item" prop="nickname">
-          <el-input v-model="form.nickname"></el-input>
-        </el-form-item>
-        <el-form-item label="账号：" class="form-item" prop="account">
-          <el-input v-model="form.account"></el-input>
-        </el-form-item>
-        <el-form-item label="修改密码：" class="form-item">
-          <el-switch
-            v-model="modify_pwd"
-            @change="modify()"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-        </el-form-item>
-        <el-form-item label="登录密码：" class="form-item" prop="passwd" v-if="modify_pwd">
-          <el-input v-model="form.passwd" type="password"></el-input>
-          <span class="site-item-info">最少6位，英文与数字或下划线组合</span>
-        </el-form-item>
-        <el-form-item label="用户组：" class="form-item">
-          <el-select v-model="form.group_id" clearable size="mini">
-            <el-option v-for="item in 4" :key="item" :label="item" :value="item"></el-option>
+        <el-form-item label="级别：" class="form-item" prop="level">
+          <el-select v-model="form.level" placeholder="" size="mini">
+            <el-option v-for="item in levelList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属部门：" class="form-item">
-          <el-select v-model="form.department_id" clearable size="mini">
-            <!-- <el-option v-for="item in subordinateDepartment" :key="item.value" :label="item.label" :value="item.value"></el-option> -->
-          </el-select>
+        <el-form-item label="权限：" class="form-item">
+          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"  @change="handleCheckAllChange">全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="form.privilege" @change="handleCheckedChange">
+            <el-checkbox v-for="item in privilegeList" :label="item.id" :key="item.id">{{item.title}}</el-checkbox>
+          </el-checkbox-group>       
         </el-form-item>
-        <el-form-item label="管理站点：" class="form-item">
-          <el-select v-model="form.site_id" clearable size="mini">
-            <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="邮箱：" class="form-item" prop="mail">
-          <el-input v-model="form.mail"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号：" class="form-item" prop="mobile">
-          <el-input v-model="form.mobile"></el-input>
-        </el-form-item>
-
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
         </el-form-item>
@@ -63,14 +35,13 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
-import FilePicker from "@/components/FilePicker";
 
-import { editUser } from "@/api/user/user";
-import { updateUser } from "@/api/user/user";
-import { getSiteList } from "@/api/site_management/SiteList";
+import { editUserGroup } from "@/api/group/group";
+import { updateUserGroup } from "@/api/group/group";
+import { privilege } from "@/api/group/group";
 
 export default {
-  name: "EditUser",
+  name: "EditUserGroup",
   data() {
     return {
       //面包屑
@@ -80,11 +51,12 @@ export default {
           url: "/pages/system_administrators/System_Administrators"
         },
         {
-          name: "用户管理",
-          url: "/pages/system_administrators/System_Administrators/UserList"
+          name: "用户组管理",
+          url:
+            "/pages/system_administrators/System_Administrators/UserGroupList"
         },
         {
-          name: "编辑用户",
+          name: "编辑用户组",
           url: ""
         }
       ],
@@ -99,7 +71,39 @@ export default {
           content: "添加站点使用说明"
         }
       ],
-      modify_pwd: false,
+      //级别列表
+      levelList: [
+        {
+          id: 0,
+          title: "系统管理员"
+        },
+        {
+          id: 1,
+          title: "主站管理员"
+        },
+        {
+          id: 2,
+          title: "站点管理员"
+        },
+        {
+          id: 3,
+          title: "领导"
+        },
+        {
+          id: 4,
+          title: "编辑"
+        },
+        {
+          id: 5,
+          title: "实习编辑"
+        }
+      ],
+      //权限列表
+      privilegeList: [],
+      //全选属性
+      isIndeterminate: false,
+      //是否全选
+      checkAll: false,
       //表单验证
       rules: {
         account: [
@@ -178,155 +182,84 @@ export default {
       //提交按钮loading
       subLoading: false,
       //表单
-      form: {},
-      //所属类别
-      category: [
-        {
-          value: 0,
-          label: "机关部门"
-        },
-        {
-          value: 1,
-          label: "教辅与研创单位"
-        },
-        {
-          value: 2,
-          label: "教学单位"
-        },
-        {
-          value: 3,
-          label: "其他"
-        }
-      ],
-      //所属部门
-      subordinateDepartment: [
-        {
-          value: 0,
-          label: "党员办"
-        },
-        {
-          value: 1,
-          label: "组织人事"
-        },
-        {
-          value: 2,
-          label: "纪监审办公室"
-        },
-        {
-          value: 3,
-          label: "宣传部"
-        },
-        {
-          value: 4,
-          label: "研究生工作部"
-        },
-        {
-          value: 5,
-          label: "学生工作部"
-        },
-        {
-          value: 6,
-          label: "网络中心"
-        },
-        {
-          value: 7,
-          label: "教务处"
-        },
-        {
-          value: 8,
-          label: "招生办公室"
-        },
-        {
-          value: 9,
-          label: "科研创作处"
-        },
-        {
-          value: 10,
-          label: "外事处"
-        },
-        {
-          value: 11,
-          label: "计划财务处"
-        },
-        {
-          value: 12,
-          label: "校园建设和管理处"
-        },
-        {
-          value: 13,
-          label: "工会"
-        },
-        {
-          value: 14,
-          label: "保卫处"
-        }
-      ],
+      form: {
+        privilege: []
+      },
       //站点列表
-      siteList: [],
-      //站点管理员
-      siteAdministrator: [
-        {
-          value: 0,
-          label: "系统超级管理员"
-        },
-        {
-          value: 1,
-          label: "分站管理员"
-        },
-        {
-          value: 2,
-          label: "编辑"
-        }
-      ]
+      siteList: []
     };
+  },
+  computed: {
+    privilegeListId: function() {
+      let arr = [];
+      for (let i in this.privilegeList) {
+        arr.push(this.privilegeList[i].id);
+      }
+      return arr;
+    }
   },
   components: {
     Crumb,
-    Instructions,
-    FilePicker
+    Instructions
   },
   mounted: function() {
-    //获取用户信息
+    //获取用户组信息
     this.getData();
-    //获取站点列表
-    this.getSite();
+    //获取权限列表
+    this.getPrivilege();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 5);
     this.$store.commit("update_system_menu_idx", 5);
   },
   methods: {
-    //获取用户信息
+    //获取用户组信息
     getData() {
       let data = { id: this.$route.query.id };
-      editUser(data).then(res => {
-        this.modify_pwd = false;
+      editUserGroup(data).then(res => {
         if (res.data.code == 200) {
           this.form = res.data.data;
+          let intArr = [];
+          //将用户权限从字符串转为整型数组
+          this.form.privilege.split(",").forEach(function(data, index, arr) {
+            intArr.push(+data);
+          });
+          this.form.privilege = intArr;          
         } else {
           this.$message.error(res.data.message);
         }
       });
     },
-    //获取站点列表
-    getSite() {
-      let data = {
-        page: 0
-      };
-      getSiteList(data).then(res => {
+    //获取权限列表
+    getPrivilege() {
+      privilege().then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
-          this.siteList = res.data.data.list;
+          this.privilegeList = res.data.data.list;
         } else {
           this.$message.error(res.data.message);
         }
       });
+    },
+    //处理全选
+    handleCheckAllChange(val) {
+      this.form.privilege = val ? this.privilegeListId : [];
+      this.isIndeterminate = false;
+      console.log(this.form.privilege);
+    },
+    //处理单选
+    handleCheckedChange(val) {
+      let checkedCount = val.length;
+      this.checkAll = checkedCount === this.privilegeListId.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.privilegeListId.length;
     },
     //表单提交
     submitForm(formName) {
+      this.form.privilege = this.form.privilege.join(","); //将权限从数组转为字符串
       var that = this;
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-          updateUser(that.form).then(res => {
+          updateUserGroup(that.form).then(res => {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.$message.success("修改成功");
@@ -341,11 +274,6 @@ export default {
           return false;
         }
       });
-    },
-    modify(val) {
-      if (!val) {
-        delete this.form.passwd;
-      }
     }
   }
 };
@@ -353,4 +281,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+#EditUserGroup {
+  .el-checkbox {
+    margin-left: 10px;
+    min-width: 150px;
+  }
+}
 </style>

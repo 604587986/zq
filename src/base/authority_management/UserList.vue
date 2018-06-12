@@ -120,7 +120,7 @@ export default {
     this.$store.commit("update_system_menu_idx", 5);
   },
   methods: {
-    //获取站点列表
+    //获取用户列表
     getData() {
       let data = {
         page: this.currentPaging.currentPage,

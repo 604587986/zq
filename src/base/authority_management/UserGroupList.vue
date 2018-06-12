@@ -12,27 +12,32 @@
           <el-button size="mini" type="primary">添加用户组</el-button>
         </router-link>
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-          <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
         </el-input>
       </div>
       <!-- 表格 -->
       <div class="table-body">
         <el-table ref="multipleTable" :data="tableInfo" stripe size="small">
-          <el-table-column prop="uid" label="ID" width="50"></el-table-column>
-          <el-table-column prop="group_name" label="用户组名"></el-table-column>
-          <el-table-column prop="date" label="添加时间"></el-table-column>
-          <el-table-column prop="state" label="状态"></el-table-column>
+          <el-table-column label="相应权限" type="expand" width="200">
+              <div slot-scope="scope">
+                  <el-tag v-for="item in toArray(scope.row.privilege)" :key="item.item">{{toTitle(item)}}</el-tag>
+              </div>
+          </el-table-column>
+          <el-table-column prop="id" label="ID" width="50"></el-table-column>
+          <el-table-column prop="title" label="用户组名"></el-table-column>
+          <el-table-column prop="level" label="级别"></el-table-column>
+          <!-- <el-table-column prop="date" label="添加时间"></el-table-column>
+          <el-table-column prop="state" label="状态"></el-table-column> -->
           <el-table-column label="操作">
             <div slot-scope="scope" class="control-btn">
-              <el-button size="mini">更改</el-button>
-              <el-button size="mini">权限</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="mini" class="control-btn-del">删除</el-button>
+              <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditUserGroup',query:{id:scope.row.id}}"><el-button size="mini">更改</el-button></router-link>
+              <el-button size="mini" class="control-btn-del">删除</el-button>
             </div>
           </el-table-column>
         </el-table>
       </div>
       <!-- 分页 -->
-      <Paging></Paging>
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -42,6 +47,9 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
+
+import { getUserGroup } from "@/api/group/group";
+import { privilege } from "@/api/group/group";
 /* 用户组列表 */
 export default {
   name: "UserGroupList",
@@ -66,6 +74,13 @@ export default {
           url: ""
         }
       ],
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
       //使用说明
       instructionsInfo: [
         {
@@ -80,33 +95,10 @@ export default {
       //栏目检索
       titleSearchValue: "",
       //表格
-      tableInfo: [
-        {
-          uid: 1,
-          group_name: "系统管理员",
-          date: "2018-01-02",
-          state: "启用"
-        },
-        {
-          uid: 2,
-          group_name: "主站管理员",
-          date: "2018-01-02",
-          state: "启用"
-        },
-        {
-          uid: 3,
-          group_name: "分站管理员",
-          date: "2018-01-02",
-          state: "启用"
-        },
-        {
-          uid: 4,
-          group_name: "编辑",
-          date: "2018-01-02",
-          state: "启用"
-        }
-      ],
-      tableList: []
+      tableInfo: [],
+      tableList: [],
+      //权限列表
+      privilegeList: []
     };
   },
   components: {
@@ -115,40 +107,65 @@ export default {
     Paging
   },
   mounted: function() {
+    //获取默认数据
+    this.getData();
+    //获取权限列表
+    this.getPrivilege();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 5);
     this.$store.commit("update_system_menu_idx", 5);
   },
   methods: {
-    //检索
-    articleSearch() {
-      console.log(this.titleSearchValue);
+    //获取用户组列表
+    getData() {
+      let data = {
+        page: this.currentPaging.currentPage,
+        size: this.currentPaging.pageSize,
+        keyword: this.titleSearchValue
+      };
+      this.table_loading = true;
+      getUserGroup(data).then(res => {
+        this.table_loading = false;
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     },
-    //删除表格行
-    deleteRow(index, rows) {
-      this.$confirm("此操作将删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          rows.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-      console.log(this.tableInfo);
+    //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
+      this.getData();
     },
-    //表格排序
-    sortBlur(a, b) {
-      console.log(b[a].uid);
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
+      this.getData();
+    },
+    //获取权限列表
+    getPrivilege() {
+      privilege().then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.privilegeList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //将字符串转为数组
+    toArray(str) {
+      return str.split(",");
+    },
+    //将权限id转为对应title
+    toTitle(tid) {
+      for (let i in this.privilegeList) {
+        if (this.privilegeList[i].id == tid) {
+          return this.privilegeList[i].title;
+        }
+      }
     }
   }
 };
@@ -156,5 +173,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 </style>

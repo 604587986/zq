@@ -34,6 +34,7 @@ import UserList from '@/base/authority_management/UserList' //用户列表
 import EditUser from '@/base/authority_management/EditUser' //编辑用户
 import AddUserGroup from '@/base/authority_management/AddUserGroup' //添加用户组
 import UserGroupList from '@/base/authority_management/UserGroupList' //用户组列表
+import EditUserGroup from '@/base/authority_management/EditUserGroup' //编辑用户组
 //系统设置
 import DepartmentList from '@/base/system_setup/DepartmentList' //部门列表
 import LoginLog from '@/base/system_setup/LoginLog' //登陆日志
@@ -204,6 +205,10 @@ export default new Router({
                 {
                     path: 'UserGroupList',
                     component: UserGroupList
+                },
+                {
+                    path: 'EditUserGroup',
+                    component: EditUserGroup
                 },
                 {
                     path: 'DepartmentList',
