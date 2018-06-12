@@ -8,14 +8,11 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter">
-        <el-select v-model="siteListValue" clearable placeholder="所属站点" size="mini" class="float-left state-selection">
-          <el-option v-for="item in siteList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-select v-model="siteValue" clearable placeholder="所属站点" size="mini" class="float-left state-selection" @change="getData">
+          <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
         <el-select v-model="typeValue" clearable placeholder="文件分类" size="mini" class="float-left state-selection">
           <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
-        <el-select v-model="userGroupValue" clearable placeholder="用户组" size="mini" class="float-left column-selection">
-          <el-option v-for="item in userGroupList" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
           <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
@@ -73,6 +70,8 @@ import Instructions from "@/components/Instructions";
 
 import { formatUrl } from "@/utils";
 import { getEnclosureList } from "@/api/enclosure/EnclosureList.js";
+import { getSiteList } from "@/api/site_management/SiteList";
+
 /* 附件列表 */
 export default {
   name: "EnclosureList",
@@ -114,17 +113,8 @@ export default {
       //表格loading
       table_loading: false,
       // 站点列表
-      siteList: [
-        {
-          value: 0,
-          label: "学院官网"
-        },
-        {
-          value: 1,
-          label: "教务处"
-        }
-      ],
-      siteListValue: "",
+      siteList: [],
+      siteValue: "",
       userGroupList: [
         {
           value: 0,
@@ -174,15 +164,17 @@ export default {
   mounted() {
     //获取默认数据
     this.getData();
+    //获取站点列表
+    this.getSite();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 2);
-    this.$store.commit("update_system_menu_idx",2);
+    this.$store.commit("update_system_menu_idx", 2);
   },
   methods: {
     //获取表格数据
     getData() {
       let data = {
-        site_id: "",
+        site_id: this.siteValue,
         type: "",
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize
@@ -201,6 +193,19 @@ export default {
     //格式化图片url
     format(url, size) {
       return formatUrl(url, size);
+    },
+    //获取站点列表
+    getSite() {
+      let data = {
+        page: 0
+      };
+      getSiteList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.siteList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     },
     //检索
     articleSearch() {},

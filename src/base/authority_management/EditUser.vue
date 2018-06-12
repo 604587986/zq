@@ -11,10 +11,10 @@
         <el-form-item label="名称：" class="form-item">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="昵称：" class="form-item">
+        <el-form-item label="昵称：" class="form-item" prop="nickname">
           <el-input v-model="form.nickname"></el-input>
         </el-form-item>
-        <el-form-item label="账号：" class="form-item">
+        <el-form-item label="账号：" class="form-item" prop="account">
           <el-input v-model="form.account"></el-input>
         </el-form-item>
         <el-form-item label="修改密码：" class="form-item">
@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item label="用户组：" class="form-item">
           <el-select v-model="form.group_id" clearable size="mini">
-            <!-- <el-option v-for="item in user_group_list" :key="item.value" :label="item.label" :value="item.value"></el-option> -->
+            <el-option v-for="item in 4" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门：" class="form-item">
@@ -44,10 +44,10 @@
             <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮箱：" class="form-item">
+        <el-form-item label="邮箱：" class="form-item" prop="mail">
           <el-input v-model="form.mail"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：" class="form-item">
+        <el-form-item label="手机号：" class="form-item" prop="mobile">
           <el-input v-model="form.mobile"></el-input>
         </el-form-item>
 
@@ -80,11 +80,11 @@ export default {
           url: "/pages/system_administrators/System_Administrators"
         },
         {
-          name: "站点管理",
-          url: "/pages/system_administrators/System_Administrators/SiteList"
+          name: "用户管理",
+          url: "/pages/system_administrators/System_Administrators/UserList"
         },
         {
-          name: "编辑站点",
+          name: "编辑用户",
           url: ""
         }
       ],
@@ -99,9 +99,27 @@ export default {
           content: "添加站点使用说明"
         }
       ],
-      modify_pwd:false,
+      modify_pwd: false,
       //表单验证
       rules: {
+        account: [
+          {
+            required: true,
+            validator: function(rule, value, callback) {
+              var reg = /^[0-9a-zA-Z_]{1,12}$/; //1-12位数字字母下划线
+              if (!value) {
+                callback(new Error("用户名不能为空"));
+              } else if (reg.test(value) == false) {
+                callback(
+                  new Error("用户名必须为数字/字母/下划线,长度不超过12位")
+                );
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
         passwd: [
           {
             required: true,
@@ -113,6 +131,42 @@ export default {
                 callback(
                   new Error("密码必须为数字/字母/下划线,长度6-12位之间")
                 );
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
+        nickname: [
+          {
+            required: true,
+            message: "请输入昵称",
+            trigger: "blur"
+          },
+          {
+            min: 1,
+            message: "昵称不能为空",
+            trigger: "blur"
+          }
+        ],
+        mail: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
+        mobile: [
+          {
+            required: true,
+            validator: function(rule, value, callback) {
+              var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
+              if (!value) {
+                callback(new Error("号码不能为空"));
+              } else if (reg.test(value) == false) {
+                callback(new Error("请输入正确的手机号"));
               } else {
                 callback();
               }
@@ -237,15 +291,15 @@ export default {
     //获取站点列表
     this.getSite();
     //侧边导航定位
-    sessionStorage.setItem("system_menu_idx", 1);
-    this.$store.commit("update_system_menu_idx", 1);
+    sessionStorage.setItem("system_menu_idx", 5);
+    this.$store.commit("update_system_menu_idx", 5);
   },
   methods: {
     //获取站点信息
     getData() {
       let data = { id: this.$route.query.id };
       editUser(data).then(res => {
-        this.modify_pwd = false
+        this.modify_pwd = false;
         if (res.data.code == 200) {
           this.form = res.data.data;
         } else {
@@ -288,9 +342,9 @@ export default {
         }
       });
     },
-    modify(val){
-      if(!val){
-        delete this.form.passwd
+    modify(val) {
+      if (!val) {
+        delete this.form.passwd;
       }
     }
   }
