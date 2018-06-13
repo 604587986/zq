@@ -6,7 +6,7 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter">
-        <router-link to="/pages/system_administrators/System_Administrators/AddSite" class="float-left filter-link">
+        <router-link to="/pages/editor/editor/add_singlepage" class="float-left filter-link">
           <el-button size="mini" type="primary">添加单页</el-button>
         </router-link>
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
@@ -23,14 +23,16 @@
           <el-table-column prop="seo_name" label="页面SEO名称"></el-table-column>
           <el-table-column prop="seo_desc" label="页面SEO描述"></el-table-column>
           <el-table-column prop="seo_keywords" label="页面SEO关键字"></el-table-column>
+          <el-table-column prop="state" label="状态">
+            <div slot-scope="scope">
+                <el-tag close-transition size="mini" v-show="scope.row.state==-1">已删除</el-tag>
+                <el-tag close-transition size="mini" v-show="scope.row.state==0">临时(草稿)</el-tag>
+                <el-tag close-transition size="mini" v-show="scope.row.state==1">正常</el-tag>
+            </div>
+          </el-table-column>
           <el-table-column label="操作" width="300">
             <div slot-scope="scope" class="control-btn">
-              <el-button size="mini" @click="visit(scope.row.domain)">访问</el-button>
-              <el-button size="mini" @click="change(scope.row.id)">切换</el-button>
-              <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditSite',query:{id:scope.row.id}}"><el-button size="mini">编辑</el-button></router-link>
-              <el-button size="mini" @click="update(scope.row.id)">更新缓存</el-button>
-              <el-button size="mini" @click="backup(scope.row.id)">数据备份</el-button>
-              <el-button size="mini" @click="recover(scope.row.id)">数据恢复</el-button>
+              <router-link :to="{path:'/pages/editor/editor/edit_singlepage',query:{id:scope.row.id}}"><el-button size="mini">编辑</el-button></router-link>
               <el-button size="mini" @click="del(scope.row.uid)" class="control-btn-del">删除</el-button>
             </div>
           </el-table-column>
@@ -115,15 +117,6 @@ export default {
     handleCurrentChange(val) {
       this.currentPaging.currentPage = val;
       this.getData();
-    },
-    onEditorBlur() {
-      //失去焦点事件
-    },
-    onEditorFocus() {
-      //获得焦点事件
-    },
-    onEditorChange() {
-      //内容改变事件
     },
     //表单提交
     submitForm(formName) {}

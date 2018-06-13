@@ -2,12 +2,12 @@
     <div class="root">
         <div class="my-input">
             <el-input  v-bind:value="currentValue" style="display:none"></el-input>
-            <el-input @focus="isShow=true" readonly  placeholder="请选择" v-model="label"></el-input>
+            <el-input @focus="isShow=true" readonly  placeholder="请选择" :value="label"></el-input>
         </div>
         <div id="file-picker" v-if="isShow">
             <div class="header">   
               <div class="close-wrapper">
-                <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1">选择附件</el-button>
+                <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1;getData()">选择附件</el-button>
                 <el-button type="primary" v-show="currentIndex == 1" @click="currentIndex = 2">上传附件</el-button>            
                 <span class="close" @click="isShow=false">关闭</span>
               </div>
@@ -183,6 +183,8 @@ export default {
       this.label = item.title;
       this.currentValue = item.id;
       this.isShow = false;
+      console.log(this.label);
+      
     },
     //处理sizeChange
     handleSizeChange(val) {
@@ -195,9 +197,15 @@ export default {
       this.currentPaging.currentPage = val;
       this.getData();
     },
+    //上传成功的回调
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
+      if(res.code == 200){
+        this.$message.success('附件上传成功')
+      }
+      
     },
+    //上传之前的回调
     beforeAvatarUpload(file) {
       var that = this;
       if (that.fileData.title == "") {

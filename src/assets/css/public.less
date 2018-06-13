@@ -94,28 +94,26 @@ a {
 }
 
 @import "./less_config";
-
 /* 滚动条样式 */
 
- ::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
- ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     border-radius: 10px;
     background: #fff;
 }
 
- ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background: #aaa;
 }
 
- ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: #888;
 }
-
 
 /* 下划线动画 */
 
@@ -199,30 +197,6 @@ body {
             .item-a {
                 margin-left: 10px;
                 color: @base-color2;
-            }
-            /* 图片上传 */
-            .avatar-uploader .el-upload {
-                border: 1px dashed @border_color;
-                border-radius: 6px;
-                cursor: pointer;
-                position: relative;
-                overflow: hidden;
-            }
-            .avatar-uploader .el-upload:hover {
-                border-color: #409EFF;
-            }
-            .avatar-uploader-icon {
-                font-size: 28px;
-                color: #8c939d;
-                width: 178px;
-                height: 158px;
-                line-height: 158px;
-                text-align: center;
-            }
-            .avatar {
-                width: 178px;
-                height: 158px;
-                display: block;
             }
             /* wechat weibo 二维码上传 */
             .wechat_weibo_uploader {
@@ -468,4 +442,38 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 3px;
+}
+
+//富文本编辑器
+.ql-container {
+    min-height: 300px;
+}
+
+/* 图片上传 */
+
+.avatar-uploader .el-upload {
+    border: 1px dashed @border_color;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 158px;
+    line-height: 158px;
+    text-align: center;
+}
+
+.avatar {
+    width: 178px;
+    height: 158px;
+    display: block;
 }

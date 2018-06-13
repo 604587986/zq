@@ -90,6 +90,10 @@ import CountRank from '@/edit/count_rank/CountRank'
 import RecycleBin from '@/edit/recycle_bin/RecycleBin'
 //单页列表
 import SinglepageList from '@/edit/singlepage_list/SinglepageList'
+//添加单页
+import AddSinglepage from '@/edit/singlepage_list/AddSinglepage'
+//编辑单页
+import EditSinglepage from '@/edit/singlepage_list/EditSinglepage'
 //网页生成
 import PageGeneration from '@/edit/page_generation/PageGeneration'
 //网页模板
@@ -344,6 +348,14 @@ export default new Router({
                 {
                 path: 'singlepage_list',
                 component: SinglepageList
+            },
+                {
+                path: 'add_singlepage',
+                component: AddSinglepage
+            },
+                {
+                path: 'edit_singlepage',
+                component: EditSinglepage
             },
                 {
                 path: 'page_generation',
