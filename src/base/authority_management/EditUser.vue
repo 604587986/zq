@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item label="用户组：" class="form-item">
           <el-select v-model="form.group_id" clearable size="mini">
-            <el-option v-for="item in 4" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in groupList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门：" class="form-item">
@@ -43,6 +43,15 @@
           <el-select v-model="form.site_id" clearable size="mini">
             <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="创建时间：" class="form-item">
+          <el-input v-model="form.create_time" disabled readonly></el-input>
+        </el-form-item>
+        <el-form-item label="上一次登录ipv4：" class="form-item">
+          <el-input v-model="form.last_ipv4" disabled readonly></el-input>
+        </el-form-item>
+        <el-form-item label="上一次登陆时间：" class="form-item">
+          <el-input v-model="form.last_time" disabled readonly></el-input>
         </el-form-item>
         <el-form-item label="邮箱：" class="form-item" prop="mail">
           <el-input v-model="form.mail"></el-input>
@@ -68,6 +77,7 @@ import FilePicker from "@/components/FilePicker";
 import { editUser } from "@/api/user/user";
 import { updateUser } from "@/api/user/user";
 import { getSiteList } from "@/api/site_management/SiteList";
+import { getUserGroup } from "@/api/group/group";
 
 export default {
   name: "EditUser",
@@ -263,21 +273,8 @@ export default {
       ],
       //站点列表
       siteList: [],
-      //站点管理员
-      siteAdministrator: [
-        {
-          value: 0,
-          label: "系统超级管理员"
-        },
-        {
-          value: 1,
-          label: "分站管理员"
-        },
-        {
-          value: 2,
-          label: "编辑"
-        }
-      ]
+      //用户组列表
+      groupList: []
     };
   },
   components: {
@@ -290,6 +287,8 @@ export default {
     this.getData();
     //获取站点列表
     this.getSite();
+    //获取用户组列表
+    this.getGroup();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 5);
     this.$store.commit("update_system_menu_idx", 5);
@@ -315,6 +314,16 @@ export default {
       getSiteList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
           this.siteList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //获取用户组列表
+    getGroup() {
+      getUserGroup().then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.groupList = res.data.data.list;
         } else {
           this.$message.error(res.data.message);
         }

@@ -20,7 +20,6 @@ axios.interceptors.request.use(
         // if (token) {
         //     config.headers.Authorization = token;
         // }
-        // config.headers.Host = 'webmaster'
         return config
     },
     error => {

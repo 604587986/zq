@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item label="用户组：" class="form-item">
           <el-select v-model="form.group_id" clearable size="mini">
-            <el-option v-for="item in 4" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in groupList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门：" class="form-item">
@@ -58,6 +58,7 @@ import Instructions from "@/components/Instructions";
 
 import { addUser } from "@/api/user/user";
 import { getSiteList } from "@/api/site_management/SiteList";
+import { getUserGroup } from "@/api/group/group";
 
 /* 添加用户 */
 export default {
@@ -98,7 +99,6 @@ export default {
       subLoading: false,
       //表单
       form: {
-        group_id: 1,
         department_id: 1
       },
       //表单验证
@@ -167,9 +167,7 @@ export default {
               if (!value) {
                 callback(new Error("号码不能为空"));
               } else if (reg.test(value) == false) {
-                callback(
-                  new Error("请输入正确的手机号")
-                );
+                callback(new Error("请输入正确的手机号"));
               } else {
                 callback();
               }
@@ -178,7 +176,10 @@ export default {
           }
         ]
       },
-      siteList: []
+      //站点列表
+      siteList: [],
+      //用户组列表
+      groupList: []
     };
   },
   components: {
@@ -188,6 +189,8 @@ export default {
   mounted: function() {
     //获取站点列表
     this.getSite();
+    //获取用户组列表
+    this.getGroup();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 5);
     this.$store.commit("update_system_menu_idx", 5);
@@ -201,6 +204,16 @@ export default {
       getSiteList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
           this.siteList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //获取用户组列表
+    getGroup() {
+      getUserGroup().then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.groupList = res.data.data.list;
         } else {
           this.$message.error(res.data.message);
         }

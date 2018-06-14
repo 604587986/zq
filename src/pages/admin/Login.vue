@@ -386,6 +386,7 @@ export default {
 
     .logo-text span {
       font-size: 0.6rem;
+      color: #fff;
     }
   }
 
