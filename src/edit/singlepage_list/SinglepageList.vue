@@ -18,8 +18,8 @@
         <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
           <el-table-column prop="id" label="序号" width="50"></el-table-column>
           <el-table-column prop="title" label="标题"></el-table-column>
-          <el-table-column prop="user_id" label="所属用户"></el-table-column>
-          <el-table-column prop="site_id" label="所属站点"></el-table-column>
+          <el-table-column prop="user_title" label="所属用户"></el-table-column>
+          <el-table-column prop="site_title" label="所属站点"></el-table-column>
           <el-table-column prop="seo_name" label="页面SEO名称"></el-table-column>
           <el-table-column prop="seo_desc" label="页面SEO描述"></el-table-column>
           <el-table-column prop="seo_keywords" label="页面SEO关键字"></el-table-column>

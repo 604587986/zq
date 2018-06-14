@@ -99,7 +99,7 @@ export default {
         origin: "",
         description: ""
       },
-      //判断当前是选择文件还是上传文件
+      //判断当前是选择文件还是上传文件,1为选择，2为上传
       currentIndex: 1,
       //附件内容
       info: [],
@@ -180,11 +180,9 @@ export default {
     },
     //选择附件时触发
     select(item) {
+      this.currentValue = item.id;      
       this.label = item.title;
-      this.currentValue = item.id;
-      this.isShow = false;
-      console.log(this.label);
-      
+      this.isShow = false;    
     },
     //处理sizeChange
     handleSizeChange(val) {
