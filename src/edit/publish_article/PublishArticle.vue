@@ -20,7 +20,7 @@
                 <el-option v-for="item in subColumnList" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
         </el-form-item> -->
-        <el-form-item label="分类" class="form-item">
+        <el-form-item label="分类" class="form-item" prop="category_id">
             <el-select v-model="form.category_id" placeholder="请选择" style="width:100%;">
                 <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
             </el-select>
@@ -28,15 +28,18 @@
         <el-form-item label="标题" class="form-item" prop="title">
             <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="SEO标题" class="form-item" prop="title">
+        <el-form-item label="SEO标题" class="form-item">
             <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="作者" class="form-item" prop="title">
+        <el-form-item label="作者" class="form-item" prop="author">
             <el-input v-model="form.author"></el-input>
         </el-form-item>
-        <el-form-item label="摄影" class="form-item" prop="title">
+        <el-form-item label="摄影" class="form-item">
             <el-input v-model="form.photo"></el-input>
-        </el-form-item>      
+        </el-form-item> 
+        <el-form-item label="文章配图">
+          <file-picker v-model="form.image_id"></file-picker>
+        </el-form-item>     
         <!-- <el-form-item label="属性" class="form-item" prop="attribute">
             <el-radio-group v-model="form.attribute">
                 <el-radio label="推荐"></el-radio>
@@ -82,6 +85,7 @@
 <script>
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
+import FilePicker from "@/components/FilePicker";
 
 import { createArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -103,11 +107,14 @@ export default {
       //分类列表
       categoryList: [],
       //编辑器配置
-      editorOption: {},
+      editorOption: {
+        placeholder:'请输入文章内容',
+      },
       form: {
         id: "",
         title: "",
         name: "",
+        image_id:'',
         // state: "",
         // state_verify: "",
         // image_id: "",
@@ -122,19 +129,52 @@ export default {
         photo: ""
         // url: ""
       },
-      rules: {},
+      rules: {
+        category_id: [
+          {
+            required: true,
+            message: "请选择分类",
+            trigger: "blur"
+          }
+        ],
+        title: [
+          {
+            required: true,
+            message: "请输入文章标题",
+            trigger: "blur"
+          },
+          {
+            min: 1,
+            message: "文章标题不能为空",
+            trigger: "blur"
+          }
+        ],
+        author: [
+          {
+            required: true,
+            message: "请输入作者",
+            trigger: "blur"
+          },
+          {
+            min: 1,
+            message: "作者不能为空",
+            trigger: "blur"
+          }
+        ]
+      },
       //提交按钮loading
       subLoading: false,
       // 是否继续按钮
-      continueBtn: false
+      continueBtn: false,
+      //是否已提交
+      isSubmit: false
     };
   },
   mounted() {
     //文章预创建
-    this.toCreate()
+    this.toCreate();
   },
   methods: {
-
     onEditorBlur() {
       //失去焦点事件
     },
@@ -151,7 +191,7 @@ export default {
           //赋值id
           this.form.id = res.data.data.data.id;
           //赋值分类列表
-          this.categoryList = res.data.data.fields.category
+          this.categoryList = res.data.data.fields.category;
         } else {
           this.$message.error(res.data.message);
         }
@@ -161,15 +201,19 @@ export default {
     submitForm(formName) {
       var that = this;
       that.$refs[formName].validate(function(valid) {
-        that.subLoading = true;       
+        that.subLoading = true;
         if (valid) {
           //保存文章
           saveArticle(that.form).then(res => {
+            that.subLoading = false;
             if (res.data.code == 200) {
               that.$alert("提交成功，请等待审核", "提示", {
                 confirmButtonText: "确定",
-                callback: () => {}
+                callback: () => {
+                  that.$refs[formName].resetFields();
+                }
               });
+              that.isSubmit = true;
             } else {
               that.$message.error(res.data.message);
             }
@@ -182,8 +226,26 @@ export default {
       });
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (!this.isSubmit) {
+      this.$confirm("是否放弃保存并离开此页面", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          next();
+        })
+        .catch(() => {
+          next(false);
+        });
+    } else {
+      next();
+    }
+  },
   components: {
-    Crumb
+    Crumb,
+    FilePicker
   }
 };
 </script>
