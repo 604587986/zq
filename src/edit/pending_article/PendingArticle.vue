@@ -34,7 +34,14 @@
               </el-table-column>
               <el-table-column prop="create_time" label="创建日期" width="100"></el-table-column>
               <el-table-column prop="author" label="创建人" width="85"></el-table-column>
-              <el-table-column prop="count" label="浏览次数" width="70"></el-table-column>
+              <!-- <el-table-column prop="count" label="浏览次数" width="70"></el-table-column> -->
+              <el-table-column prop="state_verify" label="审核状态" width="70">
+                  <div slot-scope="scope">
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==-1">驳回</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==0">待审</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==1">通过</el-tag>
+                  </div>
+              </el-table-column>
               <el-table-column label="排序" width="65">
                   <div slot-scope="scope" class="table-sort-input">
                       <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>

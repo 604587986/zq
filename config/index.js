@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        // target: 'https://webmaster.q-huan.link/api',
-        target: 'http://webmaster/api',
+        target: 'https://webmaster.q-huan.link/api',
+        // target: 'http://webmaster/api',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

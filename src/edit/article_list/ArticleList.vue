@@ -34,7 +34,14 @@
               </el-table-column>
               <el-table-column prop="create_time" label="创建日期" width="100"></el-table-column>
               <el-table-column prop="author" label="创建人" width="85"></el-table-column>
-              <el-table-column prop="count" label="浏览次数" width="70"></el-table-column>
+              <!-- <el-table-column prop="count" label="浏览次数" width="70"></el-table-column> -->
+              <el-table-column prop="state_verify" label="审核状态" width="70">
+                  <div slot-scope="scope">
+                      <el-tag close-transition size="mini" type="danger" v-show="scope.row.state_verify==-1">驳回</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==0">待审</el-tag>
+                      <el-tag close-transition size="mini" type="success" v-show="scope.row.state_verify==1">通过</el-tag>
+                  </div>
+              </el-table-column>
               <el-table-column label="排序" width="65">
                   <div slot-scope="scope" class="table-sort-input">
                       <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>
@@ -43,7 +50,8 @@
               <el-table-column label="操作" width="250">
                   <div slot-scope="scope" class="control-btn">
                       <el-button size="small">预览</el-button>
-                      <el-button size="small">审核</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0">通过</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0">驳回</el-button>
                       <el-button size="small">编辑</el-button>
                       <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
                   </div>
@@ -115,29 +123,10 @@ export default {
         },
         {
           value: 1,
-          label: "正常"
+          label: "通过"
         }
       ],
       stateValue: 1,
-      //选择栏目
-      columnSelection: [
-        {
-          value: 0,
-          label: "学术交流"
-        },
-        {
-          value: 1,
-          label: "通知公告"
-        },
-        {
-          value: 2,
-          label: "下载中心"
-        },
-        {
-          value: 3,
-          label: "联系我们"
-        }
-      ],
       columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
@@ -162,7 +151,7 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        state: this.stateValue
+        state_verify: this.stateValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
