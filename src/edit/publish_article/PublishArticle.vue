@@ -72,7 +72,7 @@
         <el-form-item class="form-control-btn">
           <el-button type="primary" size="large">预览</el-button>
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
-          <el-checkbox v-model="continueBtn" style="margin-left:10px;">发布后继续</el-checkbox>
+          <!-- <el-checkbox v-model="continueBtn" style="margin-left:10px;">发布后继续</el-checkbox> -->
         </el-form-item>
       </el-form>
     </div>

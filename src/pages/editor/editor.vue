@@ -46,11 +46,8 @@ export default {
     Nav
   },
   mounted: function() {
-    this.$http
-      .get("./static/mock/" + localStorage.getItem("jsonUrl"))
-      .then(res => {
-        this.nav_column_list = res.data;
-      });
+    const navMenus = eval("(" + window.localStorage.getItem("entryList") + ")");
+    this.nav_column_list = navMenus;
   }
 };
 </script>

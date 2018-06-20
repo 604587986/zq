@@ -136,21 +136,7 @@ export default {
                 that.$router.push(
                   "/pages/system_administrators/System_Administrators"
                 );
-              } else if (res.data.data.group.level == 1) {
-                window.localStorage.setItem(
-                  "jsonUrl",
-                  "main_administrator.json"
-                );
-                that.$router.push("/pages/administrators/Administrators");
-              } else if (res.data.data.group.level == 2) {
-                window.localStorage.setItem("jsonUrl", "administrator.json");
-                that.$router.push("/pages/administrators/Administrators");
-              } else if (res.data.data.group.level == 3) {
-                window.localStorage.setItem("jsonUrl", "leader.json");
-                that.$router.push("/pages/administrators/Administrators");
-              } else if (res.data.data.group.level == 4) {
-                window.localStorage.setItem("jsonUrl", "editor.json");
-                window.localStorage.setItem("isEditor", true);
+              } else {
                 that.$router.push("/pages/administrators/Administrators");
               }
             } else {
@@ -162,68 +148,7 @@ export default {
         }
       });
     },
-    //表单提交
-    // submitForm(formName) {
-    //   var that = this;
-    //   that.$refs[formName].validate(function(valid) {
-    //     //跳转地址
-    //     var url = "/pages/administrators/Administrators";
-    //     window.localStorage.setItem("headerUrl", "Administrators");
-    //     window.localStorage.setItem("isEditor", false); //判断是否是编辑页面
-    //     // 演示用账号密码
-    //     if (
-    //       that.login.username == "admin1" &&
-    //       that.login.password == "admin1"
-    //     ) {
-    //       window.localStorage.setItem("headerName", "沈超(编辑)");
-    //       window.localStorage.setItem("jsonUrl", "entryList2.json");
-    //       window.localStorage.setItem("isEditor", true);
-    //     } else if (
-    //       that.login.username == "admin2" &&
-    //       that.login.password == "admin2"
-    //     ) {
-    //       window.localStorage.setItem("headerName", "陈泽勇(管理员)");
-    //       window.localStorage.setItem("jsonUrl", "entryList.json");
-    //     } else if (
-    //       that.login.username == "admin3" &&
-    //       that.login.password == "admin3"
-    //     ) {
-    //       window.localStorage.setItem("headerName", "王欢(领导)");
-    //       window.localStorage.setItem("jsonUrl", "entryList3.json");
-    //     } else if (
-    //       that.login.username == "admin4" &&
-    //       that.login.password == "admin4"
-    //     ) {
-    //       window.localStorage.setItem("headerName", "测试");
-    //       window.localStorage.setItem("jsonUrl", "entryList5.json");
-    //     } else if (
-    //       that.login.username == "admin5" &&
-    //       that.login.password == "admin5"
-    //     ) {
-    //       //系统管理员
-    //       window.localStorage.setItem("headerName", "吴晓棣(系统管理员)");
-    //       window.localStorage.setItem("headerUrl", "System_Administrators");
-    //       url = "/pages/system_administrators/System_Administrators";
-    //     } else {
-    //       valid = false; //登陆失败
-    //     }
-    //     if (valid) {
-    //       that.subLoading = true;
-    //       that.$message({
-    //         type: "success",
-    //         message: "登录成功!"
-    //       });
-    //       setTimeout(function() {
-    //         //提交成功后跳转到文章列表页面
-    //         that.$router.push({ path: url });
-    //       }, 500);
-    //     } else {
-    //       that.subLoading = false;
-    //       that.$message.error("用户名或密码错误!");
-    //       return false;
-    //     }
-    //   });
-    // },
+    // 登录页canvas动画
     canvas() {
       //定义画布宽高和生成点的个数
       var WIDTH = window.innerWidth,

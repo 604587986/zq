@@ -42,7 +42,159 @@ export default {
       entryList: [],
       editor: false,
       listClass: "",
-      newsInfo: []
+      newsInfo: [],
+      // 不同用户的权限
+      authority: {
+        main_admin: [
+          {
+            iconName: "icon-shujukanban",
+            entryName: "数据看板",
+            entryUrl: "/pages/editor/editor/data_board"
+          },
+          {
+            iconName: "icon-zhandianfangwenpaihang",
+            entryName: "站点访问排行",
+            entryUrl: "/pages/editor/editor/access_rank"
+          },
+          {
+            iconName: "icon-wenzhangshenhe",
+            entryName: "文章审核",
+            entryUrl: "/pages/editor/editor/pending_article"
+          },
+          {
+            iconName: "icon-zhandianwenzhangshuliangpaihang",
+            entryName: "站点文章数量排行",
+            entryUrl: "/pages/editor/editor/count_rank"
+          },
+          {
+            iconName: "icon-wenzhangfangwenpaihang",
+            entryName: "文章访问排行",
+            entryUrl: "/pages/editor/editor/article_rank"
+          },
+          {
+            iconName: "icon-chakanwenzhang",
+            entryName: "查看文章",
+            entryUrl: "/pages/editor/editor/article_list"
+          },
+          {
+            iconName: "icon-wenzhangliebiao",
+            entryName: "网页生成",
+            entryUrl: "/pages/editor/editor/page_generation"
+          }
+        ],
+        sub_admin: [
+          {
+            iconName: "icon-fawenzhang",
+            entryName: "发文章",
+            entryUrl: "/pages/editor/editor/publish_article"
+          },
+          {
+            iconName: "icon-daishenwenzhang",
+            entryName: "待审文章",
+            entryUrl: "/pages/editor/editor/pending_article"
+          },
+          {
+            iconName: "icon-wenzhangliebiao",
+            entryName: "文章列表",
+            entryUrl: "/pages/editor/editor/article_list"
+          },
+          {
+            iconName: "icon-lanmuliebiao",
+            entryName: "栏目列表",
+            entryUrl: "/pages/editor/editor/column_list"
+          },
+          {
+            iconName: "icon-lanmuliebiao",
+            entryName: "分类列表",
+            entryUrl: "/pages/editor/editor/category_list"
+          },
+          {
+            iconName: "icon-huandengpian",
+            entryName: "轮播图",
+            entryUrl: "/pages/editor/editor/carousel_list"
+          },
+          {
+            iconName: "icon-huandengpian",
+            entryName: "友情链接",
+            entryUrl: "/pages/editor/editor/friendly_link"
+          },
+          {
+            iconName: "icon-piaofuguanggao",
+            entryName: "广告管理",
+            entryUrl: "/pages/editor/editor/advertisement_list"
+          },
+          {
+            iconName: "icon-huodongyugao",
+            entryName: "活动预告",
+            entryUrl: "/pages/editor/editor/activity_preview"
+          },
+          {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "单页列表",
+            entryUrl: "/pages/editor/editor/singlepage_list"
+          },
+          {
+            iconName: "icon-shujukanban",
+            entryName: "数据看板",
+            entryUrl: "/pages/editor/editor/data_board"
+          },
+          {
+            iconName: "icon-wenzhangpaihang",
+            entryName: "文章排行",
+            entryUrl: "/pages/editor/editor/article_rank"
+          },
+          {
+            iconName: "icon-zhandianxinxi",
+            entryName: "站点信息",
+            entryUrl: "/pages/editor/editor/site_information"
+          }
+        ],
+        leader: [
+          {
+            iconName: "icon-wenzhangliebiao",
+            entryName: "文章列表",
+            entryUrl: "/pages/editor/editor/article_list"
+          },
+          {
+            iconName: "icon-daishenwenzhang",
+            entryName: "待审文章",
+            entryUrl: "/pages/editor/editor/pending_article"
+          },
+          {
+            iconName: "icon-shujukanban",
+            entryName: "数据看板",
+            entryUrl: "/pages/editor/editor/data_board"
+          },
+          {
+            iconName: "icon-wenzhangpaihang",
+            entryName: "文章排行",
+            entryUrl: "/pages/editor/editor/article_rank"
+          }
+        ],
+        editor: [
+          {
+            iconName: "icon-fawenzhang",
+            entryName: "发文章",
+            entryUrl: "/pages/editor/editor/publish_article"
+          },
+          {
+            iconName: "icon-wenzhangliebiao",
+            entryName: "文章列表",
+            entryUrl: "/pages/editor/editor/article_list"
+          },
+          {
+            iconName: "icon-lanmuliebiao",
+            entryName: "栏目列表",
+            entryUrl: "/pages/editor/editor/column_list"
+          },
+          {
+            iconName: "icon-huandengpian",
+            entryName: "轮播图",
+            entryUrl: "/pages/editor/editor/carousel_list"
+          }
+        ],
+        practice_editor: []
+      }
     };
   },
   components: {
@@ -52,86 +204,35 @@ export default {
   },
   mounted: function() {
     var that = this;
-    var cw =
-      window.innerWidth ||
-      document.documentElement.clientWidth ||
-      document.body.clientWidth; //获取屏幕分辨率
-    var isEditor = localStorage.getItem("isEditor"); //判断是否是编辑页面
-    if (isEditor == "true") {
-      //获取最新文章列表
-      this.$http({
-        method: "get",
-        url: "./static/mock/news.json"
-      })
-        .then(function(response) {
-          that.newsInfo = response.data;
+    that.getMenus();
+  },
+  methods: {
+    //获取导航菜单
+    getMenus() {
+      var that = this;
+      const group = window.localStorage.getItem("group");
+      if (group == 1) {
+        this.entryList = this.authority.main_admin;
+      } else if (group == 2) {
+        this.entryList = this.authority.sub_admin;
+      } else if (group == 3) {
+        this.entryList = this.authority.leader;
+      } else if (group == 4) {
+        this.entryList = this.authority.editor;
+        this.editor = true;        
+        this.$http({
+          method: "get",
+          url: "./static/mock/news.json"
         })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .then(function(response) {
+            that.newsInfo = response.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+      localStorage.setItem("entryList", JSON.stringify(this.entryList));
     }
-    //获取入口列表数据
-    this.$http({
-      method: "get",
-      url: "./static/mock/" + localStorage.getItem("jsonUrl")
-    })
-      .then(function(response) {
-        //将栏目列表存到localStorage
-        localStorage.setItem("nav_column_list", JSON.stringify(response.data));
-        //判断是否是编辑页面
-        if (isEditor == "true") {
-          that.editor = true;
-          for (var i = 0; i < response.data.length; i++) {
-            if ((i + 1) % 3 === 0) {
-              response.data.splice(i, 0, {
-                show: true
-              });
-            }
-          }
-        } else {
-          //根据屏幕分辨率修改栏目列表达到隔行变色
-          if (cw > 769 && response.data.length > 6) {
-            that.listClass = "list-9";
-            for (var i = 0; i < response.data.length; i++) {
-              if ((i + 1) % 5 === 0) {
-                response.data.splice(i, 0, {
-                  show: true
-                });
-              }
-            }
-          } else if (cw > 769 && response.data.length < 5) {
-            //小与5个时添加另一套class
-            that.listClass = "list-4";
-            for (var i = 0; i < response.data.length; i++) {
-              if ((i + 1) % 3 === 0) {
-                response.data.splice(i, 0, {
-                  show: true
-                });
-              }
-            }
-          } else if (
-            cw > 769 &&
-            response.data.length < 7 &&
-            response.data.length > 4
-          ) {
-            //小与7个且大于4个时添加另一套class
-            that.listClass = "list-6";
-          } else {
-            //给栏目列表添加空元素
-            for (var i = 0; i < response.data.length; i++) {
-              if ((i + 1) % 3 === 0) {
-                response.data.splice(i, 0, {
-                  show: true
-                });
-              }
-            }
-          }
-        }
-        that.entryList = response.data;
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
   }
 };
 </script>
