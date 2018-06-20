@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/utils/request'
 import qs from 'qs';
 //获取站点列表
 export function getSiteList(data) {

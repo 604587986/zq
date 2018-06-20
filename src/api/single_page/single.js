@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/utils/request'
 import qs from 'qs';
 //单页列表
 export function pageList(data) {

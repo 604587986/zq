@@ -41,9 +41,11 @@ export default {
     SideBar
   },
   mounted: function() {},
-  // beforeRouteEnter(to, from, next) {
-  //   window.localStorage.removeItem("mockUser");//进入系统管理员页则删除模拟用户
-  // }
+  beforeRouteEnter(to, from, next) {
+    window.localStorage.removeItem("mockUser");//进入系统管理员页则删除模拟用户
+    next()
+    
+  }
 };
 </script>
 

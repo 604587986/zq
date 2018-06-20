@@ -13,41 +13,6 @@ Vue.use(ElementUI)
 
 //引入axios
 import axios from 'axios'
-//axios拦截器设置
-// 1.添加token请求头
-axios.interceptors.request.use(
-    config => {
-        // if (token) {
-        //     config.headers.Authorization = token;
-        // }
-        return config
-    },
-    error => {
-        return Promise.reject(error)
-    }
-);
-//2.判断是否登录
-axios.interceptors.response.use(
-    response => {
-        if (response.data.code == 401) {
-            ElementUI.MessageBox.alert('请先登录！', '提示', {
-                confirmButtonText: '确定',
-                callback: () => {
-                    localStorage.clear();
-                    router.push('/pages/admin/Login')
-                }
-            })
-        } else
-            return response;
-    },
-    error => {
-        if(error.response.message){
-            window.alert(error.response.message)
-        }else{
-            window.alert('发生了错误')
-        }
-        return Promise.reject(error.response.data)   // 返回接口返回的错误信息
-    });
 Vue.prototype.$http = axios // 通过修改原型链，来更方便的使用
 
 //上传组件

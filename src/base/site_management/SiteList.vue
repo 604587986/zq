@@ -133,7 +133,7 @@ export default {
       };
       this.table_loading = true;
       getSiteList(data).then(res => {
-          this.table_loading = false;        
+        this.table_loading = false;
         if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
@@ -148,8 +148,15 @@ export default {
     },
     //切换
     mockUser(id) {
-     window.localStorage.setItem('mockUser',id);
-     this.$router.push('/pages/administrators/Administrators') 
+      if (id) {
+        window.localStorage.setItem("mockUser", id);
+        this.$router.push("/pages/administrators/Administrators");
+      } else {
+        this.$alert("该站点暂无站点管理员", "提示", {
+          confirmButtonText: "确定",
+          callback: () => {}
+        });
+      }
     },
     //更新缓存
     update(id) {

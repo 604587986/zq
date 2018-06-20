@@ -1,5 +1,5 @@
 // 用户管理
-import axios from 'axios';
+import axios from '@/utils/request'
 import qs from 'qs';
 //用户列表
 export function userList(data) {
