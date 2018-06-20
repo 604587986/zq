@@ -126,7 +126,7 @@ export default {
         },
         {
           value: 1,
-          label: "正常"
+          label: "通过"
         }
       ],
       stateValue: 0,
@@ -173,7 +173,7 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        state: this.stateValue
+        state_verify: this.stateValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {

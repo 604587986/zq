@@ -9,6 +9,9 @@
       <!-- Subject -->
       <div class="subject no-public-container">
         <div class="my-nav">>
+          <router-link to="/pages/system_administrators/System_Administrators" v-if="is_mock_user">
+            <el-button size="mini" type="danger">返回系统管理员页面</el-button>
+          </router-link>
           <router-link to="/pages/administrators/Administrators">
             <el-button size="mini">工作台</el-button>
           </router-link>
@@ -37,7 +40,8 @@ export default {
     return {
       systemNavShow: true, //本页面需要展示在nav的元素
       systemFooterShow: false, //本页面在Footer需要隐藏的元素
-      nav_column_list: []
+      nav_column_list: [],
+      is_mock_user: window.localStorage.getItem("mockUser")
     };
   },
   components: {
@@ -48,6 +52,17 @@ export default {
   mounted: function() {
     const navMenus = eval("(" + window.localStorage.getItem("entryList") + ")");
     this.nav_column_list = navMenus;
+  },
+  beforeRouteEnter(to, from, next) {
+    const group = window.localStorage.getItem("group");
+    const mockUser = window.localStorage.getItem("mockUser");
+    if (group == 0 && !mockUser) {
+      alert("请切换身份后再进行操作！");
+      next(vm => {
+        vm.$router.go(-1);
+      });
+    }
+    next();
   }
 };
 </script>

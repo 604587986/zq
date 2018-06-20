@@ -42,9 +42,11 @@ export default {
   },
   mounted: function() {},
   beforeRouteEnter(to, from, next) {
-    window.localStorage.removeItem("mockUser");//进入系统管理员页则删除模拟用户
-    next()
-    
+    const isMockUser = window.localStorage.getItem("mockUser"); //进入系统管理员页则删除模拟用户
+    if (isMockUser) {
+      window.localStorage.removeItem("mockUser");
+    }
+    next();
   }
 };
 </script>

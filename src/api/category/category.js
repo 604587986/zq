@@ -1,9 +1,8 @@
 import axios from '@/utils/request'
-import qs from 'qs';
 
 //分类列表
 export function getCategoryList(data) {
-    return axios.post('/api/category/index', qs.stringify(data)).then(res => {
+    return axios.post('/api/category/index', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -11,7 +10,7 @@ export function getCategoryList(data) {
 }
 //添加分类
 export function toAddCategory(data) {
-    return axios.post('/api/category/create', qs.stringify(data)).then(res => {
+    return axios.post('/api/category/create', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -19,7 +18,7 @@ export function toAddCategory(data) {
 }
 //获取分类详情
 export function edit(data) {
-    return axios.post('/api/category/edit', qs.stringify(data)).then(res => {
+    return axios.post('/api/category/edit', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -27,7 +26,7 @@ export function edit(data) {
 }
 //修改分类信息
 export function update(data) {
-    return axios.post('/api/category/save', qs.stringify(data)).then(res => {
+    return axios.post('/api/category/save', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);

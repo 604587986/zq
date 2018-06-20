@@ -1,11 +1,10 @@
 import axios from '@/utils/request'
-import qs from 'qs';
 //获取站点列表
 export function getSiteList(data) {
     return axios({
         method: 'post',
         url: '/api/site/index',
-        data: qs.stringify(data),
+        data: data,
         headers: {}
     }).then(res => {
         return Promise.resolve(res)

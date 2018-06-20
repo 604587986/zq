@@ -84,7 +84,6 @@
 import Crumb from "@/components/Crumb";
 
 import { createArticle, saveArticle } from "@/api/article/ArticleList";
-import { getCategoryList } from "@/api/category/category";
 
 export default {
   name: "PublishArtice",
@@ -131,20 +130,11 @@ export default {
     };
   },
   mounted() {
-    //获取分类列表
-    this.getCategory();
+    //文章预创建
+    this.toCreate()
   },
   methods: {
-    //获取分类列表
-    getCategory() {
-      getCategoryList().then(res => {
-        if (res.data.code == 200 || res.data.code == 404) {
-          this.categoryList = res.data.data.list;
-        } else {
-          this.$message.error(res.data.message);
-        }
-      });
-    },
+
     onEditorBlur() {
       //失去焦点事件
     },
@@ -154,29 +144,31 @@ export default {
     onEditorChange() {
       //内容改变事件
     },
+    //文章预创建
+    toCreate() {
+      createArticle().then(res => {
+        if (res.data.code == 200) {
+          //赋值id
+          this.form.id = res.data.data.data.id;
+          //赋值分类列表
+          this.categoryList = res.data.data.fields.category
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
     //表单提交
     submitForm(formName) {
       var that = this;
       that.$refs[formName].validate(function(valid) {
-        that.subLoading = true;
+        that.subLoading = true;       
         if (valid) {
-          //文章预创建
-          createArticle().then(res => {
+          //保存文章
+          saveArticle(that.form).then(res => {
             if (res.data.code == 200) {
-              //赋值id
-              that.form.id = res.data.data.id;
-              //保存文章
-              saveArticle(that.form).then(res => {
-                if (res.data.code == 200) {
-                  that.$alert("提交成功，请等待审核", "提示", {
-                    confirmButtonText: "确定",
-                    callback:()=>{
-
-                    }
-                  });
-                } else {
-                  that.$message.error(res.data.message);
-                }
+              that.$alert("提交成功，请等待审核", "提示", {
+                confirmButtonText: "确定",
+                callback: () => {}
               });
             } else {
               that.$message.error(res.data.message);

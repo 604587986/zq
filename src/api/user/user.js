@@ -1,12 +1,11 @@
 // 用户管理
 import axios from '@/utils/request'
-import qs from 'qs';
 //用户列表
 export function userList(data) {
     return axios({
         method: 'post',
         url: '/api/user/index',
-        data: qs.stringify(data),
+        data: data,
         headers: {}
     }).then(res => {
         return Promise.resolve(res)
@@ -16,7 +15,7 @@ export function userList(data) {
 }
 //添加用户
 export function addUser(data) {
-    return axios.post('/api/user/create', qs.stringify(data)).then(res => {
+    return axios.post('/api/user/create', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -24,7 +23,7 @@ export function addUser(data) {
 }
 //获取用户信息
 export function editUser(data) {
-    return axios.post('/api/user/edit', qs.stringify(data)).then(res => {
+    return axios.post('/api/user/edit', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -32,7 +31,7 @@ export function editUser(data) {
 }
 //修改用户
 export function updateUser(data) {
-    return axios.post('/api/user/save', qs.stringify(data)).then(res => {
+    return axios.post('/api/user/save', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);

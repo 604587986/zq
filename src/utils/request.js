@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'qs'
 import {
     Message,
     MessageBox
@@ -11,20 +12,25 @@ const service = axios.create({
     baseURL: '', // api的base_url
     timeout: 15000 // 请求超时时间
 })
-
 // request拦截器
 service.interceptors.request.use(
     config => {
-        // if (token) {
-        //     config.headers.Authorization = token;
-        // }
+        var mockUser = window.localStorage.getItem('mockUser');
+        if (mockUser) {
+            if (!config.data) {
+                config.data = {};
+            }
+            config.data.mock_user = mockUser;
+        }
+        if (config.data) {
+            config.data = qs.stringify(config.data)
+        }
         return config
     },
     error => {
         return Promise.reject(error)
     }
 );
-
 // respone拦截器
 service.interceptors.response.use(
     response => {

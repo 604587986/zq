@@ -1,9 +1,8 @@
 import axios from '@/utils/request'
-import qs from 'qs';
 
 //登录
 export function init(data) {
-    return axios.post('/api/login/init', qs.stringify(data)).then(res => {
+    return axios.post('/api/login/init', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);

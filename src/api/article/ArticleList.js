@@ -1,9 +1,8 @@
 import axios from '@/utils/request'
-import qs from 'qs';
 
 //文章列表
 export function getArticleList(data) {
-    return axios.post('/api/article/index', qs.stringify(data)).then(res => {
+    return axios.post('/api/article/index', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -11,7 +10,7 @@ export function getArticleList(data) {
 }
 //文章预创建
 export function createArticle(data) {
-    return axios.post('/api/article/create', qs.stringify(data)).then(res => {
+    return axios.post('/api/article/create', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
@@ -19,7 +18,7 @@ export function createArticle(data) {
 }
 //文章保存
 export function saveArticle(data) {
-    return axios.post('/api/article/save', qs.stringify(data)).then(res => {
+    return axios.post('/api/article/save', data).then(res => {
         return Promise.resolve(res)
     }).catch(err => {
         console.log(err);
