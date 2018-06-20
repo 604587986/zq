@@ -210,26 +210,32 @@ export default {
     //获取导航菜单
     getMenus() {
       var that = this;
-      const group = window.localStorage.getItem("group");
-      if (group == 1) {
-        this.entryList = this.authority.main_admin;
-      } else if (group == 2) {
+      const group = window.localStorage.getItem("group"); //当前用户所在用户组
+      const mockUser = window.localStorage.getItem("mockUser"); //管理员模拟用户
+      //如果是管理员模拟用户则获取分站管理员的菜单，否则根据用户组获取菜单
+      if (mockUser) {
         this.entryList = this.authority.sub_admin;
-      } else if (group == 3) {
-        this.entryList = this.authority.leader;
-      } else if (group == 4) {
-        this.entryList = this.authority.editor;
-        this.editor = true;        
-        this.$http({
-          method: "get",
-          url: "./static/mock/news.json"
-        })
-          .then(function(response) {
-            that.newsInfo = response.data;
+      } else {
+        if (group == 1) {
+          this.entryList = this.authority.main_admin;
+        } else if (group == 2) {
+          this.entryList = this.authority.sub_admin;
+        } else if (group == 3) {
+          this.entryList = this.authority.leader;
+        } else if (group == 4) {
+          this.entryList = this.authority.editor;
+          this.editor = true;
+          this.$http({
+            method: "get",
+            url: "./static/mock/news.json"
           })
-          .catch(function(error) {
-            console.log(error);
-          });
+            .then(function(response) {
+              that.newsInfo = response.data;
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        }
       }
       localStorage.setItem("entryList", JSON.stringify(this.entryList));
     }

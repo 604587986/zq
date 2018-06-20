@@ -40,7 +40,7 @@
           <el-table-column label="操作" width="500" resizable>
             <div slot-scope="scope" class="control-btn">
               <el-button size="mini" @click="visit(scope.row.domain)">访问</el-button>
-              <el-button size="mini" @click="change(scope.row.id)">切换</el-button>
+              <el-button size="mini" @click="mockUser(scope.row.user_id)">切换</el-button>
               <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditSite',query:{id:scope.row.id}}"><el-button size="mini">编辑</el-button></router-link>
               <el-button size="mini" @click="update(scope.row.id)">更新缓存</el-button>
               <el-button size="mini" @click="backup(scope.row.id)">数据备份</el-button>
@@ -147,8 +147,9 @@ export default {
       window.open("//" + url);
     },
     //切换
-    change(id) {
-      this.$message("切换：" + id);
+    mockUser(id) {
+     window.localStorage.setItem('mockUser',id);
+     this.$router.push('/pages/administrators/Administrators') 
     },
     //更新缓存
     update(id) {

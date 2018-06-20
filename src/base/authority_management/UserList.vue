@@ -21,9 +21,9 @@
           <el-table-column prop="id" label="ID" width="50"></el-table-column>
           <el-table-column prop="account" label="登录用户名"></el-table-column>
           <el-table-column prop="nickname" label="姓名"></el-table-column>
-          <el-table-column prop="group_id" label="用户组"></el-table-column>
+          <el-table-column prop="group_title" label="用户组"></el-table-column>
           <el-table-column prop="department_id" label="所属部门"></el-table-column>
-          <el-table-column prop="site_id" label="管理站点"></el-table-column>
+          <el-table-column prop="site_title" label="管理站点"></el-table-column>
           <!-- <el-table-column prop="count" label="登陆次数"></el-table-column> -->
           <el-table-column prop="last_time" label="最后一次登录时间" width="120"></el-table-column>
           <el-table-column prop="state" label="状态">
