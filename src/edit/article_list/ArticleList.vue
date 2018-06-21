@@ -54,10 +54,10 @@
               <el-table-column label="操作" width="250">
                   <div slot-scope="scope" class="control-btn">
                       <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
-                      <el-button size="small" v-if="scope.row.state_verify==0">通过</el-button>
-                      <el-button size="small" v-if="scope.row.state_verify==0">驳回</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0" @click="verify(scope.row.id,1)">通过</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0" @click="verify(scope.row.id,-1)">驳回</el-button>
                       <router-link :to="{path:'/pages/editor/editor/edit_article',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
-                      <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                      <el-button @click="toDelete(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                   </div>
               </el-table-column>
           </el-table>
@@ -223,6 +223,33 @@ export default {
       this.preview.title = title;
       this.preview.content = content;
       this.previewDialog = true;
+    },
+    //审核
+    verify(id, state) {
+      let data = {
+        id: id,
+        state_verify: state
+      };
+      let msg = state == 1 ? "该文章成功通过审核" : "已成功驳回该文章";
+      verifyArticle(data).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success(msg);
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    // 软删除
+    toDelete(id) {
+      let data = { id: id };
+      deleteArticle(data).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("文章删除成功");
+          this.getData();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     }
   }
 };

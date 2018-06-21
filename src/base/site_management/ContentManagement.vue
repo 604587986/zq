@@ -1,5 +1,5 @@
 <template>
-  <div id="ArticeList">
+  <div id="ContentManagement">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
@@ -11,9 +11,9 @@
           <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
+          <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          </el-select> -->
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
               <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
           </el-input>
@@ -43,9 +43,10 @@
               </el-table-column>
               <el-table-column label="操作">
                   <div slot-scope="scope" class="control-btn">
-                      <el-button size="small">预览</el-button>
-                      <el-button size="small">审核</el-button>
-                      <el-button size="small">编辑</el-button>
+                      <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0">通过</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0">驳回</el-button>
+                      <!-- <router-link :to="{path:'/pages/editor/editor/edit_article',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link> -->
                       <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
                   </div>
               </el-table-column>
@@ -61,6 +62,19 @@
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
+      <!-- 预览diolog -->
+      <el-dialog
+        :title="preview.title"
+        :visible.sync="previewDialog"
+        width="60%"
+        center>
+        <div v-html="preview.content">
+          
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="previewDialog = false">确 定</el-button>
+        </span>
+      </el-dialog>
   </div>
 </template>
 
@@ -72,7 +86,7 @@ import Instructions from "@/components/Instructions";
 import { getArticleList } from "@/api/article/ArticleList";
 /* 内容管理 */
 export default {
-  name: "ArticeList",
+  name: "ContentManagement",
   data() {
     return {
       //面包屑
@@ -147,7 +161,14 @@ export default {
       //表格数据
       tableInfo: [],
       //用于全选
-      tableList: []
+      tableList: [],
+      //预览框
+      previewDialog: false,
+      //预览内容
+      preview: {
+        title: "",
+        content: ""
+      }
     };
   },
   components: {
@@ -168,18 +189,18 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        state: this.stateValue
+        state_verify: this.stateValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
         this.table_loading = false;
         if (res.data.code == 200) {
           this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count
-        }else{
+          this.currentPaging.totals = res.data.data.count;
+        } else {
           this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count
-          this.$message.error(res.data.message)
+          this.currentPaging.totals = res.data.data.count;
+          this.$message.error(res.data.message);
         }
       });
     },
@@ -212,6 +233,12 @@ export default {
     handleCurrentChange(val) {
       this.currentPaging.currentPage = val;
       this.getData();
+    },
+    //预览
+    openDialog(title, content) {
+      this.preview.title = title;
+      this.preview.content = content;
+      this.previewDialog = true;
     }
   }
 };
