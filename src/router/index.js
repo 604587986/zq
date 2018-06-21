@@ -54,6 +54,8 @@ import Editor from '@/pages/editor/editor'
 import PublishArticle from '@/edit/publish_article/PublishArticle'
 //文章列表
 import ArticleList from '@/edit/article_list/ArticleList'
+//文章编辑
+import EditArticle from '@/edit/article_list/EditArticle'
 //文章回收站
 import ArticleRecycleBin from '@/edit/article_list/ArticleRecycleBin'
 //栏目列表
@@ -270,6 +272,10 @@ export default new Router({
                 {
                 path: 'article_list',
                 component: ArticleList
+            },
+                {
+                path: 'edit_article',
+                component: EditArticle
             },
                 {
                 path: 'article_recycle_bin',

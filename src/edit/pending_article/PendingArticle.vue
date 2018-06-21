@@ -14,7 +14,7 @@
           <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select> -->
-          <router-link to="/pages/editor/editor/article_recycle_bin">
+          <router-link to="/pages/editor/editor/article_recycle_bin" class="float-right">
             <el-button size="mini" type="primary">回收站</el-button>
           </router-link>
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
