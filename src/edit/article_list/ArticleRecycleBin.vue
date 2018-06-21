@@ -1,5 +1,5 @@
 <template>
-  <div id="ArticeList">
+  <div id="ArticleRecycleBin">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
@@ -8,17 +8,13 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter">
-          <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="getData()">
+          <el-select v-model="stateValue" placeholder="审核状态" clearable size="mini" class="float-left state-selection" @change="getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select> -->
-        
-          <router-link to="/pages/editor/editor/article_recycle_bin" class="float-right">
-            <el-button size="mini" type="primary">回收站</el-button>
-          </router-link>
-                    <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
+          <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
               <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
           </el-input>
       </div>
@@ -41,9 +37,9 @@
               <!-- <el-table-column prop="count" label="浏览次数" width="70"></el-table-column> -->
               <el-table-column prop="state_verify" label="审核状态" width="70">
                   <div slot-scope="scope">
-                      <el-tag close-transition size="mini" type="danger" v-show="scope.row.state_verify==-1">驳回</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==-1">驳回</el-tag>
                       <el-tag close-transition size="mini" v-show="scope.row.state_verify==0">待审</el-tag>
-                      <el-tag close-transition size="mini" type="success" v-show="scope.row.state_verify==1">通过</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==1">通过</el-tag>
                   </div>
               </el-table-column>
               <el-table-column label="排序" width="65">
@@ -54,10 +50,8 @@
               <el-table-column label="操作" width="250">
                   <div slot-scope="scope" class="control-btn">
                       <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
-                      <el-button size="small" v-if="scope.row.state_verify==0">通过</el-button>
-                      <el-button size="small" v-if="scope.row.state_verify==0">驳回</el-button>
-                      <router-link :to="{path:'/pages/editor/editor/edit_article',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
-                      <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                      <el-button size="small" @click="toRestore(scope.row.id)">恢复</el-button>
+                      <el-button size="small" @click="del(scope.row.id)">彻底删除</el-button>
                   </div>
               </el-table-column>
           </el-table>
@@ -70,19 +64,19 @@
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
-     <!-- 预览diolog -->
-      <el-dialog
-        :title="preview.title"
-        :visible.sync="previewDialog"
-        width="60%"
-        center>
-        <div v-html="preview.content">
-          
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="previewDialog = false">确 定</el-button>
-        </span>
-      </el-dialog>
+    <!-- 预览diolog -->
+    <el-dialog
+      :title="preview.title"
+      :visible.sync="previewDialog"
+      width="60%"
+      center>
+      <div v-html="preview.content">
+        
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="previewDialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -92,9 +86,13 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
 
-import { getArticleList } from "@/api/article/ArticleList";
+import {
+  getArticleList,
+  restoreArticle,
+  delArticle
+} from "@/api/article/ArticleList";
 export default {
-  name: "ArticeList",
+  name: "ArticleRecycleBin",
   data() {
     return {
       //面包屑
@@ -105,6 +103,10 @@ export default {
         },
         {
           name: "文章列表",
+          url: "/pages/editor/editor/article_list"
+        },
+        {
+          name: "文章回收站",
           url: ""
         }
       ],
@@ -143,7 +145,26 @@ export default {
           label: "通过"
         }
       ],
-      stateValue: 1,
+      stateValue: '',
+      //选择栏目
+      columnSelection: [
+        {
+          value: 0,
+          label: "学术交流"
+        },
+        {
+          value: 1,
+          label: "通知公告"
+        },
+        {
+          value: 2,
+          label: "下载中心"
+        },
+        {
+          value: 3,
+          label: "联系我们"
+        }
+      ],
       columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
@@ -175,7 +196,8 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        state_verify: this.stateValue
+        state_verify: this.stateValue,
+        state: -1
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -223,6 +245,30 @@ export default {
       this.preview.title = title;
       this.preview.content = content;
       this.previewDialog = true;
+    },
+    // 恢复
+    toRestore(id) {
+      let data = {id:id}
+      restoreArticle(data).then(res=>{
+        if (res.data.code == 200) {
+          this.$message.success("文章恢复成功");
+          this.getData();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      })
+    },
+    //彻底删除
+    del(id) {
+      let data = {id:id}
+      // delArticle(data).then(res=>{
+      //   if (res.data.code == 200) {
+      //     this.$message.success("文章已被彻底删除");
+      //     this.getData();
+      //   } else {
+      //     this.$message.error(res.data.message);
+      //   }
+      // })
     }
   }
 };

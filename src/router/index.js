@@ -48,12 +48,14 @@ import AutomationSetting from '@/base/system_setup/AutomationSetting' //自动�
 import welcome from '@/pages/Systemsettings/welcome'//系统设置欢迎页
 Vue.use(Router)
 
-//非系统管理员后台
+//--非系统管理员后台--
 import Editor from '@/pages/editor/editor'
 //写文章
 import PublishArticle from '@/edit/publish_article/PublishArticle'
 //文章列表
 import ArticleList from '@/edit/article_list/ArticleList'
+//文章回收站
+import ArticleRecycleBin from '@/edit/article_list/ArticleRecycleBin'
 //栏目列表
 import ColumnList2 from '@/edit/column_list/ColumnList'
 
@@ -268,6 +270,10 @@ export default new Router({
                 {
                 path: 'article_list',
                 component: ArticleList
+            },
+                {
+                path: 'article_recycle_bin',
+                component: ArticleRecycleBin
             },
                 {
                 path: 'column_list',

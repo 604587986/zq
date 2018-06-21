@@ -14,6 +14,9 @@
           <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select> -->
+          <router-link to="/pages/editor/editor/article_recycle_bin">
+            <el-button size="mini" type="primary">回收站</el-button>
+          </router-link>
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
               <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
           </el-input>
@@ -49,10 +52,11 @@
               </el-table-column>
               <el-table-column label="操作" width="250">
                   <div slot-scope="scope" class="control-btn">
-                      <el-button size="small">预览</el-button>
-                      <el-button size="small">审核</el-button>
+                      <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
+                      <el-button size="small" @click="verify(scope.row.id,1)">通过</el-button>
+                      <el-button size="small" @click="verify(scope.row.id,-1)">驳回</el-button>
                       <el-button size="small">编辑</el-button>
-                      <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                      <el-button @click.native.prevent="toDelete(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                   </div>
               </el-table-column>
           </el-table>
@@ -65,6 +69,19 @@
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
+    <!-- 预览diolog -->
+    <el-dialog
+      :title="preview.title"
+      :visible.sync="previewDialog"
+      width="60%"
+      center>
+      <div v-html="preview.content">
+        
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="previewDialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -74,7 +91,11 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
 
-import { getArticleList } from "@/api/article/ArticleList";
+import {
+  getArticleList,
+  verifyArticle,
+  deleteArticle
+} from "@/api/article/ArticleList";
 export default {
   name: "PendingArticle",
   data() {
@@ -92,7 +113,7 @@ export default {
         {
           name: "待审文章",
           url: ""
-        },
+        }
       ],
       //使用说明
       instructionsInfo: [
@@ -155,7 +176,14 @@ export default {
       //表格数据
       tableInfo: [],
       //用于全选
-      tableList: []
+      tableList: [],
+      //预览框
+      previewDialog: false,
+      //预览内容
+      preview: {
+        title: "",
+        content: ""
+      }
     };
   },
   components: {
@@ -178,11 +206,11 @@ export default {
       this.table_loading = true;
       getArticleList(data).then(res => {
         this.table_loading = false;
-        if (res.data.code == 200 ||res.data.code == 404) {
+        if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count
-        }else{
-          this.$message.error(res.data.message)
+          this.currentPaging.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
         }
       });
     },
@@ -215,6 +243,39 @@ export default {
     handleCurrentChange(val) {
       this.currentPaging.currentPage = val;
       this.getData();
+    },
+    //预览
+    openDialog(title, content) {
+      this.preview.title = title;
+      this.preview.content = content;
+      this.previewDialog = true;
+    },
+    //审核
+    verify(id, state) {
+      let data = {
+        id: id,
+        state_verify: state
+      };
+      let msg = state == 1 ? "该文章成功通过审核" : "已成功驳回该文章";
+      verifyArticle(data).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success(msg);
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    // 软删除
+    toDelete(id) {
+      let data = { id: id };
+      deleteArticle(data).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("文章删除成功");
+          this.getData();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     }
   }
 };
