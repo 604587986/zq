@@ -8,7 +8,7 @@ import Rank from '@/pages/index/Rank' //前台排行榜页
 import Login from '@/pages/admin/Login'
 //后台首页
 import Administrators from '@/pages/administrators/Administrators'
-//系统管理员后台
+//--系统管理员后台--
 import System_Administrators from '@/pages/system_administrators/System_Administrators'
  //工作台
 import Workbench from '@/base/workbench/Workbench'
@@ -17,6 +17,7 @@ import AddSite from '@/base/site_management/AddSite' //添加站点
 import SiteList from '@/base/site_management/SiteList' //站点列表
 import EditSite from '@/base/site_management/EditSite' //编辑站点
 import ContentManagement from '@/base/site_management/ContentManagement' //内容管理
+import EditContent from '@/base/site_management/EditArticle' //编辑内容
 import DataBackup from '@/base/site_management/DataBackup' //数据备份
 
 //附件管理
@@ -165,6 +166,10 @@ export default new Router({
                 {
                     path: 'ContentManagement',
                     component: ContentManagement
+                },
+                {
+                    path: 'EditContent',
+                    component: EditContent
                 },
                 {
                     path: 'DataBackup',
