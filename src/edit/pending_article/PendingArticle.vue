@@ -260,6 +260,7 @@ export default {
       verifyArticle(data).then(res => {
         if (res.data.code == 200) {
           this.$message.success(msg);
+          this.getData()
         } else {
           this.$message.error(res.data.message);
         }

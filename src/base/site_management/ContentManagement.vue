@@ -14,6 +14,9 @@
           <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select> -->
+          <router-link to="/pages/system_administrators/System_Administrators/ContentRecycleBin" class="float-right">
+            <el-button size="mini" type="primary">回收站</el-button>
+          </router-link>
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
               <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
           </el-input>
@@ -33,9 +36,16 @@
                       <el-tag close-transition size="mini" v-show="scope.row.state==1">正常</el-tag>
                   </div>
               </el-table-column>
+              <el-table-column prop="state_verify" label="审核状态" width="70">
+                  <div slot-scope="scope">
+                      <el-tag close-transition size="mini" type="danger" v-show="scope.row.state_verify==-1">驳回</el-tag>
+                      <el-tag close-transition size="mini" v-show="scope.row.state_verify==0">待审</el-tag>
+                      <el-tag close-transition size="mini" type="success" v-show="scope.row.state_verify==1">通过</el-tag>
+                  </div>
+              </el-table-column>
               <el-table-column prop="create_time" label="创建日期"></el-table-column>
-              <el-table-column prop="author" label="创建人"></el-table-column>
-              <el-table-column prop="count" label="浏览次数"></el-table-column>
+              <el-table-column prop="author" label="作者"></el-table-column>
+              <!-- <el-table-column prop="count" label="浏览次数"></el-table-column> -->
               <el-table-column label="排序">
                   <div slot-scope="scope" class="table-sort-input">
                       <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>
@@ -132,7 +142,7 @@ export default {
         },
         {
           value: 1,
-          label: "正常"
+          label: "通过"
         }
       ],
       stateValue: 1,
@@ -194,12 +204,10 @@ export default {
       this.table_loading = true;
       getArticleList(data).then(res => {
         this.table_loading = false;
-        if (res.data.code == 200) {
+        if (res.data.code == 200 ||res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
         } else {
-          this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count;
           this.$message.error(res.data.message);
         }
       });

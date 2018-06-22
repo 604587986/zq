@@ -18,6 +18,7 @@ import SiteList from '@/base/site_management/SiteList' //站点列表
 import EditSite from '@/base/site_management/EditSite' //编辑站点
 import ContentManagement from '@/base/site_management/ContentManagement' //内容管理
 import EditContent from '@/base/site_management/EditArticle' //编辑内容
+import ContentRecycleBin from '@/base/site_management/ArticleRecycleBin' //内容回收站
 import DataBackup from '@/base/site_management/DataBackup' //数据备份
 
 //附件管理
@@ -170,6 +171,10 @@ export default new Router({
                 {
                     path: 'EditContent',
                     component: EditContent
+                },
+                {
+                    path: 'ContentRecycleBin',
+                    component: ContentRecycleBin
                 },
                 {
                     path: 'DataBackup',

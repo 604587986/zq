@@ -17,7 +17,7 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
     config => {
-        var mockUser = window.localStorage.getItem('mockUser');
+        var mockUser = window.localStorage.getItem('mockUser');//系统管理员模拟用户
         if (mockUser) {
             if (!config.data) {
                 config.data = {};
@@ -48,7 +48,11 @@ service.interceptors.response.use(
             return response;
     },
     error => {
-        window.alert('发生了错误')
+        Message({
+            message: '发生了错误',
+            type: 'error',
+            duration: 1 * 1000
+          })
         return Promise.reject(error.response.data) // 返回接口返回的错误信息
     });
 

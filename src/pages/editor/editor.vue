@@ -58,11 +58,10 @@ export default {
     const mockUser = window.localStorage.getItem("mockUser");
     if (group == 0 && !mockUser) {
       alert("请切换身份后再进行操作！");
-      next(vm => {
-        vm.$router.go(-1);
-      });
+      next(false);
+    } else {
+      next();
     }
-    next();
   }
 };
 </script>
