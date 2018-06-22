@@ -54,10 +54,10 @@
               <el-table-column label="操作">
                   <div slot-scope="scope" class="control-btn">
                       <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
-                      <el-button size="small" v-if="scope.row.state_verify==0">通过</el-button>
-                      <el-button size="small" v-if="scope.row.state_verify==0">驳回</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0" @click="verify(scope.row.id,1)">通过</el-button>
+                      <el-button size="small" v-if="scope.row.state_verify==0" @click="verify(scope.row.id,-1)">驳回</el-button>
                       <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditContent',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
-                      <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                      <el-button @click="toDelete(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                   </div>
               </el-table-column>
           </el-table>
@@ -93,7 +93,11 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
-import { getArticleList } from "@/api/article/ArticleList";
+import {
+  getArticleList,
+  verifyArticle,
+  deleteArticle
+} from "@/api/article/ArticleList";
 /* 内容管理 */
 export default {
   name: "ContentManagement",
@@ -204,7 +208,7 @@ export default {
       this.table_loading = true;
       getArticleList(data).then(res => {
         this.table_loading = false;
-        if (res.data.code == 200 ||res.data.code == 404) {
+        if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
         } else {
@@ -247,6 +251,34 @@ export default {
       this.preview.title = title;
       this.preview.content = content;
       this.previewDialog = true;
+    },
+    //审核
+    verify(id, state) {
+      let data = {
+        id: id,
+        state_verify: state
+      };
+      let msg = state == 1 ? "该文章成功通过审核" : "已成功驳回该文章";
+      verifyArticle(data).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success(msg);
+          this.getData();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    // 软删除
+    toDelete(id) {
+      let data = { id: id };
+      deleteArticle(data).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("文章删除成功");
+          this.getData();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     }
   }
 };
