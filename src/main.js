@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import uploader from 'vue-simple-uploader'
+import qs from 'qs'
 
 //引入element
 import ElementUI from 'element-ui'
@@ -14,6 +15,16 @@ Vue.use(ElementUI)
 //引入axios
 import axios from 'axios'
 Vue.prototype.$http = axios // 通过修改原型链，来更方便的使用
+Vue.prototype.$get = function (url, data = {}) {
+    return axios.get(url, {
+        params: data
+    });
+};
+Vue.prototype.$post = function (url, data = {}) {
+    // 处理请求参数，由 json 转为 字符串
+    data = qs.stringify(data);
+    return axios.post(url, data);
+};
 
 //上传组件
 Vue.use(uploader)

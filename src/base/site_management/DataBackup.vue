@@ -26,19 +26,22 @@
         <el-form-item>
           <el-button type="primary">立即备份</el-button>
         </el-form-item>
+        <el-form-item>
+          <div id="filePicker">选择文件</div>
+          <upload>
+          </upload>
+        </el-form-item>
       </el-form>
     </div>
-    <file-picker :url="'static/test/files.json'" @select-file="handleSelect"></file-picker>
   </div>
 </template>
 
 <script>
-import FilePicker from "@/components/FilePicker";
-
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import InnerMenu from "@/components/InnerMenu";
+import Upload from "@/components/Upload";
 /* 数据备份 */
 export default {
   name: "DataBackup",
@@ -114,7 +117,7 @@ export default {
     Crumb,
     Instructions,
     InnerMenu,
-    FilePicker
+    Upload
   },
   mounted: function() {
     //侧边导航定位
@@ -130,9 +133,35 @@ export default {
         this.form.backup_type = 1;
       }
     },
-    handleSelect(item) {
-      console.log(item);
-      this.show = false;
+    fileChange(file) {
+      if (!file.size) return;
+      this.fileList.push(file);
+      console.log(file);
+    },
+    onProgress(file, percent) {
+      $(`.file-${file.id} .progress`).css("width", percent * 100 + "%");
+      $(`.file-${file.id} .file-status`).html((percent * 100).toFixed(2) + "%");
+    },
+    onSuccess(file, response) {
+      console.log("上传成功", response);
+      if (response.needMerge) {
+        api
+          .mergeUpload({
+            tempName: response.tempName,
+            fileName: file.name
+          })
+          .then(res => {
+            let $fileStatus = $(`.file-${file.id} .file-status`);
+            console.log(res);
+            if (res.status === 0) {
+              $fileStatus.html("上传成功，转码中");
+            } else if (res.status === 1) {
+              $fileStatus.html("上传失败");
+            } else if (res.status === 2) {
+              $fileStatus.html("上传成功");
+            }
+          });
+      }
     }
   }
 };
