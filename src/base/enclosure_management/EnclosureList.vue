@@ -22,12 +22,12 @@
       <div class="table-body carousel_container">
         <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
           <el-table-column type="selection"></el-table-column>
-          <el-table-column prop="id" label="ID" width="40"></el-table-column>
+          <el-table-column prop="id" label="ID" width="80"></el-table-column>
           <el-table-column prop="title" label="文件名称" width="160"></el-table-column>
           <el-table-column prop="preview" label="预览" width="150">
             <div slot-scope="scope">
               <div v-if="scope.row.type == 1" class="carousel-img">
-                <img :src="'//webmaster'+format(scope.row.url,'/128')"/>
+                <img :src="'https://webmaster.q-huan.link'+format(scope.row.url,'/128')"/>
               </div>
               <div v-else>
                 <a :href="scope.row.preview_url">{{scope.row.preview}}</a>
@@ -36,7 +36,7 @@
           </el-table-column>
           <el-table-column label="文件大小" width="80">
             <div slot-scope="scope">
-              {{scope.row.size/1000}}kb
+              {{scope.row.size | fileSize}}
             </div>
           </el-table-column>
           <el-table-column prop="user_id" label="上传人" width="80"></el-table-column>
@@ -282,7 +282,31 @@ export default {
       this.currentPaging.currentPage = val;
       this.getData();
     }
-  }
+  },
+    filters: {
+    fileSize: function(value) {
+      if (null == value || value == "") {
+        return "0 Bytes";
+      }
+      var unitArr = new Array(
+        "Bytes",
+        "KB",
+        "MB",
+        "GB",
+        "TB",
+        "PB",
+        "EB",
+        "ZB",
+        "YB"
+      );
+      var index = 0;
+      var srcsize = parseFloat(value);
+      index = Math.floor(Math.log(srcsize) / Math.log(1024));
+      var size = srcsize / Math.pow(1024, index);
+      size = size.toFixed(2); //保留的小数位数
+      return size + unitArr[index];
+    }
+  },
 };
 </script>
 
