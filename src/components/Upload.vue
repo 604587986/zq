@@ -116,17 +116,19 @@ export default {
   },
   mounted() {
     this.registerWebUpload();
-    this.initWebUpload();
+    this.initWebUpload();    
   },
   methods: {
     registerWebUpload() {
-      if (!this.$store.state.webuploader) {
         const $this = this;
+        WebUploader.Uploader.unRegister('custom'); //卸载之前注册的钩子     
         WebUploader.Uploader.register(
           {
             "before-send-file": "beforeSendFile",
             "before-send": "beforeSend",
-            "after-send-file": "afterSendFile"
+            "after-send-file": "afterSendFile",
+            name:'custom',
+
           },
           {
             // 时间点1：所有分块进行上传之前调用此函数
@@ -303,9 +305,8 @@ export default {
               return deferred.promise();
             }
           }
-        );
-        this.$store.commit("update_webuploader", true);
-      }
+        );       
+      
     },
     initWebUpload() {
       $(".upload-file").css("display", "block"); //初始化之前将父级元素.upload-file设为block，解决初始化后不可选择文件的bug

@@ -9,7 +9,6 @@ export default new Vuex.Store({
         reception_search_option: 0, //全局/标题
         reception_search_source: true, //切换搜索‘站群’和‘共享平台’
         system_menu_idx: 0 ,//系统管理员侧边菜单定位
-        webuploader:false//webuploader实例是否创建
     },
     mutations: {
         update_reception_search_keyword(state, reception_search_keyword) {
@@ -24,8 +23,5 @@ export default new Vuex.Store({
         update_system_menu_idx(state, menu_idx) {
             state.system_menu_idx = menu_idx;
         },
-        update_webuploader(state, val) {
-            state.webuploader = val;
-        }
     }
 })
