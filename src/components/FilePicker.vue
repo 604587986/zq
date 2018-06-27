@@ -2,7 +2,8 @@
     <div class="root">
         <div class="my-input">
             <el-input  v-bind:value="currentValue" style="display:none"></el-input>
-            <el-input @focus="isShow=true" readonly  placeholder="请选择" :value="label"></el-input>
+            <el-input @focus="showWrapper" readonly  placeholder="请选择" :value="label"></el-input>
+            
         </div>
         <div id="file-picker" v-if="isShow">
             <div class="header">   
@@ -46,14 +47,13 @@
               </div>
             </div>
             <div class="upload-file" v-show="currentIndex == 2">
-              <el-form ref="form" status-icon label-width="95px" size="mini" label-position="right">
-                <el-form-item label="附件标题：" class="form-item">
+                <!-- <el-form-item label="附件标题：" class="form-item">
                   <el-input v-model="fileData.title"></el-input>
                 </el-form-item>
                 <el-form-item label="描述：" class="form-item">
                   <el-input type="textarea" v-model="fileData.description"></el-input>
-                </el-form-item>
-                <el-form-item label="选择文件：" class="form-item">
+                </el-form-item> -->
+                <!-- <el-form-item label="选择文件：" class="form-item">
                   <el-upload
                     class="avatar-uploader"
                     action="/api/attachment/upload"
@@ -65,8 +65,8 @@
                     <img v-if="imageUrl" :src="imageUrl" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                   </el-upload>
-                </el-form-item>
-              </el-form>
+                </el-form-item> -->
+                  <upload @uploadSuccess="handleUpload"></upload>
             </div>
           </div>
       </div>
@@ -74,6 +74,8 @@
 </template>
 <script>
 import Paging from "@/components/Paging";
+import Upload from "@/components/Upload";
+
 import { getEnclosureList } from "@/api/enclosure/EnclosureList.js";
 import { getSiteList } from "@/api/site_management/SiteList";
 import { formatUrl } from "@/utils";
@@ -89,16 +91,16 @@ export default {
       },
       //图片预览
       imageUrl: "",
-      fileData: {
-        type: 1,
-        ext: "",
-        // size:"",
-        size_w: "",
-        size_h: "",
-        title: "",
-        origin: "",
-        description: ""
-      },
+      // fileData: {
+      //   type: 1,
+      //   ext: "",
+      //   // size:"",
+      //   size_w: "",
+      //   size_h: "",
+      //   title: "",
+      //   origin: "",
+      //   description: ""
+      // },
       //判断当前是选择文件还是上传文件,1为选择，2为上传
       currentIndex: 1,
       //附件内容
@@ -180,9 +182,9 @@ export default {
     },
     //选择附件时触发
     select(item) {
-      this.currentValue = item.id;      
+      this.currentValue = item.id;
       this.label = item.title;
-      this.isShow = false;    
+      this.isShow = false;
     },
     //处理sizeChange
     handleSizeChange(val) {
@@ -198,10 +200,9 @@ export default {
     //上传成功的回调
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
-      if(res.code == 200){
-        this.$message.success('附件上传成功')
+      if (res.code == 200) {
+        this.$message.success("附件上传成功");
       }
-      
     },
     //上传之前的回调
     beforeAvatarUpload(file) {
@@ -227,9 +228,19 @@ export default {
         };
         reader.readAsDataURL(file);
       });
+    },
+    //上传成功后
+    handleUpload(item) {
+      this.currentValue = item.id;
+      this.label = item.title;
+      this.isShow = false;
+    },
+    //打开弹出框
+    showWrapper(){
+      this.isShow = true;
     }
   },
-  components: { Paging }
+  components: { Paging, Upload }
 };
 </script>
 <style lang="less">
@@ -303,6 +314,22 @@ export default {
         text-align: center;
       }
     }
+  }
+  .select-file{
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 50;
+    z-index: 30;
+    background: #fff;
+  }
+  .upload-file{
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 50;
+    z-index: 20;
+    background: #fff;    
   }
   .upload-file {
     margin-top: 20px;

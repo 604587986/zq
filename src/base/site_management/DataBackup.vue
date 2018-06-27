@@ -28,8 +28,6 @@
         </el-form-item>
         <el-form-item>
           <div id="filePicker">选择文件</div>
-          <upload>
-          </upload>
         </el-form-item>
       </el-form>
     </div>
@@ -41,7 +39,7 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import InnerMenu from "@/components/InnerMenu";
-import Upload from "@/components/Upload";
+// import Upload from "@/components/Upload";
 /* 数据备份 */
 export default {
   name: "DataBackup",
@@ -117,7 +115,7 @@ export default {
     Crumb,
     Instructions,
     InnerMenu,
-    Upload
+    // Upload
   },
   mounted: function() {
     //侧边导航定位
