@@ -27,7 +27,7 @@
           <el-table-column prop="preview" label="预览" width="150">
             <div slot-scope="scope">
               <div v-if="scope.row.type == 1" class="carousel-img">
-                <img :src="'https://webmaster.q-huan.link'+format(scope.row.url,'/128')"/>
+                <img :src="format(scope.row.url,'/128')"/>
               </div>
               <div v-else>
                 <a :href="scope.row.preview_url">{{scope.row.preview}}</a>

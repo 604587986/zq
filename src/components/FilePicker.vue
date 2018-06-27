@@ -37,7 +37,7 @@
               </div>
               <div class="content">
                 <div class="item" v-for="item in info" :key="item.id" @click="select(item)">
-                    <img :src="'//webmaster.q-huan.link'+formatUrl(item.url,'/160')" alt=""> 
+                    <img :src="formatUrl(item.url,'/160')" alt=""> 
                     <p class="title">{{item.title}}</p>   
                 </div>           
               </div>

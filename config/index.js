@@ -18,6 +18,13 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/attachment': {
+        target: 'https://webmaster.q-huan.link/attachment',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/attachment': ''
+        }
       }
     },
 
