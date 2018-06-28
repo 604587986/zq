@@ -27,8 +27,11 @@
           <el-form-item size="mini">
             <el-checkbox label="记住密码" name="type"></el-checkbox>
           </el-form-item>
-          <el-form-item class="form-control-btn item-padding">
+          <!-- <el-form-item class="form-control-btn item-padding">
             <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
+          </el-form-item> -->
+          <el-form-item class="form-control-btn item-padding">
+            <el-button type="primary" id="btn" size="large">登录</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -45,6 +48,7 @@
 <script>
 /* 后台登录页 */
 import { toLogin } from "@/api/login/login.js";
+import gtInit from "@/utils/gt";
 export default {
   name: "Login",
   data() {
@@ -100,6 +104,8 @@ export default {
     this.isLogin();
     //生成canvas
     this.canvas();
+    // 初始化极验
+    this.gee_init();
   },
   methods: {
     //判断是否已登录
@@ -266,6 +272,84 @@ export default {
           draw();
         }, 16);
       })();
+    },
+    // 极验初始化
+    gee_init() {
+      var that = this;
+      this.$http({
+        method: "get",
+        url: "/api/login/gee_init"
+      }).then(res => {
+        window.initGeetest(
+          {
+            gt: res.data.data.gt,
+            challenge: res.data.data.challenge,
+            offline: !res.data.data.success, // 表示用户后台检测极验服务器是否宕机
+            new_captcha: res.data.data.new_captcha, // 用于宕机时表示是新验证码的宕机
+            timeout: "5000",
+            product: "bind", // 产品形式，包括：float，popup
+            width: "300px"
+          },
+          this.handler
+        );
+      });
+    },
+    //极验二次处理函数
+    handler(captchaObj) {
+      var that = this;
+      captchaObj
+        .onReady(function() {
+          $("#wait").hide();
+        })
+        .validate(function() {
+          let bool;//对表单进行验证
+          that.$refs["form"].validate(function(valid) {
+            if (!valid) {
+              bool = false;
+            } else {
+              bool = true;
+            }
+          });
+          return bool;
+        })
+        .onSuccess(function() {
+          var result = captchaObj.getValidate();
+          if (!result) {
+            return alert("请完成验证");
+          }
+          let data = {
+            account: that.login.username,
+            passwd: that.login.password,
+            challenge: result.geetest_challenge,
+            validate: result.geetest_validate,
+            seccode: result.geetest_seccode
+          };
+          toLogin(data).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              //存储用户信息
+              window.localStorage.setItem(
+                "userInfo",
+                JSON.stringify(res.data.data.user)
+              );
+              //存储角色组
+              window.localStorage.setItem("group", res.data.data.group.level);
+              //根据角色组进入不同工作台
+              if (res.data.data.group.level == 0) {
+                that.$router.push(
+                  "/pages/system_administrators/System_Administrators"
+                );
+              } else {
+                that.$router.push("/pages/administrators/Administrators");
+              }
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        });
+      $("#btn").click(function() {
+        captchaObj.verify();
+      });
     }
   }
 };
