@@ -3,12 +3,13 @@
         <div class="my-input">
             <el-input  v-bind:value="currentValue" style="display:none"></el-input>
             <el-input @focus="showWrapper" readonly  placeholder="请选择" :value="label"></el-input>
-            
+            <img v-if="imageUrl" :src="formatUrl(imageUrl,'/160x160')" alt="">
+            <slot name="img" v-if="!imageUrl"></slot>
         </div>
         <div id="file-picker" v-if="isShow">
             <div class="header">   
               <div class="close-wrapper">
-                <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1;getData()">选择附件</el-button>
+                <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1">选择附件</el-button>
                 <el-button type="primary" v-show="currentIndex == 1" @click="currentIndex = 2">上传附件</el-button>            
                 <span class="close" @click="isShow=false">关闭</span>
               </div>
@@ -34,6 +35,7 @@
                     <el-radio :label="2">文档</el-radio>
                     <el-radio :label="3">视频</el-radio>
                 </el-radio-group>
+                <i class="el-icon-refresh" @click="refresh" ref="refresh"></i>
               </div>
               <div class="content">
                 <div class="item" v-for="item in info" :key="item.id" @click="select(item)">
@@ -122,7 +124,9 @@ export default {
       data: {
         type: 1,
         keyword: ""
-      }
+      },
+      // 刷新次数
+      count: 1
     };
   },
   props: {
@@ -130,8 +134,13 @@ export default {
     value: [String, Number]
   },
   watch: {
+    //数据双向绑定
     currentValue: function(val, old) {
       this.$emit("input", val);
+    },
+    //监听currentIndex变化，若为1则请求附件列表
+    currentIndex: function(val) {
+      this.getData();
     }
   },
   mounted() {
@@ -184,6 +193,7 @@ export default {
     select(item) {
       this.currentValue = item.id;
       this.label = item.title;
+      this.imageUrl = item.url;
       this.isShow = false;
     },
     //处理sizeChange
@@ -233,11 +243,21 @@ export default {
     handleUpload(item) {
       this.currentValue = item.id;
       this.label = item.title;
+      if (item.type == 1) {
+        this.imageUrl = item.url;
+      }
       this.isShow = false;
     },
     //打开弹出框
-    showWrapper(){
+    showWrapper() {
       this.isShow = true;
+    },
+    // 刷新当前列表（重新请求）
+    refresh() {
+      this.$refs.refresh.style.transform =
+        "rotate(" + this.count * 360 + "deg)";
+      this.count++;
+      this.getData();
     }
   },
   components: { Paging, Upload }
@@ -249,7 +269,7 @@ export default {
   position: relative;
 }
 .my-input {
-  width: 300px;
+  width: 160px;
   position: relative;
   z-index: 10;
 }
@@ -315,21 +335,29 @@ export default {
       }
     }
   }
-  .select-file{
+  .select-file {
     position: absolute;
     left: 20px;
     right: 20px;
     top: 50;
     z-index: 30;
     background: #fff;
+    .el-icon-refresh {
+      margin-left: 40px;
+      cursor: pointer;
+      transition: all 1s;
+      &:hover {
+        color: #409eff;
+      }
+    }
   }
-  .upload-file{
+  .upload-file {
     position: absolute;
     left: 20px;
     right: 20px;
     top: 50;
     z-index: 20;
-    background: #fff;    
+    background: #fff;
   }
   .upload-file {
     margin-top: 20px;

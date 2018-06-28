@@ -59,10 +59,18 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <file-picker v-model="form.qr_wechat"></file-picker>
+          <file-picker v-model="form.qr_wechat">
+            <div slot="img">
+              <img class="small-img" :src="form.qr_wechat.url" alt="">
+            </div>
+          </file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <file-picker v-model="form.qr_weibo"></file-picker>
+          <file-picker v-model="form.qr_weibo">
+            <div slot="img">
+              <img class="small-img" :src="form.qr_weibo.url" alt="">
+            </div>
+          </file-picker>
         </el-form-item>
         <!-- <el-form-item label="微信公众号二维码：">
           <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">

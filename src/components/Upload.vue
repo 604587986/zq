@@ -179,10 +179,13 @@ export default {
                         json.data.message == "文件已存在；"
                       ) {
                         // 文件已存在
-                        // uploader.owner.skipFile(file);
-                        $("#status" + file.id).text("您已上传过该文件");
-                        deferred.reject();
-                        // deferred.resolve();
+                        file.setStatus("complete");
+                        uploader.owner.skipFile(file);
+                        $("#status" + file.id).text("文件秒传成功；");
+                        // 上传成功，通知父组件
+                        $this.$emit("uploadSuccess", json.data.data);
+                        // deferred.reject();
+                        deferred.resolve();
                       } else if (
                         json.data.msg == "SkipFile" &&
                         json.data.code == 200 &&

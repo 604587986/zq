@@ -197,7 +197,7 @@ export default {
   methods: {
     open_column: function(index) {
       for (let obj of this.side_bar) {
-        obj.column_open = false;
+        // obj.column_open = false;
       }
       if (index == 0) {
         this.$router.push({
