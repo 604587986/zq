@@ -22,11 +22,11 @@
           </el-form-item>
           <el-form-item prop="password" class="item-box r-psd">
             <i class="iconfont icon-password"></i>
-            <el-input v-model="login.password" type="password" @keyup.enter.native="submitForm('form')" placeholder="密码"></el-input>
+            <el-input v-model="login.password" type="password" placeholder="密码"></el-input>
           </el-form-item>
-          <el-form-item size="mini">
+          <!-- <el-form-item size="mini">
             <el-checkbox label="记住密码" name="type"></el-checkbox>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item class="form-control-btn item-padding">
             <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
           </el-form-item> -->
@@ -278,7 +278,7 @@ export default {
       var that = this;
       this.$http({
         method: "get",
-        url: "/api/login/gee_init"
+        url: "/api/login/gee_init?t=" + (new Date()).getTime()
       }).then(res => {
         window.initGeetest(
           {
@@ -325,7 +325,6 @@ export default {
             seccode: result.geetest_seccode
           };
           toLogin(data).then(res => {
-            that.subLoading = false;
             if (res.data.code == 200) {
               //存储用户信息
               window.localStorage.setItem(
@@ -342,7 +341,8 @@ export default {
               } else {
                 that.$router.push("/pages/administrators/Administrators");
               }
-            } else {
+            } else {    
+              captchaObj.reset();                     
               that.$message.error(res.data.message);
             }
           });
@@ -477,6 +477,7 @@ export default {
 
     .form-control-btn .el-button {
       width: 100%;
+      margin-top: 20px;
     }
   }
 
