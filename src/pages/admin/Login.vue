@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item prop="password" class="item-box r-psd">
             <i class="iconfont icon-password"></i>
-            <el-input v-model="login.password" type="password" placeholder="密码"></el-input>
+            <el-input v-model="login.password" type="password" placeholder="密码" id="password"></el-input>
           </el-form-item>
           <!-- <el-form-item size="mini">
             <el-checkbox label="记住密码" name="type"></el-checkbox>
@@ -349,6 +349,9 @@ export default {
         });
       $("#btn").click(function() {
         captchaObj.verify();
+      });
+      $("#password").keyup(function(e) {
+        e.keyCode == 13 &&   captchaObj.verify();  
       });
     }
   }
