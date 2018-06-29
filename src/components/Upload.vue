@@ -46,8 +46,7 @@
 <!--<script src="../assets/lib/webUploader/webuploader.js"></script>-->
 
 <script type="text/ecmascript-6">
-// import '../assets/lib/jquery2.0.0/jquery-2.0.0.js';
-import WebUploader from "webuploader";
+// import WebUploader from "webuploader";
 
 const request = {
   url_file_getUploadinfo: "/api/attachment/upload_check",
@@ -93,7 +92,7 @@ export default {
   data() {
     return {
       options: {
-        auto: true,
+        auto: false,
         url: request.url_file_uploadChunks2Server,
         button: "#picker" + new Date().getTime(),
         multiple: true,
@@ -114,203 +113,224 @@ export default {
       description: ""
     };
   },
+  watch: {
+    uploader: function() {
+      setTimeout(function() {
+        $(".upload-file").css("display", "none"); //初始化之前将父级元素.upload-file设为block，解决初始化后不可选择文件的bug
+      },20);
+    }
+  },
   mounted() {
     this.registerWebUpload();
-    this.initWebUpload();    
+    this.getOption();
   },
   methods: {
+    //从服务器获取webuploader配置并在获得响应后实例化webuploader
+    getOption() {
+      this.$http.get("/api/attachment/upload_init").then(res => {
+        if (res.data.code == 200) {
+          this.options = Object.assign(this.options, {
+            chunkRetry: 1,
+            chunkSize: 2097152,
+            chunked: true,
+            fileNumLimit: 2,
+            fileSingleSizeLimit: 52428800,
+            fileSizeLimit: 52428800
+          });
+          this.initWebUpload();
+        }
+      });
+    },
+    //注册上传事件的钩子
     registerWebUpload() {
-        const $this = this;
-        WebUploader.Uploader.unRegister('custom'); //卸载之前注册的钩子     
-        WebUploader.Uploader.register(
-          {
-            "before-send-file": "beforeSendFile",
-            "before-send": "beforeSend",
-            "after-send-file": "afterSendFile",
-            name:'custom',
-
-          },
-          {
-            // 时间点1：所有分块进行上传之前调用此函数
-            beforeSendFile: function(file) {
-              const deferred = WebUploader.Deferred();
-              const uploader = this;
-              new WebUploader.Uploader()
-                .md5File(file)
-                .progress(percentage => {
-                  $("#md5" + file.id).text(
-                    "正在读取文件" + Math.round(percentage * 100) + "%"
-                  );
-                })
-                .then(md5 => {
-                  $("#md5" + file.id).text("检查完毕");
-                  // 判断文件是否存在
-                  const getData = Object.assign(
-                    {},
-                    request.arg_file_getUploadinfo,
-                    {
-                      fileMd5: md5,
-                      fileName: file.name,
-                      size: file.size.toString(),
-                      directoryId: 58,
-                      projectId: 58,
-                      title: $this.title,
-                      description: $this.description
-                    }
-                  );
-                  $this
-                    .$post(request.url_file_getUploadinfo, getData)
-                    .then(json => {
-                      if (json.data.msg == "success" && json.data.code == 200) {
-                        // 文件不存在
-                        $this.file = {
-                          file,
-                          fileMd5: md5,
-                          fileName: file.name,
-                          fileSizeStr: file.size.toString(),
-                          objectId: json.data.objectId,
-                          directoryId: 58,
-                          projectId: 58
-                        };
-                        deferred.resolve();
-                      } else if (
-                        json.data.msg == "SkipFile" &&
-                        json.data.code == 200 &&
-                        json.data.message == "文件已存在；"
-                      ) {
-                        // 文件已存在
-                        file.setStatus("complete");
-                        uploader.owner.skipFile(file);
-                        $("#status" + file.id).text("文件秒传成功；");
-                        // 上传成功，通知父组件
-                        $this.$emit("uploadSuccess", json.data.data);
-                        // deferred.reject();
-                        deferred.resolve();
-                      } else if (
-                        json.data.msg == "SkipFile" &&
-                        json.data.code == 200 &&
-                        json.data.message == "文件秒传成功；"
-                      ) {
-                        // 文件已存在
-                        file.setStatus("complete");
-                        uploader.owner.skipFile(file);
-                        $("#status" + file.id).text("文件秒传成功；");
-                        // 上传成功，通知父组件
-                        $this.$emit("uploadSuccess", json.data.data);
-                        // deferred.reject();
-                        deferred.resolve();
-                      } else {
-                        console.log(json.data.msg);
-                        deferred.reject();
-                      }
-                    });
-                });
-              return deferred.promise();
-            },
-            // 时间点2：如果有分块上传，则每个分块上传之前调用此函数
-            beforeSend: block => {
-              // var $this = this;
-              const deferred = WebUploader.Deferred();
-              const file = block.file; // 获取分片所属的文件对象
-
-              new WebUploader.Uploader()
-                .md5File(file, block.start, block.end)
-                .then(md5 => {
-                  // 判断分块是否存在
-                  const getData = Object.assign(
-                    {},
-                    request.arg_file_judgeFileChunkExisted,
-                    {
-                      fileMd5: this.file.fileMd5,
-                      chunkMd5: md5,
-                      objectId: this.file.objectId,
-                      chunkIndexStr: block.chunk.toString()
-                    }
-                  );
-                  this.uploader.options.formData = Object.assign(this.file, {
-                    // file,
-                    chunkMd5: md5,
-                    chunkSizeStr: file.size.toString(),
-                    chunkIndexStr: block.chunk.toString()
-                  });
-                  this.$post(
-                    request.url_file_judgeFileChunkExisted,
-                    getData
-                  ).then(json => {
-                    // this.file = Object.assign(this.file, {
-                    //   // file,
-                    //   chunkMd5: md5,
-                    //   chunkSizeStr: file.size.toString(),
-                    //   chunkIndexStr: block.chunk.toString()
-                    // });
-
-                    if (json.data.code == 200) {
-                      if (json.data.data.isExisted) {
-                        // 块存在
-                        deferred.reject();
-                        this.file.file = "";
-                      } else {
-                        //块不存在
-                        deferred.resolve();
-                      }
-                    } else {
-                      console.log(json.data.msg);
-                      // 上传失败
-                      // deferred.resolve();
-                    }
-                  });
-                });
-              return deferred.promise();
-            },
-            // 时间点3：上传完成
-            afterSendFile: (file, ret) => {
-              const deferred = WebUploader.Deferred();
-
-              // 不是秒传，走完成接口
-              if (this.file.fileMd5) {
-                // 开始构造后台所需要的参数
+      const $this = this;
+      WebUploader.Uploader.unRegister("custom"); //卸载之前注册的钩子
+      WebUploader.Uploader.register(
+        {
+          "before-send-file": "beforeSendFile",
+          "before-send": "beforeSend",
+          "after-send-file": "afterSendFile",
+          name: "custom"
+        },
+        {
+          // 时间点1：所有分块进行上传之前调用此函数
+          beforeSendFile: function(file) {
+            const deferred = WebUploader.Deferred();
+            const uploader = this;
+            new WebUploader.Uploader()
+              .md5File(file)
+              .progress(percentage => {
+                $("#md5" + file.id).text(
+                  "正在读取文件" + Math.round(percentage * 100) + "%"
+                );
+              })
+              .then(md5 => {
+                $("#md5" + file.id).text("检查完毕");
+                // 判断文件是否存在
                 const getData = Object.assign(
                   {},
-                  request.arg_file_completeUpload2Server,
+                  request.arg_file_getUploadinfo,
                   {
-                    objectId: this.file.objectId,
-                    fileName: this.file.fileName,
-                    fileSizeStr: this.file.fileSizeStr,
-                    fileMd5: this.file.fileMd5,
-                    directoryId: this.file.directoryId,
-                    projectId: this.file.projectId,
-                    chunksCountStr: Math.ceil(
-                      file.size / this.options.chunkSize
-                    )
+                    fileMd5: md5,
+                    fileName: file.name,
+                    size: file.size.toString(),
+                    directoryId: 58,
+                    projectId: 58,
+                    title: $this.title,
+                    description: $this.description
                   }
                 );
-                this.$post(request.url_file_completeUpload2Server, getData)
+                $this
+                  .$post(request.url_file_getUploadinfo, getData)
                   .then(json => {
-                    if (json.data.code == 200) {
-                      $("#status" + file.id).text("上传成功");
+                    if (json.data.msg == "success" && json.data.code == 200) {
+                      // 文件不存在
+                      $this.file = {
+                        file,
+                        fileMd5: md5,
+                        fileName: file.name,
+                        fileSizeStr: file.size.toString(),
+                        objectId: json.data.objectId,
+                        directoryId: 58,
+                        projectId: 58
+                      };
                       deferred.resolve();
+                    } else if (
+                      json.data.msg == "SkipFile" &&
+                      json.data.code == 200 &&
+                      json.data.message == "文件已存在；"
+                    ) {
+                      // 文件已存在
+                      file.setStatus("complete");
+                      uploader.owner.skipFile(file);
+                      $("#status" + file.id).text("文件秒传成功；");
                       // 上传成功，通知父组件
                       $this.$emit("uploadSuccess", json.data.data);
+                      // deferred.reject();
+                      deferred.resolve();
+                    } else if (
+                      json.data.msg == "SkipFile" &&
+                      json.data.code == 200 &&
+                      json.data.message == "文件秒传成功；"
+                    ) {
+                      // 文件已存在
+                      file.setStatus("complete");
+                      uploader.owner.skipFile(file);
+                      $("#status" + file.id).text("文件秒传成功；");
+                      // 上传成功，通知父组件
+                      $this.$emit("uploadSuccess", json.data.data);
+                      // deferred.reject();
+                      deferred.resolve();
                     } else {
-                      $("#status" + file.id).text("上传失败");
                       console.log(json.data.msg);
                       deferred.reject();
                     }
-                  })
-                  .catch(err => {
-                    $("#status" + file.id).text("文件合成失败");
                   });
-              } else {
-                // 秒传
-                deferred.resolve();
-              }
+              });
+            return deferred.promise();
+          },
+          // 时间点2：如果有分块上传，则每个分块上传之前调用此函数
+          beforeSend: block => {
+            // var $this = this;
+            const deferred = WebUploader.Deferred();
+            const file = block.file; // 获取分片所属的文件对象
 
-              return deferred.promise();
+            new WebUploader.Uploader()
+              .md5File(file, block.start, block.end)
+              .then(md5 => {
+                // 判断分块是否存在
+                const getData = Object.assign(
+                  {},
+                  request.arg_file_judgeFileChunkExisted,
+                  {
+                    fileMd5: this.file.fileMd5,
+                    chunkMd5: md5,
+                    objectId: this.file.objectId,
+                    chunkIndexStr: block.chunk.toString()
+                  }
+                );
+                this.uploader.options.formData = Object.assign(this.file, {
+                  // file,
+                  chunkMd5: md5,
+                  chunkSizeStr: file.size.toString(),
+                  chunkIndexStr: block.chunk.toString()
+                });
+                this.$post(
+                  request.url_file_judgeFileChunkExisted,
+                  getData
+                ).then(json => {
+                  // this.file = Object.assign(this.file, {
+                  //   // file,
+                  //   chunkMd5: md5,
+                  //   chunkSizeStr: file.size.toString(),
+                  //   chunkIndexStr: block.chunk.toString()
+                  // });
+
+                  if (json.data.code == 200) {
+                    if (json.data.data.isExisted) {
+                      // 块存在
+                      deferred.reject();
+                      this.file.file = "";
+                    } else {
+                      //块不存在
+                      deferred.resolve();
+                    }
+                  } else {
+                    console.log(json.data.msg);
+                    // 上传失败
+                    // deferred.resolve();
+                  }
+                });
+              });
+            return deferred.promise();
+          },
+          // 时间点3：上传完成
+          afterSendFile: (file, ret) => {
+            const deferred = WebUploader.Deferred();
+
+            // 不是秒传，走完成接口
+            if (this.file.fileMd5) {
+              // 开始构造后台所需要的参数
+              const getData = Object.assign(
+                {},
+                request.arg_file_completeUpload2Server,
+                {
+                  objectId: this.file.objectId,
+                  fileName: this.file.fileName,
+                  fileSizeStr: this.file.fileSizeStr,
+                  fileMd5: this.file.fileMd5,
+                  directoryId: this.file.directoryId,
+                  projectId: this.file.projectId,
+                  chunksCountStr: Math.ceil(file.size / this.options.chunkSize)
+                }
+              );
+              this.$post(request.url_file_completeUpload2Server, getData)
+                .then(json => {
+                  if (json.data.code == 200) {
+                    $("#status" + file.id).text("上传成功");
+                    deferred.resolve();
+                    // 上传成功，通知父组件
+                    $this.$emit("uploadSuccess", json.data.data);
+                  } else {
+                    $("#status" + file.id).text("上传失败");
+                    console.log(json.data.msg);
+                    deferred.reject();
+                  }
+                })
+                .catch(err => {
+                  $("#status" + file.id).text("文件合成失败");
+                });
+            } else {
+              // 秒传
+              deferred.resolve();
             }
+
+            return deferred.promise();
           }
-        );       
-      
+        }
+      );
     },
+    //实例化webuploader
     initWebUpload() {
       $(".upload-file").css("display", "block"); //初始化之前将父级元素.upload-file设为block，解决初始化后不可选择文件的bug
       const options = this.options;
@@ -381,18 +401,14 @@ export default {
       this.uploader.on("uploadError", (file, reason) => {});
 
       this.uploader.on("error", type => {
-        let errorMessage = "";
-        if (type === "F_EXCEED_SIZE") {
-          errorMessage = `文件大小不能超过${this.fileSingleSizeLimit /
-            (1024 * 1000)}M`;
-        } else if (type === "Q_EXCEED_NUM_LIMIT") {
-          errorMessage = "文件上传已达到最大上限数";
-        } else {
-          errorMessage = `上传出错！请检查后重新上传！错误代码${type}`;
+        if (type === "Q_EXCEED_NUM_LIMIT") {
+          this.$message.error('文件上传已达到最大上限数')
+        } else if (type === "Q_EXCEED_SIZE_LIMIT") {
+          this.$message.error('文件总大小不能超过'+this.options.fileSizeLimit)
+          return false;
+        } else if(type === "F_EXCEED_SIZE") {
+          this.$message.error('单个文件大小不能超过'+this.options.fileSingleSizeLimit)
         }
-
-        console.error(errorMessage);
-        // this.$emit('error', errorMessage);
       });
 
       this.uploader.on("uploadComplete", (file, response) => {
@@ -407,11 +423,18 @@ export default {
       this.uploader.on("statuschange", () => {
         // console.log(arguments);
       });
-      this.uploader.on("beforeFileQueued", () => {
+      this.uploader.on("beforeFileQueued", (file) => {
         if (this.title == "" || this.description == "") {
           this.$message.error("请先填写附件标题或描述！");
           return false;
         }
+        console.log();
+        
+        if(file.size > this.options.fileSingleSizeLimit){
+          this.$message.error('单个文件大小不能超过'+this.options.fileSingleSizeLimit/1024/1024+'M');
+          return false;
+        }
+        
       });
     },
     upload(file) {

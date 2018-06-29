@@ -38,9 +38,13 @@
                 <i class="el-icon-refresh" @click="refresh" ref="refresh"></i>
               </div>
               <div class="content">
-                <div class="item" v-for="item in info" :key="item.id" @click="select(item)">
+                <div class="item" v-for="item in info" :key="item.id" @click="select(item)" v-if="info.length">
                     <img :src="formatUrl(item.url,'/160')" alt=""> 
                     <p class="title">{{item.title}}</p>   
+                </div>
+                <!-- 当列表为空时显示 -->
+                <div class="no-data" v-else>
+                  暂无数据
                 </div>           
               </div>
               <div class="footer">
@@ -193,7 +197,9 @@ export default {
     select(item) {
       this.currentValue = item.id;
       this.label = item.title;
-      this.imageUrl = item.url;
+      if (item.type == 1) {
+        this.imageUrl = item.url;
+      }
       this.isShow = false;
     },
     //处理sizeChange
@@ -333,6 +339,12 @@ export default {
         overflow: hidden;
         text-align: center;
       }
+    }
+    .no-data{
+      font-size: 20px;
+      line-height: 300px;
+      text-align: center;
+      color: #909399;
     }
   }
   .select-file {
