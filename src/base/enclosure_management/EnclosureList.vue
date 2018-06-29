@@ -8,14 +8,14 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter">
-        <el-select v-model="siteValue" clearable placeholder="所属站点" size="mini" class="float-left state-selection" @change="getData">
+        <el-select v-model="siteValue" clearable placeholder="所属站点" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
           <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
-        <el-select v-model="typeValue" clearable placeholder="文件分类" size="mini" class="float-left state-selection">
+        <!-- <el-select v-model="typeValue" clearable placeholder="文件分类" size="mini" class="float-left state-selection">
           <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
+        </el-select> -->
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-          <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
         </el-input>
       </div>
       <!-- 表格 -->
@@ -176,6 +176,7 @@ export default {
       let data = {
         site_id: this.siteValue,
         type: "",
+        keyword:this.titleSearchValue,
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize
       };
@@ -207,8 +208,6 @@ export default {
         }
       });
     },
-    //检索
-    articleSearch() {},
     //删除表格行
     deleteRow(index, rows) {
       this.$confirm("此操作将删除该文件, 是否继续?", "提示", {
@@ -283,7 +282,7 @@ export default {
       this.getData();
     }
   },
-    filters: {
+  filters: {
     fileSize: function(value) {
       if (null == value || value == "") {
         return "0 Bytes";
@@ -306,7 +305,7 @@ export default {
       size = size.toFixed(2); //保留的小数位数
       return size + unitArr[index];
     }
-  },
+  }
 };
 </script>
 

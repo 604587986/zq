@@ -10,7 +10,7 @@
           <el-button size="mini" type="primary">添加单页</el-button>
         </router-link>
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-          <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
         </el-input>
       </div>
       <!-- 表格 -->

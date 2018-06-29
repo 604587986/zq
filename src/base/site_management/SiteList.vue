@@ -12,7 +12,7 @@
           <el-button size="mini" type="primary">添加站点</el-button>
         </router-link>
         <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-          <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
         </el-input>
       </div>
       <!-- 表格 -->
@@ -174,8 +174,6 @@ export default {
     del(id) {
       this.$message("删除：" + id);
     },
-    //检索
-    articleSearch() {},
     //处理sizeChange
     handleSizeChange(val) {
       this.currentPaging.pageSize = val;

@@ -7,3 +7,10 @@ export function logList(data) {
         console.log(err);
     })
 }
+export function clearLog(data) {
+    return axios.post('/api/log/delete', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}
