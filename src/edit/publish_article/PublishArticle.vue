@@ -47,11 +47,9 @@
                 <el-radio label="置顶"></el-radio>
             </el-radio-group>
         </el-form-item> -->
-        <!-- <el-form-item label="来源" class="form-item" prop="comeFrom">
-            <el-select v-model="form.comeFrom" placeholder="请选择栏目" style="width:100%;">
-                <el-option v-for="item in sourceList" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
-            </el-select>
-        </el-form-item> -->
+        <el-form-item label="文章标签" class="form-item" prop="comeFrom">
+            <tag @change="getTags"></tag>
+        </el-form-item>
         <el-form-item label="文章内容">
           <quill-editor 
                 v-model="form.content" 
@@ -86,6 +84,7 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import FilePicker from "@/components/FilePicker";
+import Tag from "@/components/Tag";
 
 import { createArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -108,13 +107,13 @@ export default {
       categoryList: [],
       //编辑器配置
       editorOption: {
-        placeholder:'请输入文章内容',
+        placeholder: "请输入文章内容"
       },
       form: {
         id: "",
         title: "",
         name: "",
-        image_id:'',
+        image_id: "",
         // state: "",
         // state_verify: "",
         // image_id: "",
@@ -224,6 +223,11 @@ export default {
           return false;
         }
       });
+    },
+    //获取标签
+    getTags(val) {
+      console.log(val);
+      
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -243,9 +247,11 @@ export default {
       next();
     }
   },
+
   components: {
     Crumb,
-    FilePicker
+    FilePicker,
+    Tag
   }
 };
 </script>

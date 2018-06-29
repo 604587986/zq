@@ -45,6 +45,9 @@
         <el-form-item label="更新时间:">
           <el-input v-model="form.update_time" disabled></el-input>
         </el-form-item>
+        <el-form-item label="文章标签:">
+          <tag @change="getTags"></tag>
+        </el-form-item>
         <el-form-item label="文章内容:">
             <quill-editor 
                 v-model="form.content" 
@@ -65,6 +68,7 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
+import Tag from "@/components/Tag";
 
 import { editArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -126,7 +130,8 @@ export default {
   components: {
     Crumb,
     Instructions,
-    FilePicker
+    FilePicker,
+    Tag
   },
   mounted: function() {
     //获取信息
@@ -152,29 +157,33 @@ export default {
         that.subLoading = true;
         if (valid) {
           let data = {
-            id:that.form.id,
-            title:that.form.title,
-            category_id:that.form.category_id,
-            author:that.form.author,
-            photo:that.form.photo,
-            content:that.form.content,
-            image_id:that.form.image_id
-          }
-          saveArticle(data).then(res=>{
+            id: that.form.id,
+            title: that.form.title,
+            category_id: that.form.category_id,
+            author: that.form.author,
+            photo: that.form.photo,
+            content: that.form.content,
+            image_id: that.form.image_id
+          };
+          saveArticle(data).then(res => {
             that.subLoading = false;
             if (res.data.code == 200) {
-              that.$message.success('提交成功');
-              that.getData()
-            }else{
-              that.$message.error(res.data.message)
+              that.$message.success("提交成功");
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
             }
-          })
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");
           return false;
         }
       });
+    },
+    //获取标签
+    getTags(val) {
+      console.log(val);
     }
   }
 };
@@ -182,4 +191,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+.tag {
+  margin-right: 10px;
+}
 </style>
