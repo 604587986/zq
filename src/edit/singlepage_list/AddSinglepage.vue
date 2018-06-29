@@ -28,7 +28,7 @@
         </el-form-item>
         <el-form-item label="附加数据(分类):">
           <!-- 分类 -->
-          <div v-for="(row,index) in this.form.data.category" :key="row.id" style="margin-bottom:10px">
+          <div v-for="(row,index) in this.form.data.category" :key="createKey(index)" style="margin-bottom:10px">
             <span>分类：</span>
             <el-select v-model="row.id" size="mini" placeholder="请选择分类" :popper-append-to-body="false">
               <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
@@ -43,7 +43,7 @@
         </el-form-item>
         <el-form-item label="附加数据(图片):">
           <!-- 图片 -->
-          <div v-for="(row,index) in this.form.data.image" :key="row.id" style="margin:10px 0">
+          <div v-for="(row,index) in this.form.data.image" :key="createKey(index)" style="margin:10px 0">
             <span>图片:</span>
             <el-tag>id：{{row.id}}</el-tag>
             <file-picker style="display:inline-block" v-model="row.id"></file-picker>
@@ -257,6 +257,10 @@ export default {
     //新增一行附加数据：图片
     add_image() {
       this.form.data.image.push({ id: "" });
+    },
+    // 生成循环时所需唯一数（用于绑定key）
+    createKey(a){
+      return new Date().getTime()+a
     }
   }
 };
