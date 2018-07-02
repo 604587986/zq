@@ -45,6 +45,9 @@
         <el-form-item label="更新时间:">
           <el-input v-model="form.update_time" disabled></el-input>
         </el-form-item>
+        <el-form-item label="文章标签" class="form-item" prop="comeFrom">
+            <tag @change="getTags"></tag>
+        </el-form-item>
         <el-form-item label="文章内容:">
             <quill-editor 
                 v-model="form.content" 
@@ -65,6 +68,7 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
+import Tag from "@/components/Tag";
 
 import { editArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -80,7 +84,8 @@ export default {
         },
         {
           name: "文章列表",
-          url: "/pages/system_administrators/System_Administrators/ContentManagement"
+          url:
+            "/pages/system_administrators/System_Administrators/ContentManagement"
         },
         {
           name: "编辑文章",
@@ -126,7 +131,8 @@ export default {
   components: {
     Crumb,
     Instructions,
-    FilePicker
+    FilePicker,
+    Tag
   },
   mounted: function() {
     //获取信息
@@ -178,6 +184,10 @@ export default {
           return false;
         }
       });
+    },
+    //获取标签
+    getTags(val) {
+      console.log(val);
     }
   }
 };
