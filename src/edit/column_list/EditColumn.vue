@@ -14,11 +14,11 @@
         <el-form-item label="英文名称：">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="所属站点：">
+        <!-- <el-form-item label="所属站点：">
           <el-select v-model="form.site_id" size="mini">
             <el-option v-for="item in siteList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="类型：">
           <el-select v-model="form.type" size="mini">
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
