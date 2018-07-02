@@ -28,18 +28,28 @@
         </el-form-item>
         <el-form-item label="附加数据(分类):">
           <!-- 分类 -->
-          <div v-for="(row,index) in this.form.data.category" :key="createKey(index)" style="margin-bottom:10px">
+          <div v-for="(row,index) in this.form.data.category" :key="row.id" style="margin-bottom:10px">
             <span>分类：</span>
             <el-select v-model="row.id" size="mini" placeholder="请选择分类" :popper-append-to-body="false">
               <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
             </el-select>
-            <span>尺寸：</span>
+            <span>列表数量：</span>
               <el-input  v-model="row.size" style="width:auto"></el-input>
-            <span>宽度：</span>
-              <el-input  v-model="row.width" style="width:auto"></el-input>
-              <el-button @click="del(index)" size="mini" type="danger">删除本条</el-button>
+              <el-button @click="del_category(index)" size="mini" type="danger">删除本条</el-button>
           </div> 
-          <div><el-button @click="add()" size="mini" type="success">新增</el-button></div>
+          <div><el-button @click="add_category()" size="mini" type="success">新增</el-button></div>
+        </el-form-item>
+        <el-form-item label="附加数据(链接):">
+          <!-- 链接 -->
+          <div v-for="(row,index) in this.form.data.link" :key="row.id" style="margin-bottom:10px">
+            <span>链接：</span>
+            <span>标题：</span>
+              <el-input  v-model="row.title" style="width:auto"></el-input>
+            <span>地址：</span>
+              <el-input  v-model="row.url" style="width:auto"></el-input>
+              <el-button @click="del_link(index)" size="mini" type="danger">删除本条</el-button>
+          </div> 
+          <div><el-button @click="add_link()" size="mini" type="success">新增</el-button></div>
         </el-form-item>
         <el-form-item label="附加数据(图片):">
           <!-- 图片 -->
@@ -50,6 +60,16 @@
             <el-button @click="del_image(index)" size="mini" type="danger">删除本条</el-button>
           </div>
           <div><el-button @click="add_image()" size="mini" type="success">新增</el-button></div>
+        </el-form-item>
+        <el-form-item label="附加数据(视频):">
+          <!-- 视频 -->
+          <div v-for="(row,index) in this.form.data.movie" :key="createKey(index)" style="margin:10px 0">
+            <span>视频:</span>
+            <el-tag>id：{{row.id}}</el-tag>
+            <file-picker style="display:inline-block" v-model="row.id"></file-picker>
+            <el-button @click="del_movie(index)" size="mini" type="danger">删除本条</el-button>
+          </div>
+          <div><el-button @click="add_movie()" size="mini" type="success">新增</el-button></div>
         </el-form-item>
         <el-form-item label="页面内容:">
             <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
@@ -67,7 +87,7 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
-import Tinymce from "@/components/Tinymce"
+import Tinymce from "@/components/Tinymce";
 
 import { addPage } from "@/api/single_page/single";
 import { getCategoryList } from "@/api/category/category";
@@ -106,7 +126,7 @@ export default {
       //提交按钮loading
       subLoading: false,
       //表单
-      form: { data: { category: [], image: [] } },
+      form: { data: { category: [],link: [], image: [] ,movie:[] }},
       //表单验证
       rules: {
         account: [
@@ -205,11 +225,17 @@ export default {
         that.subLoading = true;
         if (valid) {
           //将form.data.image转换为不带id的数组
-          let arr = [];
+          let arr1 = [];
           for(let i in that.form.data.image){
-            arr.push(that.form.data.image[i].id)
+            arr1.push(that.form.data.image[i].id)
           }
-          that.form.data.image = arr;
+          that.form.data.image = arr1;
+          //将form.data.movie转换为不带id的数组
+          let arr2 = [];
+          for(let i in that.form.data.movie){
+            arr2.push(that.form.data.movie[i].id)
+          }
+          that.form.data.movie = arr2;
           //将附加数据（json）转换为字符串
           that.form.data = JSON.stringify(that.form.data);
           addPage(that.form).then(res => {
@@ -239,12 +265,20 @@ export default {
       });
     },
     //删除一行附加数据：分类
-    del(index) {
+    del_category(index) {
       this.form.data.category.splice(index, 1);
     },
     //新增一行附加数据：分类
-    add() {
-      this.form.data.category.push({ id: "", size: "", width: "" });
+    add_category() {
+      this.form.data.category.push({ id: "", size: ""});
+    },
+    //删除一行附加数据：链接
+    del_link(index) {
+      this.form.data.link.splice(index, 1);
+    },
+    //新增一行附加数据：链接
+    add_link() {
+      this.form.data.link.push({ title: "", url: ""});
     },
     //删除一行附加数据：图片
     del_image(index) {
@@ -253,6 +287,14 @@ export default {
     //新增一行附加数据：图片
     add_image() {
       this.form.data.image.push({ id: "" });
+    },
+    //删除一行附加数据：视频
+    del_movie(index) {
+      this.form.data.movie.splice(index, 1);
+    },
+    //新增一行附加数据：视频
+    add_movie() {
+      this.form.data.movie.push({ id: "" });
     },
     // 生成循环时所需唯一数（用于绑定key）
     createKey(a){

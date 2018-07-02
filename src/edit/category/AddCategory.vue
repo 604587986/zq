@@ -32,7 +32,7 @@
         <el-form-item label="内容页文件命名规则:">
           <el-input v-model="form.content_pattern"></el-input>
         </el-form-item>
-        <el-form-item label="页面数量:">
+        <el-form-item label="分类列表数量:">
           <el-input-number v-model="form.page_size" :min="5" :max="100"></el-input-number>
         </el-form-item>
 
@@ -56,7 +56,7 @@ export default {
   name: "AddCategory",
   data() {
     return {
-      haha:'',
+      haha: "",
       //面包屑
       crumbs: [
         {
@@ -70,7 +70,7 @@ export default {
         {
           name: "添加分类",
           url: ""
-        },
+        }
       ],
       //使用说明
       instructionsInfo: [
@@ -88,7 +88,7 @@ export default {
 
       //表单
       form: {
-       
+        parent_id: 0
       },
       //表单验证
       rules: {
@@ -149,12 +149,12 @@ export default {
             trigger: "blur"
           }
         ]
-      },
+      }
     };
   },
   components: {
     Crumb,
-    Instructions,
+    Instructions
   },
   mounted: function() {
     //侧边导航定位
@@ -168,14 +168,14 @@ export default {
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-          toAddCategory(that.form).then(res=>{
+          toAddCategory(that.form).then(res => {
             that.subLoading = false;
-            if(res.data.code == 200){              
-              that.$message.success('添加成功')
-            }else{
-              that.$message.error(res.data.message)
+            if (res.data.code == 200) {
+              that.$message.success("添加成功");
+            } else {
+              that.$message.error(res.data.message);
             }
-          })
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");
@@ -189,4 +189,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+
 </style>

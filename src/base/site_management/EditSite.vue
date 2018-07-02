@@ -17,12 +17,12 @@
           </el-select>
           <a href="javascript:void(0);" class="item-a">类别管理</a>
         </el-form-item> -->
-        <el-form-item label="所属部门：" prop="department_id">
+        <!-- <el-form-item label="所属部门：" prop="department_id">
           <el-select v-model="form.department_id" placeholder="所属部门" size="mini">
             <el-option v-for="item in department_list" :key="item.id" :label="item.label" :value="item.id"></el-option>
           </el-select>
           <a href="javascript:void(0);" class="item-a">部门管理</a>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="编码：">
           <el-input v-model="form.code"></el-input>
         </el-form-item>
@@ -32,7 +32,7 @@
         </el-form-item>
         <el-form-item label="域名：">
           <el-input v-model="form.domain"></el-input>
-          <span class="site-item-info">网站绑定的域名。必须以http开头，例：http://jwc.caa.edu.cn</span>
+          <span class="site-item-info">网站绑定的域名。jwc.caa.edu.cn</span>
         </el-form-item>
         <el-form-item label="是否启用HTTPS：">
           <el-radio-group v-model="form.domain_https">
@@ -43,12 +43,12 @@
         <el-form-item label="网站关键字：">
           <el-input v-model="form.keywords"></el-input>
         </el-form-item>
-        <el-form-item label="选择站点管理员：">
+        <!-- <el-form-item label="选择站点管理员：">
           <el-select v-model="form.user_id" placeholder="选择站点管理员" size="mini">
             <el-option v-for="item in siteAdministrator" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <a href="javascript:void(0);" class="item-a">新建管理员</a>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="网站描述：">
           <el-input v-model="form.description" type="textarea" :rows="2"></el-input>
         </el-form-item>
