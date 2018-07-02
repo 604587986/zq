@@ -248,6 +248,9 @@ export default {
                       uploader.owner.skipFile(file);
                       $("#status" + file.id).text("文件秒传成功；");
                       // 上传成功，通知父组件
+                      $this.fileList = []; //重置队列
+                      $this.title = "";
+                      $this.description = "";
                       $this.$emit("uploadSuccess", json.data.data);
                       // deferred.reject();
                       deferred.resolve();
@@ -261,6 +264,9 @@ export default {
                       uploader.owner.skipFile(file);
                       $("#status" + file.id).text("文件秒传成功；");
                       // 上传成功，通知父组件
+                      $this.fileList = []; //重置队列
+                      $this.title = "";
+                      $this.description = "";
                       $this.$emit("uploadSuccess", json.data.data);
                       // deferred.reject();
                       deferred.resolve();
@@ -353,6 +359,9 @@ export default {
                     $("#status" + file.id).text("上传成功");
                     deferred.resolve();
                     // 上传成功，通知父组件
+                    $this.fileList = []; //重置队列
+                    $this.title = "";
+                    $this.description = "";
                     $this.$emit("uploadSuccess", json.data.data);
                   } else {
                     $("#status" + file.id).text("上传失败");

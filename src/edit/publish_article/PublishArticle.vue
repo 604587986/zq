@@ -51,13 +51,7 @@
             <tag @change="getTags"></tag>
         </el-form-item>
         <el-form-item label="文章内容">
-          <quill-editor 
-                v-model="form.content" 
-                ref="myQuillEditor" 
-                :options="editorOption" 
-                @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
-                @change="onEditorChange($event)">
-          </quill-editor>
+          <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
         </el-form-item>
         <!-- <el-form-item label="文章排序" class="form-item" prop="sort">
           <el-input v-model.number="form.sort"></el-input>
@@ -85,6 +79,7 @@
 import Crumb from "@/components/Crumb";
 import FilePicker from "@/components/FilePicker";
 import Tag from "@/components/Tag";
+import Tinymce from "@/components/Tinymce"
 
 import { createArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -105,10 +100,6 @@ export default {
       ],
       //分类列表
       categoryList: [],
-      //编辑器配置
-      editorOption: {
-        placeholder: "请输入文章内容"
-      },
       form: {
         id: "",
         title: "",
@@ -174,15 +165,6 @@ export default {
     this.toCreate();
   },
   methods: {
-    onEditorBlur() {
-      //失去焦点事件
-    },
-    onEditorFocus() {
-      //获得焦点事件
-    },
-    onEditorChange() {
-      //内容改变事件
-    },
     //文章预创建
     toCreate() {
       createArticle().then(res => {
@@ -251,7 +233,8 @@ export default {
   components: {
     Crumb,
     FilePicker,
-    Tag
+    Tag,
+    Tinymce
   }
 };
 </script>
