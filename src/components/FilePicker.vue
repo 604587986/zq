@@ -3,7 +3,12 @@
         <div class="my-input">
             <el-input  v-bind:value="currentValue" style="display:none"></el-input>
             <el-input @focus="showWrapper" readonly  placeholder="请选择" :value="label"></el-input>
+            <!-- 图片预览 -->
             <img v-if="imageUrl" :src="formatUrl(imageUrl,'/160x160')" alt="">
+            <!-- 文档地址 -->
+            <a v-if="docUrl" :href="docUrl" target="_blank">文档链接</a>
+            <!-- 视频预览 -->
+            <video v-if="videoUrl" :src="videoUrl" controls></video>
             <slot name="img" v-if="!imageUrl"></slot>
         </div>
         <div id="file-picker" v-if="isShow">
@@ -39,8 +44,18 @@
               </div>
               <div class="content">
                 <div class="item" v-for="item in info" :key="item.id" @click="select(item)" v-if="info.length">
+                  <div v-if="item.type == 1">
                     <img :src="formatUrl(item.url,'/160')" alt=""> 
-                    <p class="title">{{item.title}}</p>   
+                    <p class="title">{{item.title}}</p>
+                  </div>   
+                  <div v-if="item.type == 2">
+                    <p class="title">{{item.title}}</p>
+                    <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                  </div>   
+                  <div v-if="item.type == 3">
+                    <p class="title">{{item.title}}</p>
+                    <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                  </div>   
                 </div>
                 <!-- 当列表为空时显示 -->
                 <div class="no-data" v-else>
@@ -97,16 +112,10 @@ export default {
       },
       //图片预览
       imageUrl: "",
-      // fileData: {
-      //   type: 1,
-      //   ext: "",
-      //   // size:"",
-      //   size_w: "",
-      //   size_h: "",
-      //   title: "",
-      //   origin: "",
-      //   description: ""
-      // },
+      //文档预览
+      docUrl: "",
+      //视频预览
+      videoUrl: "",
       //判断当前是选择文件还是上传文件,1为选择，2为上传
       currentIndex: 1,
       //附件内容
@@ -197,8 +206,19 @@ export default {
     select(item) {
       this.currentValue = item.id;
       this.label = item.title;
+      //生成预览路径
       if (item.type == 1) {
         this.imageUrl = item.url;
+        this.docUrl = "";
+        this.videoUrl = "";
+      } else if (item.type == 2) {
+        this.docUrl = item.url;
+        this.imageUrl = "";
+        this.videoUrl = "";
+      } else {
+        this.videoUrl = item.url;
+        this.imageUrl = "";
+        this.docUrl = "";
       }
       this.isShow = false;
     },
@@ -245,12 +265,23 @@ export default {
         reader.readAsDataURL(file);
       });
     },
-    //上传成功后
+    //监听上传成功事件
     handleUpload(item) {
       this.currentValue = item.id;
       this.label = item.title;
+      //生成预览路径
       if (item.type == 1) {
         this.imageUrl = item.url;
+        this.docUrl = "";
+        this.videoUrl = "";
+      } else if (item.type == 2) {
+        this.docUrl = item.url;
+        this.imageUrl = "";
+        this.videoUrl = "";
+      } else {
+        this.videoUrl = item.url;
+        this.imageUrl = "";
+        this.docUrl = "";
       }
       this.isShow = false;
     },
@@ -340,7 +371,7 @@ export default {
         text-align: center;
       }
     }
-    .no-data{
+    .no-data {
       font-size: 20px;
       line-height: 300px;
       text-align: center;

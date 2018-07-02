@@ -1,6 +1,13 @@
 <template>
   <div id="my-upload">
       <el-form>
+        <el-form-item label="附件类型：" class="form-item">
+          <el-radio-group v-model="type">
+            <el-radio :label="1">图片</el-radio>
+            <el-radio :label="2">文档</el-radio>
+            <el-radio :label="3">视频</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="附件标题：" class="form-item">
           <el-input v-model="title"></el-input>
         </el-form-item>
@@ -92,11 +99,15 @@ export default {
   data() {
     return {
       options: {
-        auto: false,
+        auto: true,
         url: request.url_file_uploadChunks2Server,
         button: "#picker" + new Date().getTime(),
         multiple: true,
-        accept: "*",
+        accept: {
+          title: "Images",
+          extensions: "gif,jpg,jpeg,bmp,png",
+          mimeTypes: "image/*"
+        },
         threads: 1,
         fileNumLimit: 1,
         formData: request.arg_file_uploadChunks2Server,
@@ -110,14 +121,42 @@ export default {
       //附件标题
       title: "",
       //附件描述
-      description: ""
+      description: "",
+      //附件类型
+      type: 1,
+      //从服务器获取的类型列表
+      typeList: {}
     };
   },
   watch: {
-    uploader: function() {
-      setTimeout(function() {
-        $(".upload-file").css("display", "none"); //初始化之前将父级元素.upload-file设为block，解决初始化后不可选择文件的bug
-      },20);
+    // uploader: function() {
+    //   setTimeout(function() {
+    //     $(".upload-file").css("display", "none"); //初始化之前将父级元素.upload-file设为block，解决初始化后不可选择文件的bug
+    //   }, 20);
+    // },
+    //监听上传附件类型，重新设置accept
+    type: function(val) {
+      switch (val) {
+        case 1:
+          this.options.accept = {
+            extensions: this.typeList[1].ext,
+            mimeTypes: this.typeList[1].mime
+          };
+          break;
+        case 2:
+          this.options.accept = {
+            extensions: this.typeList[2].ext,
+            mimeTypes: this.typeList[2].mime
+          };
+          break;
+        case 3:
+          this.options.accept = {
+            extensions: this.typeList[3].ext,
+            mimeTypes: this.typeList[3].mime
+          };
+          break;
+      }
+      this.initWebUpload();
     }
   },
   mounted() {
@@ -129,13 +168,16 @@ export default {
     getOption() {
       this.$http.get("/api/attachment/upload_init").then(res => {
         if (res.data.code == 200) {
+          //保存接收的文件类型
+          this.typeList = res.data.data.accept;
+          //
           this.options = Object.assign(this.options, {
-            chunkRetry: 1,
-            chunkSize: 2097152,
-            chunked: true,
-            fileNumLimit: 2,
-            fileSingleSizeLimit: 52428800,
-            fileSizeLimit: 52428800
+            chunkRetry: res.data.data.chunkRetry,
+            chunkSize: res.data.data.chunkSize,
+            chunked: res.data.data.chunked,
+            fileNumLimit: res.data.data.fileNumLimit,
+            fileSingleSizeLimit: res.data.data.fileSingleSizeLimit,
+            fileSizeLimit: res.data.data.fileSizeLimit
           });
           this.initWebUpload();
         }
@@ -177,7 +219,8 @@ export default {
                     directoryId: 58,
                     projectId: 58,
                     title: $this.title,
-                    description: $this.description
+                    description: $this.description,
+                    type: $this.type
                   }
                 );
                 $this
@@ -367,7 +410,30 @@ export default {
 
       this.uploader.on("uploadStart", file => {
         // 在这里可以准备好formData的数据
-        // this.uploader.options.formData.key = this.keyGenerator(file);
+        // var accept = {};
+        // switch(this.type){
+        //   case 1:
+        //   accept = {
+        //     extensions:this.typeList[1].ext,
+        //     // mimeTypes:this.typeList[1].mine
+        //     mimeTypes:'image/*'
+        //   }
+        //   break;
+        //   case 2:
+        //   accept = {
+        //     extensions:this.typeList[2].ext,
+        //     mimeTypes:this.typeList[2].mine
+        //   }
+        //   break;
+        //   case 3:
+        //   accept = {
+        //     extensions:this.typeList[3].ext,
+        //     mimeTypes:this.typeList[3].mime
+        //   }
+        //   break;
+        // }
+        // console.log(accept);
+        // this.uploader.options.formData.type  = this.type;
       });
 
       this.uploader.on("startUpload", file => {
@@ -402,12 +468,16 @@ export default {
 
       this.uploader.on("error", type => {
         if (type === "Q_EXCEED_NUM_LIMIT") {
-          this.$message.error('文件上传已达到最大上限数')
+          this.$message.error("文件上传已达到最大上限数");
         } else if (type === "Q_EXCEED_SIZE_LIMIT") {
-          this.$message.error('文件总大小不能超过'+this.options.fileSizeLimit)
+          this.$message.error(
+            "文件总大小不能超过" + this.options.fileSizeLimit
+          );
           return false;
-        } else if(type === "F_EXCEED_SIZE") {
-          this.$message.error('单个文件大小不能超过'+this.options.fileSingleSizeLimit)
+        } else if (type === "F_EXCEED_SIZE") {
+          this.$message.error(
+            "单个文件大小不能超过" + this.options.fileSingleSizeLimit
+          );
         }
       });
 
@@ -423,18 +493,21 @@ export default {
       this.uploader.on("statuschange", () => {
         // console.log(arguments);
       });
-      this.uploader.on("beforeFileQueued", (file) => {
+      this.uploader.on("beforeFileQueued", file => {
         if (this.title == "" || this.description == "") {
           this.$message.error("请先填写附件标题或描述！");
           return false;
         }
         console.log();
-        
-        if(file.size > this.options.fileSingleSizeLimit){
-          this.$message.error('单个文件大小不能超过'+this.options.fileSingleSizeLimit/1024/1024+'M');
+
+        if (file.size > this.options.fileSingleSizeLimit) {
+          this.$message.error(
+            "单个文件大小不能超过" +
+              this.options.fileSingleSizeLimit / 1024 / 1024 +
+              "M"
+          );
           return false;
         }
-        
       });
     },
     upload(file) {
