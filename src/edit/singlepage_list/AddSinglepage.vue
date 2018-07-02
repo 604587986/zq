@@ -52,11 +52,7 @@
           <div><el-button @click="add_image()" size="mini" type="success">新增</el-button></div>
         </el-form-item>
         <el-form-item label="页面内容:">
-            <quill-editor 
-                v-model="form.content" 
-                ref="myQuillEditor" 
-                :options="editorOption" >
-          </quill-editor>
+            <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
@@ -71,6 +67,7 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
+import Tinymce from "@/components/Tinymce"
 
 import { addPage } from "@/api/single_page/single";
 import { getCategoryList } from "@/api/category/category";
@@ -110,8 +107,6 @@ export default {
       subLoading: false,
       //表单
       form: { data: { category: [], image: [] } },
-      //编辑器配置
-      editorOption: {},
       //表单验证
       rules: {
         account: [
@@ -195,7 +190,8 @@ export default {
   components: {
     Crumb,
     Instructions,
-    FilePicker
+    FilePicker,
+    Tinymce
   },
   mounted: function() {
     //获取分类列表

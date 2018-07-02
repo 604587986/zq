@@ -49,11 +49,7 @@
             <tag @change="getTags"></tag>
         </el-form-item>
         <el-form-item label="文章内容:">
-            <quill-editor 
-                v-model="form.content" 
-                ref="myQuillEditor" 
-                :options="editorOption" >
-          </quill-editor>
+            <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
@@ -69,6 +65,8 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
 import Tag from "@/components/Tag";
+import Tinymce from "@/components/Tinymce"
+
 
 import { editArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -132,7 +130,9 @@ export default {
     Crumb,
     Instructions,
     FilePicker,
-    Tag
+    Tag,
+    Tinymce
+    
   },
   mounted: function() {
     //获取信息

@@ -93,6 +93,7 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
+
 import {
   getArticleList,
   verifyArticle,
@@ -188,7 +189,7 @@ export default {
   components: {
     Crumb,
     Instructions,
-    Paging
+    Paging,
   },
   mounted: function() {
     this.getData();
