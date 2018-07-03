@@ -197,6 +197,7 @@ export default {
         {
           // 时间点1：所有分块进行上传之前调用此函数
           beforeSendFile: function(file) {
+            $this.title = file.name
             const deferred = WebUploader.Deferred();
             const uploader = this;
             new WebUploader.Uploader()
@@ -503,11 +504,10 @@ export default {
         // console.log(arguments);
       });
       this.uploader.on("beforeFileQueued", file => {
-        if (this.title == "" || this.description == "") {
-          this.$message.error("请先填写附件标题或描述！");
-          return false;
-        }
-        console.log();
+        // if (this.title == "" || this.description == "") {
+        //   this.$message.error("请先填写附件标题或描述！");
+        //   return false;
+        // }
 
         if (file.size > this.options.fileSingleSizeLimit) {
           this.$message.error(

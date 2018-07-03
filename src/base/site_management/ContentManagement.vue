@@ -151,26 +151,6 @@ export default {
         }
       ],
       stateValue: 1,
-      //选择栏目
-      columnSelection: [
-        {
-          value: 0,
-          label: "学术交流"
-        },
-        {
-          value: 1,
-          label: "通知公告"
-        },
-        {
-          value: 2,
-          label: "下载中心"
-        },
-        {
-          value: 3,
-          label: "联系我们"
-        }
-      ],
-      columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
       //表格数据
