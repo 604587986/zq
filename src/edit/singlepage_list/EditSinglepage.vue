@@ -137,7 +137,7 @@ export default {
       subLoading: false,
       //表单
       form: {
-        data: { category: [],link: [], image: [] ,movie:[] ,attachment:[] }
+        data: { category: [], link: [], image: [], movie: [], attachment: [] }
       },
       //编辑器配置
       editorOption: {},
@@ -240,27 +240,56 @@ export default {
       editPage(data).then(res => {
         if (res.data.code == 200) {
           this.form = res.data.data;
-          //将将附加数据转为json格式
+          //将附加数据转为json格式
           this.form.data = eval("(" + this.form.data + ")");
           //将form.data.image 和form.data.movie和form.data.attachment转换为带id的数组
+          console.log(this.form.data);
+          
           if (this.form.data) {
-            let arr1 = [];
-            for (let i in this.form.data.image) {
-              arr1.push({ id: this.form.data.image[i] });
+            if (this.form.data.image) {
+              let arr1 = [];
+              for (let i in this.form.data.image) {
+                arr1.push({ id: this.form.data.image[i] });
+              }
+              this.form.data.image = arr1;
+            } else {
+              this.$set(this.form.data,'image',[])
             }
-            this.form.data.image = arr1;
-            let arr2 = [];
-            for (let i in this.form.data.movie) {
-              arr2.push({ id: this.form.data.movie[i] });
+            if (this.form.data.movie) {
+              let arr2 = [];
+              for (let i in this.form.data.movie) {
+                arr2.push({ id: this.form.data.movie[i] });
+              }
+              this.form.data.movie = arr2;
+            } else {
+              this.$set(this.form.data,'movie',[])
             }
-            this.form.data.movie = arr2;
-            let arr3 = [];
-            for (let i in this.form.data.attachment) {
-              arr3.push({ id: this.form.data.attachment[i] });
+            if (this.form.data.attachment) {
+              let arr3 = [];
+              for (let i in this.form.data.attachment) {
+                arr3.push({ id: this.form.data.attachment[i] });
+              }
+              this.form.data.attachment = arr3;
+            } else {
+              this.$set(this.form.data,'attachment',[])
             }
-            this.form.data.attachment = arr3;
+            if(!this.form.data.category){
+              this.$set(this.form.data,'category',[])
+            }
+            if(!this.form.data.link){
+              this.$set(this.form.data,'link',[])
+            }
+          
           } else {
-            this.form.data = { category: [], link: [], image: [], movie: [],attachment:[] };
+            this.form.data = {
+              category: [],
+              link: [],
+              image: [],
+              movie: [],
+              attachment: []
+            };
+            console.log(this.form.data);
+            
           }
         } else {
           this.$message.error(res.data.message);
@@ -327,6 +356,8 @@ export default {
     //新增一行附加数据：分类
     add_category() {
       this.form.data.category.push({ id: "", size: "" });
+      console.log(this.form.data);
+      
     },
     //删除一行附加数据：链接
     del_link(index) {
@@ -359,6 +390,8 @@ export default {
     //新增一行附加数据：附件
     add_attachment() {
       this.form.data.attachment.push({ id: "" });
+      console.log(this.form.data);
+      
     },
     // 生成循环时所需唯一数（用于绑定key）
     createKey(a) {
