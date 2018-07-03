@@ -45,16 +45,22 @@
               <div class="content">
                 <div class="item" v-for="item in info" :key="item.id" @click="select(item)" v-if="info.length">
                   <div v-if="item.type == 1">
-                    <img :src="formatUrl(item.url,'/160')" alt=""> 
+                    <div class="my-img-wrapper">
+                      <img :src="formatUrl(item.url,'/160')" alt=""> 
+                    </div>
                     <p class="title">{{item.title}}</p>
                   </div>   
                   <div v-if="item.type == 2">
-                    <p class="title">{{item.title}}</p>
+                    <div class="my-doc-wrapper">
+                      <p class="title">{{item.title}}</p>
                     <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                    </div>
                   </div>   
                   <div v-if="item.type == 3">
-                    <p class="title">{{item.title}}</p>
-                    <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                    <div class="my-doc-wrapper">
+                      <p class="title">{{item.title}}</p>
+                      <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                    </div>
                   </div>   
                 </div>
                 <!-- 当列表为空时显示 -->
@@ -340,8 +346,24 @@ export default {
       margin-left: 20px;
       vertical-align: top;
       cursor: pointer;
+      .my-img-wrapper {
+        height: 80px;
+        overflow: hidden;
+        position: relative;
+      }
+      .my-doc-wrapper{
+        p{
+          text-align: left;
+          height: 60px;
+        }
+      }
       img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         width: 100%;
+        min-height: 100%;
       }
       .title {
         font-size: 12px;
