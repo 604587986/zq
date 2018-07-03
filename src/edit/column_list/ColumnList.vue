@@ -151,7 +151,7 @@
             <el-input-number v-model="form.sort"></el-input-number>
         </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 1">
-          <el-select v-model="form.data" size="mini" placeholder="请输入文章关键词" filterable remote :remote-method="remoteArticle" :popper-append-to-body="false">
+          <el-select v-model="form.data" size="mini" placeholder="输入关键词搜索文章" filterable remote :remote-method="remoteArticle" :popper-append-to-body="false">
             <el-option v-for="item in articleList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

@@ -32,7 +32,7 @@
         <el-form-item label="内容页文件命名规则:">
           <el-input v-model="form.content_pattern"></el-input>
         </el-form-item>
-        <el-form-item label="分类列表数量:">
+        <el-form-item label="列表数量:">
           <el-input-number v-model="form.page_size" :min="5" :max="100"></el-input-number>
         </el-form-item>
 
@@ -172,6 +172,7 @@ export default {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.$message.success("添加成功");
+              that.getData();
             } else {
               that.$message.error(res.data.message);
             }

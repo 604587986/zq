@@ -32,7 +32,7 @@
         <el-form-item label="内容页文件命名规则:">
           <el-input v-model="form.content_pattern"></el-input>
         </el-form-item>
-        <el-form-item label="页面数量:">
+        <el-form-item label="列表数量:">
           <el-input-number v-model="form.page_size" :min="5" :max="100"></el-input-number>
         </el-form-item>
 
