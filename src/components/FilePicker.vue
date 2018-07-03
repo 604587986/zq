@@ -16,7 +16,7 @@
               <div class="close-wrapper">
                 <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1">选择附件</el-button>
                 <el-button type="primary" v-show="currentIndex == 1" @click="currentIndex = 2">上传附件</el-button>            
-                <span class="close" @click="isShow=false">关闭</span>
+                <i class="el-icon-close close" @click="isShow=false"></i>
               </div>
             <div class="select-file" v-show="currentIndex == 1">
               <div class="my-input-wrapper">
@@ -310,8 +310,7 @@ export default {
         transition: all 0.4s;
       }
       .close {
-        line-height: 2;
-        font-size: 16px;
+        font-size: 22px;
         cursor: pointer;
         float: right;
         &:hover {
