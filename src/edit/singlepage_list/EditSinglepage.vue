@@ -71,6 +71,16 @@
           </div>
           <div><el-button @click="add_movie()" size="mini" type="success">新增</el-button></div>
         </el-form-item>
+        <el-form-item label="附加数据(附件):">
+          <!-- 附件 -->
+          <div v-for="(row,index) in this.form.data.attachment" :key="createKey(index)" style="margin:10px 0">
+            <span>附件:</span>
+            <el-tag>id：{{row.id}}</el-tag>
+            <file-picker style="display:inline-block" v-model="row.id"></file-picker>
+            <el-button @click="del_attachment(index)" size="mini" type="danger">删除本条</el-button>
+          </div>
+          <div><el-button @click="add_attachment()" size="mini" type="success">新增</el-button></div>
+        </el-form-item>
         <el-form-item label="页面内容:">
             <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
         </el-form-item>
@@ -87,7 +97,7 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
-import Tinymce from "@/components/Tinymce"
+import Tinymce from "@/components/Tinymce";
 
 import { editPage } from "@/api/single_page/single";
 import { updatePage } from "@/api/single_page/single";
@@ -127,7 +137,7 @@ export default {
       subLoading: false,
       //表单
       form: {
-        data: { category: [], image: [] }
+        data: { category: [],link: [], image: [] ,movie:[] ,attachment:[] }
       },
       //编辑器配置
       editorOption: {},
@@ -232,7 +242,7 @@ export default {
           this.form = res.data.data;
           //将将附加数据转为json格式
           this.form.data = eval("(" + this.form.data + ")");
-          //将form.data.image 和form.data.movie转换为带id的数组
+          //将form.data.image 和form.data.movie和form.data.attachment转换为带id的数组
           if (this.form.data) {
             let arr1 = [];
             for (let i in this.form.data.image) {
@@ -243,9 +253,14 @@ export default {
             for (let i in this.form.data.movie) {
               arr2.push({ id: this.form.data.movie[i] });
             }
-            this.form.data.image = arr2;
+            this.form.data.movie = arr2;
+            let arr3 = [];
+            for (let i in this.form.data.attachment) {
+              arr3.push({ id: this.form.data.attachment[i] });
+            }
+            this.form.data.attachment = arr3;
           } else {
-            this.form.data = { category: [],link:[], image: [],movie:[] };
+            this.form.data = { category: [], link: [], image: [], movie: [],attachment:[] };
           }
         } else {
           this.$message.error(res.data.message);
@@ -271,16 +286,22 @@ export default {
         if (valid) {
           //将form.data.image转换为不带id的数组
           let arr1 = [];
-          for(let i in that.form.data.image){
-            arr1.push(that.form.data.image[i].id)
+          for (let i in that.form.data.image) {
+            arr1.push(that.form.data.image[i].id);
           }
           that.form.data.image = arr1;
           //将form.data.movie转换为不带id的数组
           let arr2 = [];
-          for(let i in that.form.data.movie){
-            arr2.push(that.form.data.movie[i].id)
+          for (let i in that.form.data.movie) {
+            arr2.push(that.form.data.movie[i].id);
           }
           that.form.data.movie = arr2;
+          //将form.data.attachment转换为不带id的数组
+          let arr3 = [];
+          for (let i in that.form.data.attachment) {
+            arr3.push(that.form.data.attachment[i].id);
+          }
+          that.form.data.attachment = arr3;
           //将附加数据（json）转换为字符串
           that.form.data = JSON.stringify(that.form.data);
           updatePage(that.form).then(res => {
@@ -305,7 +326,7 @@ export default {
     },
     //新增一行附加数据：分类
     add_category() {
-      this.form.data.category.push({ id: "", size: ""});
+      this.form.data.category.push({ id: "", size: "" });
     },
     //删除一行附加数据：链接
     del_link(index) {
@@ -313,7 +334,7 @@ export default {
     },
     //新增一行附加数据：链接
     add_link() {
-      this.form.data.link.push({ title: "", url: ""});
+      this.form.data.link.push({ title: "", url: "" });
     },
     //删除一行附加数据：图片
     del_image(index) {
@@ -331,9 +352,17 @@ export default {
     add_movie() {
       this.form.data.movie.push({ id: "" });
     },
-    //新增一行附加数据：图片
-    add_image() {
-      this.form.data.image.push({ id: "" });
+    //删除一行附加数据：附件
+    del_attachment(index) {
+      this.form.data.attachment.splice(index, 1);
+    },
+    //新增一行附加数据：附件
+    add_attachment() {
+      this.form.data.attachment.push({ id: "" });
+    },
+    // 生成循环时所需唯一数（用于绑定key）
+    createKey(a) {
+      return new Date().getTime() + a;
     }
   }
 };

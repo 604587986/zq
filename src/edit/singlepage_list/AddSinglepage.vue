@@ -71,6 +71,16 @@
           </div>
           <div><el-button @click="add_movie()" size="mini" type="success">新增</el-button></div>
         </el-form-item>
+        <el-form-item label="附加数据(附件):">
+          <!-- 附件 -->
+          <div v-for="(row,index) in this.form.data.attachment" :key="createKey(index)" style="margin:10px 0">
+            <span>附件:</span>
+            <el-tag>id：{{row.id}}</el-tag>
+            <file-picker style="display:inline-block" v-model="row.id"></file-picker>
+            <el-button @click="del_attachment(index)" size="mini" type="danger">删除本条</el-button>
+          </div>
+          <div><el-button @click="add_attachment()" size="mini" type="success">新增</el-button></div>
+        </el-form-item>
         <el-form-item label="页面内容:">
             <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
         </el-form-item>
@@ -126,7 +136,7 @@ export default {
       //提交按钮loading
       subLoading: false,
       //表单
-      form: { data: { category: [],link: [], image: [] ,movie:[] }},
+      form: { data: { category: [],link: [], image: [] ,movie:[] ,attachment:[]}},
       //表单验证
       rules: {
         account: [
@@ -236,6 +246,12 @@ export default {
             arr2.push(that.form.data.movie[i].id)
           }
           that.form.data.movie = arr2;
+          //将form.data.attachment转换为不带id的数组
+          let arr3 = [];
+          for (let i in that.form.data.attachment) {
+            arr3.push(that.form.data.attachment[i].id);
+          }
+          that.form.data.attachment = arr3;
           //将附加数据（json）转换为字符串
           that.form.data = JSON.stringify(that.form.data);
           addPage(that.form).then(res => {
@@ -295,6 +311,14 @@ export default {
     //新增一行附加数据：视频
     add_movie() {
       this.form.data.movie.push({ id: "" });
+    },
+    //删除一行附加数据：附件
+    del_attachment(index) {
+      this.form.data.attachment.splice(index, 1);
+    },
+    //新增一行附加数据：附件
+    add_attachment() {
+      this.form.data.attachment.push({ id: "" });
     },
     // 生成循环时所需唯一数（用于绑定key）
     createKey(a){
