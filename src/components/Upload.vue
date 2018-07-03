@@ -175,7 +175,6 @@ export default {
             chunkRetry: res.data.data.chunkRetry,
             chunkSize: res.data.data.chunkSize,
             chunked: res.data.data.chunked,
-            fileNumLimit: res.data.data.fileNumLimit,
             fileSingleSizeLimit: res.data.data.fileSingleSizeLimit,
             fileSizeLimit: res.data.data.fileSizeLimit
           });

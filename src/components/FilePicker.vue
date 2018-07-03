@@ -58,7 +58,7 @@
                   </div>   
                 </div>
                 <!-- 当列表为空时显示 -->
-                <div class="no-data" v-else>
+                <div class="no-data" v-if="!info.length">
                   暂无数据
                 </div>           
               </div>
@@ -68,25 +68,6 @@
               </div>
             </div>
             <div class="upload-file" v-show="currentIndex == 2">
-                <!-- <el-form-item label="附件标题：" class="form-item">
-                  <el-input v-model="fileData.title"></el-input>
-                </el-form-item>
-                <el-form-item label="描述：" class="form-item">
-                  <el-input type="textarea" v-model="fileData.description"></el-input>
-                </el-form-item> -->
-                <!-- <el-form-item label="选择文件：" class="form-item">
-                  <el-upload
-                    class="avatar-uploader"
-                    action="/api/attachment/upload"
-                    name="file"
-                    :data="fileData"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </el-form-item> -->
                   <upload @uploadSuccess="handleUpload"></upload>
             </div>
           </div>

@@ -39,9 +39,9 @@
               {{scope.row.size | fileSize}}
             </div>
           </el-table-column>
-          <el-table-column prop="user_id" label="上传人" width="80"></el-table-column>
+          <el-table-column prop="user_title" label="上传人" width="80"></el-table-column>
           <el-table-column prop="create_time" label="添加时间" width="90"></el-table-column>
-          <el-table-column prop="site_id" label="所属站点" width="100"></el-table-column>
+          <el-table-column prop="site_title" label="所属站点" width="100"></el-table-column>
           <el-table-column prop="ext" label="文件类型" width="70"></el-table-column>
           <el-table-column label="操作" width="130">
             <div slot-scope="scope" class="control-btn">
