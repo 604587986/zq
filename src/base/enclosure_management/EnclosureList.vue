@@ -30,7 +30,7 @@
                 <img :src="format(scope.row.url,'/128')"/>
               </div>
               <div v-else>
-                <a :href="scope.row.preview_url">{{scope.row.preview}}</a>
+                <a :href="scope.row.url" target="_blank">{{scope.row.title}}</a>
               </div>
             </div>
           </el-table-column>
