@@ -117,6 +117,8 @@ import AddEnclosure2 from '@/edit/enclosure_management/AddEnclosure'
 //友情链接
 import FriendlyLink from '@/edit/friendly_link/FriendlyLink'//友情链接列表
 import AddFriendlyLink from '@/edit/friendly_link/AddFriendlyLink'//添加友情链接
+//会员管理
+import MemberList from '@/edit/member/MemberList'
 
 
 
@@ -414,6 +416,10 @@ export default new Router({
                 {
                 path: 'add_friendly_link',
                 component: AddFriendlyLink
+            },
+                {
+                path: 'member_list',
+                component: MemberList
             },
         
             ]

@@ -80,7 +80,12 @@ export default {
             iconName: "icon-wenzhangliebiao",
             entryName: "网页生成",
             entryUrl: "/pages/editor/editor/page_generation"
-          }
+          },
+          {
+            iconName: "icon-wenzhangliebiao",
+            entryName: "会员列表",
+            entryUrl: "/pages/editor/editor/member_list"
+          },
         ],
         sub_admin: [
           {
