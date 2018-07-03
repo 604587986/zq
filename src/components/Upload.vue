@@ -197,7 +197,9 @@ export default {
         {
           // 时间点1：所有分块进行上传之前调用此函数
           beforeSendFile: function(file) {
-            $this.title = file.name
+            if ($this.title == "") {//如果未填写附件标题，则填充为文件名
+              $this.title = file.name;
+            }
             const deferred = WebUploader.Deferred();
             const uploader = this;
             new WebUploader.Uploader()

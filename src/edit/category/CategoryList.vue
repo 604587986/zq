@@ -10,12 +10,12 @@
       <div class="table-filter">
           <router-link to="/pages/editor/editor/add_category"><el-button type="primary" size="mini">添加顶级分类</el-button></router-link>
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-              <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
+              <el-button slot="append" icon="el-icon-search" @click="getData()"></el-button>
           </el-input>
       </div>
       <!-- 表格 -->
       <div class="table-body">
-          <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
+          <el-table ref="multipleTable" :data="tableInfo" stripe size="small"  v-loading="table_loading" element-loading-text="数据载入中">
               <!-- <el-table-column type="selection"></el-table-column> -->
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
                   <el-table-column label="显示子类" type="expand" width="100">
@@ -120,7 +120,6 @@
         <el-button type="primary"  size="large" :loading="subLoading" @click="submitForm('form')">提交</el-button>
       </div>
     </el-dialog>
-      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
   </div>
 </template>
@@ -129,7 +128,6 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
-import Paging from "@/components/Paging";
 
 import { getCategoryList,toAddCategory } from "@/api/category/category";
 export default {
@@ -158,13 +156,6 @@ export default {
           content: "添加站点使用说明"
         }
       ],
-      //分页数据
-      currentPaging: {
-        currentPage: 1,
-        pageSize: 10,
-        pageSizes: [10, 20, 30, 40],
-        totals: null
-      },
       //表格loading
       table_loading: false,
       //选择发布状态
@@ -223,7 +214,6 @@ export default {
   components: {
     Crumb,
     Instructions,
-    Paging
   },
   mounted() {
     this.getData();
@@ -232,8 +222,6 @@ export default {
     //获取表格信息
     getData() {
       let data = {
-        page: this.currentPaging.currentPage,
-        size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
         tree:1
       };
@@ -242,43 +230,11 @@ export default {
         this.table_loading = false;
         if (res.data.code == 200) {
           this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count;
         } else {
           this.tableInfo = res.data.data.list;
-          this.currentPaging.totals = res.data.data.count;
           this.$message.error(res.data.message);
         }
       });
-    },
-
-    //选中的时候触发
-    handleSelectionChange(val) {
-      this.tableList = [];
-      for (let i in val) {
-        this.tableList.push(val[i].id);
-      }
-    },
-    //全选
-    selection(rows) {
-      var that = this;
-      if (this.tableInfo.length !== this.tableList.length) {
-        rows.forEach(row => {
-          that.$refs.multipleTable.toggleRowSelection(row, true);
-        });
-      } else {
-        that.$refs.multipleTable.clearSelection();
-      }
-    },
-    //处理sizeChange
-    handleSizeChange(val) {
-      this.currentPaging.pageSize = val;
-      this.currentPaging.currentPage = 1;
-      this.getData();
-    },
-    //处理currentChange
-    handleCurrentChange(val) {
-      this.currentPaging.currentPage = val;
-      this.getData();
     },
     //打开弹出框并存储pid和level
     add_child(id, title) {
@@ -298,6 +254,7 @@ export default {
             if(res.data.code == 200){              
               that.$message.success('添加成功')
               that.dialogFormVisible = false;
+              that.getData()
             }else{
               that.$message.error(res.data.message)
             }

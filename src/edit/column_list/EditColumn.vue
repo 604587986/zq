@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="类型：">
-          <el-select v-model="form.type" size="mini">
+          <el-select v-model="form.type" size="mini" @change="clearData">
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -39,10 +39,18 @@
         <el-form-item label="排序：">
             <el-input-number v-model="form.sort"></el-input-number>
         </el-form-item>
-        <el-form-item label="数据：">
-          <el-select v-model="form.data" size="mini">
-            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-form-item label="数据：" v-if="form.type == 1">
+          <el-select v-model="form.data" size="mini" placeholder="请输入文章关键词" filterable remote :remote-method="remoteArticle" :popper-append-to-body="false">
+            <el-option v-for="item in articleList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="数据：" v-if="form.type == 2">
+          <el-select v-model="form.data" size="mini" placeholder="请选择分类" :popper-append-to-body="false">
+            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数据：" v-if="form.type == 3">
+          <el-input v-model="form.data" placeholder="请输入链接地址" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
@@ -59,6 +67,8 @@ import Instructions from "@/components/Instructions";
 
 import { EditColumn } from "@/api/column/ColumnList";
 import { UpdateColumn } from "@/api/column/ColumnList";
+import { getArticleList } from "@/api/article/ArticleList";
+import { getCategoryList } from "@/api/category/category";
 
 export default {
   name: "EditColumn",
@@ -98,6 +108,11 @@ export default {
         { label: "列表", value: 2 },
         { label: "链接", value: 3 }
       ],
+      //类型为单页时的文章列表
+      articleList: [],
+      //类型为列表时的分类列表
+      categoryList: [],
+      articleList: [],
       //栏目状态列表
       stateList: [
         { label: "隐藏", value: 0 },
@@ -215,7 +230,41 @@ export default {
           return false;
         }
       });
-    }
+    },
+        //远程搜索文章列表
+    remoteArticle(query) {
+      this.articleList = [];
+      let data = {
+        keyword: query
+      };
+      if (query == "") {
+        this.articleList = [];
+      } else {
+        getArticleList(data).then(res => {
+          if (res.data.code == 200 || res.data.code == 404) {
+            this.articleList = res.data.data.list;
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
+      }
+    },
+    //获取分类列表
+    getCategory() {
+      let data = {};
+      getCategoryList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //切换类型时清空一些数据
+    clearData() {
+      this.form.data = '';
+      this.articleList = [];
+    },
   }
 };
 </script>
