@@ -11,9 +11,12 @@
           <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
-              <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select> -->
+          <el-select v-model="siteValue" clearable placeholder="站点" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getCategory();getData()">
+              <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
+          <el-select v-model="categoryValue" clearable placeholder="分类" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
+              <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
           <router-link to="/pages/system_administrators/System_Administrators/ContentRecycleBin" class="float-right">
             <el-button size="mini" type="primary">回收站</el-button>
           </router-link>
@@ -27,7 +30,7 @@
               <el-table-column type="selection"></el-table-column>
               <el-table-column prop="id" label="ID" width="50"></el-table-column>
               <el-table-column prop="title" label="标题" width="200"></el-table-column>
-              <el-table-column prop="category_title" label="栏目"></el-table-column>
+              <el-table-column prop="category_title" label="所属分类"></el-table-column>
               <el-table-column prop="site_title" label="所属站点"></el-table-column>
               <el-table-column label="文章状态">
                   <div slot-scope="scope">
@@ -99,6 +102,8 @@ import {
   verifyArticle,
   deleteArticle
 } from "@/api/article/ArticleList";
+import { getSiteList } from "@/api/site_management/SiteList";
+import { getCategoryList } from "@/api/category/category";
 /* 内容管理 */
 export default {
   name: "ContentManagement",
@@ -153,6 +158,12 @@ export default {
       stateValue: 1,
       //搜索关键字
       titleSearchValue: "",
+      //站点列表
+      siteList: [],
+      siteValue: "",
+      //分类列表
+      categoryList: [],
+      categoryValue: '',
       //表格数据
       tableInfo: [],
       //用于全选
@@ -169,9 +180,10 @@ export default {
   components: {
     Crumb,
     Instructions,
-    Paging,
+    Paging
   },
   mounted: function() {
+    this.getSite();
     this.getData();
     //侧边导航定位
     sessionStorage.setItem("system_menu_idx", 1);
@@ -184,7 +196,9 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        state_verify: this.stateValue
+        state_verify: this.stateValue,
+        site_id: this.siteValue,
+        category_id:this.categoryValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -197,7 +211,32 @@ export default {
         }
       });
     },
-
+    //获取站点列表
+    getSite() {
+      let data = {
+        page: 0
+      };
+      getSiteList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.siteList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //获取分类列表
+    getCategory() {
+      let data = {
+        site_id:this.siteValue
+      };
+      getCategoryList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
     //选中的时候触发
     handleSelectionChange(val) {
       this.tableList = [];

@@ -224,7 +224,6 @@ export default {
       articleList: [],
       //类型为列表时的分类列表
       categoryList: [],
-      articleList: [],
       //栏目类型列表
       typeList: [
         { label: "单页/模板", value: 1 },
