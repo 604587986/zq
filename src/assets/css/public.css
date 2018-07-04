@@ -219,7 +219,7 @@ body {
   margin-bottom: 20px;
 }
 .public-wap .main .table-container .table-filter a {
-  margin: 0 4px;
+  margin-left: 20px;
 }
 .public-wap .main .table-container .table-filter button {
   display: block;
