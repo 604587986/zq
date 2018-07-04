@@ -20,10 +20,13 @@
               <el-table-column prop="mail" label="邮箱"></el-table-column>
               <el-table-column prop="mobile" label="手机"></el-table-column>
               <el-table-column prop="create_time" label="创建时间"></el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" width="200">
                   <div slot-scope="scope" class="control-btn">
-                      <el-button size="small" class="control-btn-del">编辑</el-button>
-                      <el-button @click="toDelete(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
+                    <router-link :to="{path:'/pages/editor/editor/edit_member',query:{id:scope.row.id}}">
+                      <el-button size="small">编辑</el-button>
+                    </router-link>
+                      <el-button @click="" size="small" class="control-btn-del">删除</el-button>                    
+                      <el-button @click="setPassword(scope.row.id)" size="small">密码重设</el-button>
                   </div>
               </el-table-column>
           </el-table>
@@ -73,7 +76,7 @@
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 
-import {addMember,memberList} from "@/api/member/member"
+import { addMember, memberList, modifyPassword } from "@/api/member/member";
 export default {
   name: "MemberList",
   data() {
@@ -140,7 +143,7 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        mobile:[
+        mobile: [
           {
             required: true,
             validator: function(rule, value, callback) {
@@ -148,9 +151,7 @@ export default {
               if (!value) {
                 callback(new Error("手机不能为空"));
               } else if (reg.test(value) == false) {
-                callback(
-                  new Error("请输入正确的手机号码格式")
-                );
+                callback(new Error("请输入正确的手机号码格式"));
               } else {
                 callback();
               }
@@ -195,7 +196,7 @@ export default {
       // 弹出框
       dialogVisible: false,
       // 提交按钮loading
-      subLoading:false
+      subLoading: false
     };
   },
   components: {
@@ -211,7 +212,7 @@ export default {
       let data = {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
-        keyword: this.titleSearchValue,
+        keyword: this.titleSearchValue
       };
       this.table_loading = true;
       memberList(data).then(res => {
@@ -238,7 +239,7 @@ export default {
     //表单提交
     submitForm(formName) {
       var that = this;
-      that.$refs[formName].validate(function(valid) {  
+      that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
           addMember(that.form).then(res => {
@@ -258,6 +259,31 @@ export default {
         }
       });
     },
+    //密码重设
+    setPassword(id) {
+      this.$confirm("是否要重设此会员密码", "警告", {
+        cancelButtonText: "取消",
+        confirmButtonText: "确定",
+        type: "warning"
+      })
+        .then(() => {
+          modifyPassword({ id: id }).then(res => {
+            if (res.data.code == 200) {
+              this.$alert(`新密码为：${res.data.data.passwd}  请牢记密码`, "新密码", {
+                confirmButtonText: "确定"
+              });
+            }else{
+              this.$message.error(res.data.message)
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    }
   }
 };
 </script>
