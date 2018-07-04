@@ -119,11 +119,11 @@
     </div>
     <!-- dialog -->
     <el-dialog :title="show_title" :visible.sync="dialogFormVisible">
-      <el-form ref="form" :model="form" label-width="150px" label-position="right">
-        <el-form-item label="菜单标题：">
+      <el-form ref="form" :model="form" label-width="150px" label-position="right" :rules="rules">
+        <el-form-item label="菜单标题：" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="英文名称：">
+        <el-form-item label="路径：">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <!-- <el-form-item label="所属站点：">
@@ -237,7 +237,9 @@ export default {
       //提交按钮loading
       subLoading: false,
       //表单验证
-      rules: {},
+      rules: {
+        title:[{ required: true, message: '请填写名称', trigger: 'blur' }]
+      },
       //表格
       tableInfo: [
         {
