@@ -65,7 +65,6 @@
             <el-date-picker v-model="form.date" align="right" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item> -->
         <el-form-item class="form-control-btn">
-          <el-button type="primary" size="large">预览</el-button>
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
           <!-- <el-checkbox v-model="continueBtn" style="margin-left:10px;">发布后继续</el-checkbox> -->
         </el-form-item>
@@ -79,7 +78,7 @@
 import Crumb from "@/components/Crumb";
 import FilePicker from "@/components/FilePicker";
 import Tag from "@/components/Tag";
-import Tinymce from "@/components/Tinymce"
+import Tinymce from "@/components/Tinymce";
 
 import { createArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -188,13 +187,14 @@ export default {
           saveArticle(that.form).then(res => {
             that.subLoading = false;
             if (res.data.code == 200) {
+              that.isSubmit = true;
               that.$alert("提交成功，请等待审核", "提示", {
                 confirmButtonText: "确定",
                 callback: () => {
                   that.$refs[formName].resetFields();
+                  that.$router.push('/pages/editor/editor/article_list');
                 }
               });
-              that.isSubmit = true;
             } else {
               that.$message.error(res.data.message);
             }
@@ -209,7 +209,6 @@ export default {
     //获取标签
     getTags(val) {
       console.log(val);
-      
     }
   },
   beforeRouteLeave(to, from, next) {

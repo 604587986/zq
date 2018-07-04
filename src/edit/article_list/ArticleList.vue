@@ -11,9 +11,9 @@
           <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <!-- <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
-              <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select> -->
+          <el-select v-model="categoryValue" clearable placeholder="分类" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
+              <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
         
           <router-link to="/pages/editor/editor/article_recycle_bin" class="float-right">
             <el-button size="mini" type="primary">回收站</el-button>
@@ -97,6 +97,8 @@ import {
   verifyArticle,
   deleteArticle
 } from "@/api/article/ArticleList";
+import { getCategoryList } from "@/api/category/category";
+
 export default {
   name: "ArticeList",
   data() {
@@ -151,6 +153,9 @@ export default {
       columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
+      //分类列表
+      categoryList: [],
+      categoryValue: "",
       //表格数据
       tableInfo: [],
       //用于全选
@@ -170,6 +175,7 @@ export default {
     Paging
   },
   mounted() {
+    this.getCategory();
     this.getData();
   },
   methods: {
@@ -179,7 +185,8 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        state_verify: this.stateValue
+        state_verify: this.stateValue,
+        category_id:this.categoryValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -238,7 +245,7 @@ export default {
       verifyArticle(data).then(res => {
         if (res.data.code == 200) {
           this.$message.success(msg);
-          this.getData()          
+          this.getData();
         } else {
           this.$message.error(res.data.message);
         }
@@ -255,7 +262,20 @@ export default {
           this.$message.error(res.data.message);
         }
       });
-    }
+    },
+        //获取分类列表
+    getCategory() {
+      let data = {
+
+      };
+      getCategoryList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
   }
 };
 </script>
