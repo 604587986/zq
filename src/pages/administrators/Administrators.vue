@@ -87,9 +87,14 @@ export default {
           //   entryUrl: "/pages/editor/editor/page_generation"
           // },
           {
-            iconName: "icon-jiaoshifengcai",
+            iconName: "icon-lanmuliebiao",
             entryName: "单页列表",
             entryUrl: "/pages/editor/editor/singlepage_list"
+          },
+          {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "会员管理",
+            entryUrl: "/pages/editor/editor/member_list"
           },
           {
             iconName: "icon-lanmuliebiao",
