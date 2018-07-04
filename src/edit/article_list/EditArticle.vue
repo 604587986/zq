@@ -39,11 +39,28 @@
               <el-option label="通过" :value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="创建时间:">
+        <!-- <el-form-item label="创建时间:">
           <el-input v-model="form.create_time" disabled></el-input>
         </el-form-item>
         <el-form-item label="更新时间:">
           <el-input v-model="form.update_time" disabled></el-input>
+        </el-form-item> -->
+        <el-form-item label="文章发布日期" class="form-item">
+          <el-date-picker
+            v-model="form.publish_date"
+            type="datetime"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            placeholder="文章发布日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="置顶截止日期" class="form-item">
+          <el-date-picker
+            v-model="form.pin_date"
+            type="datetime"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            :picker-options="pickerOptions"
+            placeholder="选择置顶截止日期">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="文章标签:">
           <tag @change="getTags"></tag>
@@ -65,7 +82,7 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
 import Tag from "@/components/Tag";
-import Tinymce from "@/components/Tinymce"
+import Tinymce from "@/components/Tinymce";
 
 import { editArticle, saveArticle } from "@/api/article/ArticleList";
 
@@ -119,6 +136,13 @@ export default {
             trigger: "blur"
           }
         ]
+      },
+      //置顶截止日期需大于当前时间
+      pickerOptions: {
+        disabledDate: function(val) {
+          let now = new Date();
+          return val < now ? true : false;
+        }
       }
     };
   },
@@ -159,7 +183,9 @@ export default {
             author: that.form.author,
             photo: that.form.photo,
             content: that.form.content,
-            image_id: that.form.image_id
+            image_id: that.form.image_id,
+            publish_date: that.form.publish_date,
+            pin_date: that.form.pin_date
           };
           saveArticle(data).then(res => {
             that.subLoading = false;

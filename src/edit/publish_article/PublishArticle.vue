@@ -170,6 +170,7 @@ export default {
       continueBtn: false,
       //是否已提交
       isSubmit: false,
+      //置顶截止日期需大于当前时间
       pickerOptions: {
         disabledDate: function(val) {
           let now = new Date();
