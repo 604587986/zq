@@ -110,7 +110,6 @@
                 <el-table-column label="操作" width="270">
                     <div slot-scope="scope" class="control-btn">
                         <el-button size="small" @click="add_child(scope.row.id,1,'二级栏目')">添加子类</el-button>
-                        <el-button size="small">预览</el-button>
                         <router-link :to="{path:'/pages/editor/editor/edit_column',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
                         <el-button @click.native.prevent="deleteRow(scope.$index, column_list)" size="small" class="control-btn-del">删除</el-button>
                     </div>
