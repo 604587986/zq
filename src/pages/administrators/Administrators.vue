@@ -43,7 +43,7 @@ export default {
       editor: false,
       listClass: "",
       newsInfo: [],
-      // 不同用户的权限
+      // 不同用户的工作台菜单
       authority: {
         main_admin: [
           {
@@ -77,9 +77,24 @@ export default {
             entryUrl: "/pages/editor/editor/article_list"
           },
           {
-            iconName: "icon-wenzhangliebiao",
-            entryName: "网页生成",
-            entryUrl: "/pages/editor/editor/page_generation"
+            iconName: "icon-lanmuliebiao",
+            entryName: "栏目列表",
+            entryUrl: "/pages/editor/editor/column_list"
+          },
+          // {
+          //   iconName: "icon-wenzhangliebiao",
+          //   entryName: "网页生成",
+          //   entryUrl: "/pages/editor/editor/page_generation"
+          // },
+          {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "单页列表",
+            entryUrl: "/pages/editor/editor/singlepage_list"
+          },
+          {
+            iconName: "icon-lanmuliebiao",
+            entryName: "分类列表",
+            entryUrl: "/pages/editor/editor/category_list"
           }
         ],
         sub_admin: [
