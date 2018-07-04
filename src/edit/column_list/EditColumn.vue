@@ -8,10 +8,10 @@
     <div class="form-container">
       <!-- 表单 -->
       <el-form ref="form" :model="form" :rules="rules" status-icon label-width="150px" size="mini" label-position="right">
-        <el-form-item label="菜单标题：">
+        <el-form-item label="菜单标题：" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="英文名称：">
+        <el-form-item label="路径：">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <!-- <el-form-item label="所属站点：">
@@ -140,37 +140,7 @@ export default {
       form: {},
       //表单验证
       rules: {
-        title: [
-          {
-            required: true,
-            message: "请输入站点名称",
-            trigger: "blur"
-          },
-          {
-            min: 1,
-            message: "站点名称不能为空",
-            trigger: "blur"
-          }
-        ],
-        alias: [
-          {
-            required: true,
-            message: "请输入别名",
-            trigger: "blur"
-          },
-          {
-            min: 1,
-            message: "别名不能为空",
-            trigger: "blur"
-          }
-        ],
-        state: [
-          {
-            required: true,
-            message: "请选择站点状态",
-            trigger: "blur"
-          }
-        ]
+        title:[{ required: true, message: '请填写名称', trigger: 'blur' }]
       }
     };
   },

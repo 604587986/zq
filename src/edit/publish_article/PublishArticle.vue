@@ -29,7 +29,7 @@
             <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="SEO标题" class="form-item">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.name" placeholder="请输入英文字母"></el-input>
         </el-form-item>
         <el-form-item label="作者" class="form-item" prop="author">
             <el-input v-model="form.author"></el-input>
@@ -40,6 +40,23 @@
         <el-form-item label="文章配图">
           <file-picker v-model="form.image_id"></file-picker>
         </el-form-item>     
+        <el-form-item label="文章发布日期" class="form-item">
+          <el-date-picker
+            v-model="form.publish_date"
+            type="datetime"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            placeholder="文章发布日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="置顶截止日期" class="form-item">
+          <el-date-picker
+            v-model="form.pin_date"
+            type="datetime"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            :picker-options="pickerOptions"
+            placeholder="选择置顶截止日期">
+          </el-date-picker>
+        </el-form-item>
         <!-- <el-form-item label="属性" class="form-item" prop="attribute">
             <el-radio-group v-model="form.attribute">
                 <el-radio label="推荐"></el-radio>
@@ -55,11 +72,6 @@
         </el-form-item>
         <!-- <el-form-item label="文章排序" class="form-item" prop="sort">
           <el-input v-model.number="form.sort"></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="置顶" class="form-item">
-            <el-select v-model="form.toTop" placeholder="请选择" style="width:100%;">
-                <el-option v-for="item in toTopList" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
-            </el-select>
         </el-form-item> -->
         <!-- <el-form-item label="发布日期" class="form-item" prop="date">
             <el-date-picker v-model="form.date" align="right" type="date" placeholder="选择日期"></el-date-picker>
@@ -108,7 +120,8 @@ export default {
         // state_verify: "",
         // image_id: "",
         // sort: "",
-        // pin_date: "",
+        publish_date:'',
+        pin_date: "",
         // create_time: "",
         // update_time: "",
         // user_id: "",
@@ -156,7 +169,13 @@ export default {
       // 是否继续按钮
       continueBtn: false,
       //是否已提交
-      isSubmit: false
+      isSubmit: false,
+      pickerOptions: {
+        disabledDate: function(val) {
+          let now = new Date();
+          return val < now ? true : false;
+        }
+      }
     };
   },
   mounted() {
@@ -192,7 +211,7 @@ export default {
                 confirmButtonText: "确定",
                 callback: () => {
                   that.$refs[formName].resetFields();
-                  that.$router.push('/pages/editor/editor/article_list');
+                  that.$router.push("/pages/editor/editor/article_list");
                 }
               });
             } else {
