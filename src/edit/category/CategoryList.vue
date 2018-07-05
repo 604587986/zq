@@ -38,7 +38,7 @@
                                         <el-table-column label="操作" width="250">
                                             <div slot-scope="scope" class="control-btn">
                                               <router-link :to="{path:'/pages/editor/editor/edit_category',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link> 
-                                                <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                                                <el-button @click.native.prevent="del(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                                             </div>
                                         </el-table-column>
                                     </el-table>
@@ -56,7 +56,7 @@
                                 <div slot-scope="scope" class="control-btn">
                                       <el-button size="small" @click="add_child(scope.row.id,'三级分类')">添加子类</el-button>                    
                                   <router-link :to="{path:'/pages/editor/editor/edit_category',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link> 
-                                    <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                                    <el-button @click.native.prevent="del(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                                 </div>
                             </el-table-column>
                         </el-table>
@@ -74,7 +74,7 @@
                   <div slot-scope="scope" class="control-btn">
                         <el-button size="small" @click="add_child(scope.row.id,'二级分类')">添加子类</el-button>                    
                      <router-link :to="{path:'/pages/editor/editor/edit_category',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link> 
-                      <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+                      <el-button @click.native.prevent="del(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                   </div>
               </el-table-column>
           </el-table>
@@ -129,7 +129,11 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 
-import { getCategoryList,toAddCategory } from "@/api/category/category";
+import {
+  getCategoryList,
+  toAddCategory,
+  deleteCategory
+} from "@/api/category/category";
 export default {
   name: "CategoryList",
   data() {
@@ -203,9 +207,9 @@ export default {
       // 添加分类弹出框
       dialogFormVisible: false,
       //提交按钮loading
-      subLoading:false,
+      subLoading: false,
       //存储parent_id和显示标题
-      parent_id:'',
+      parent_id: "",
       show_title: "",
       // 添加分类的form表单
       form: {}
@@ -213,7 +217,7 @@ export default {
   },
   components: {
     Crumb,
-    Instructions,
+    Instructions
   },
   mounted() {
     this.getData();
@@ -223,7 +227,7 @@ export default {
     getData() {
       let data = {
         keyword: this.titleSearchValue,
-        tree:1
+        tree: 1
       };
       this.table_loading = true;
       getCategoryList(data).then(res => {
@@ -249,20 +253,31 @@ export default {
         that.subLoading = true;
         if (valid) {
           that.form.parent_id = that.parent_id;
-          toAddCategory(that.form).then(res=>{
+          toAddCategory(that.form).then(res => {
             that.subLoading = false;
-            if(res.data.code == 200){              
-              that.$message.success('添加成功')
+            if (res.data.code == 200) {
+              that.$message.success("添加成功");
               that.dialogFormVisible = false;
-              that.getData()
-            }else{
-              that.$message.error(res.data.message)
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
             }
-          })
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");
           return false;
+        }
+      });
+    },
+    //删除分类
+    del(id) {
+      deleteCategory({ id: id }).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("删除成功");
+          this.getData()
+        } else {
+          this.$message.error("该分类有子分类不能删除");
         }
       });
     }
