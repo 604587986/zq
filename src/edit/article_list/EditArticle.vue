@@ -185,7 +185,8 @@ export default {
             content: that.form.content,
             image_id: that.form.image_id,
             publish_date: that.form.publish_date,
-            pin_date: that.form.pin_date
+            pin_date: that.form.pin_date,
+            tag_id:that.form.tag_id
           };
           saveArticle(data).then(res => {
             that.subLoading = false;

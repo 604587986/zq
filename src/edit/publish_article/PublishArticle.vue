@@ -127,7 +127,8 @@ export default {
         // site_id: "",
         category_id: "",
         author: "",
-        photo: ""
+        photo: "",
+        tag_id:''
         // url: ""
       },
       rules: {
