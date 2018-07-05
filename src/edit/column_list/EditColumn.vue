@@ -24,21 +24,6 @@
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="状态：">
-          <el-select v-model="form.state" size="mini">
-            <el-option v-for="item in stateList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        </el-form-item>
-        <el-form-item label="小图标：">
-          <el-select v-model="form.icon_id" size="mini">
-            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        </el-form-item>
-        <el-form-item label="排序：">
-            <el-input-number v-model="form.sort"></el-input-number>
-        </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 1">
           <el-select v-model="form.data" size="mini" placeholder="请输入文章关键词" filterable remote :remote-method="remoteArticle" :popper-append-to-body="false">
             <el-option v-for="item in articleList" :key="item.id" :label="item.title" :value="item.id"></el-option>
@@ -51,6 +36,19 @@
         </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 3">
           <el-input v-model="form.data" placeholder="请输入链接地址" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="状态：">
+          <el-select v-model="form.state" size="mini">
+            <el-option v-for="item in stateList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        </el-form-item>
+        <el-form-item label="小图标：">
+          <file-picker v-model="form.icon_id"></file-picker>
+        </el-form-item>
+        </el-form-item>
+        <el-form-item label="排序：">
+            <el-input-number v-model="form.sort"></el-input-number>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>

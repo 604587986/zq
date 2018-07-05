@@ -464,8 +464,6 @@ export default {
       });
 
       this.uploader.on("uploadSuccess", (file, response) => {
-        console.log(response);
-
         $this.fileList.forEach((item, index) => {
           if (item.id === file.id) {
             item.percentage = 100 + "%";

@@ -143,7 +143,7 @@
         </el-form-item>
         </el-form-item>
         <el-form-item label="小图标：">
-          <file-picker :url="'/api/attachment/index'" v-model="form.icon_id"></file-picker>
+          <file-picker v-model="form.icon_id"></file-picker>
         </el-form-item>
         </el-form-item>
         <el-form-item label="排序：">
