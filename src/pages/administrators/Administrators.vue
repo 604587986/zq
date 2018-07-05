@@ -92,6 +92,11 @@ export default {
             entryUrl: "/pages/editor/editor/singlepage_list"
           },
           {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "会员管理",
+            entryUrl: "/pages/editor/editor/member_list"
+          },
+          {
             iconName: "icon-lanmuliebiao",
             entryName: "分类列表",
             entryUrl: "/pages/editor/editor/category_list"

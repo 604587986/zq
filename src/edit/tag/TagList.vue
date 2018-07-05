@@ -72,8 +72,6 @@ export default {
       tableInfo: [],
       //用于全选
       tableList: [],
-      // 提交按钮loading
-      subLoading: false
     };
   },
   components: {
