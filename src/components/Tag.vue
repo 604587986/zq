@@ -16,29 +16,29 @@
     </div>
 </template>
 <script>
+import { tagList, createNewTag } from "@/api/tag/tag";
+
 export default {
   name: "tag",
   data() {
     return {
       //从服务器获得的标签列表
-      tagList: [
-        {
-          id: 1,
-          title: " 标签一"
-        },
-        {
-          id: 2,
-          title: " 标签二"
-        },
-        {
-          id: 3,
-          title: " 标签三"
-        }
-      ],
+      tagList: [],
       tagValue: "",
       //当前已选择的标签
       tags: []
     };
+  },
+  props: {
+    receiveTags: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
+  mounted() {
+    this.getData();
   },
   methods: {
     // 添加标签
@@ -59,8 +59,15 @@ export default {
         inputErrorMessage: "不能为空"
       })
         .then(({ value }) => {
-          const newTag = { id: 999, title: value };
-          this.tags.push(newTag);
+          let data = { title: value, type: 1 };
+          createNewTag(data).then(res => {
+            if (res.data.code == 200) {
+              this.tags.push(res.data.data);
+              this.getData();
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
         })
         .catch(() => {
           this.$message({
@@ -68,11 +75,28 @@ export default {
             message: "已取消"
           });
         });
+    },
+    // 获取标签列表
+    getData() {
+      let data = { page: 0 };
+      tagList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.tagList = res.data.data.list;
+        }
+      });
     }
   },
   watch: {
-    tags:function(val){
-        this.$emit('change',val)
+    tags: function(val) {
+      let idList = [];
+      for (let i in val) {
+        idList.push(val[i].id);
+      }
+      idList = idList.join(",");
+      this.$emit("change", idList);
+    },
+    receiveTags: function(val) {
+      this.tags = val;
     }
   }
 };

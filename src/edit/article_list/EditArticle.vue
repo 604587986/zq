@@ -63,7 +63,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="文章标签:">
-          <tag @change="getTags"></tag>
+          <tag @change="getTags" :receiveTags="form.tag"></tag>
         </el-form-item>
         <el-form-item label="文章内容:">
             <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
@@ -203,9 +203,9 @@ export default {
         }
       });
     },
-    //获取标签
+    //监听tag变化，将标签值绑定到form上
     getTags(val) {
-      console.log(val);
+      this.$set(this.form,'tag_id',val)
     }
   }
 };
