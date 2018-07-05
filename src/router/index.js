@@ -117,6 +117,8 @@ import AddEnclosure2 from '@/edit/enclosure_management/AddEnclosure'
 //友情链接
 import FriendlyLink from '@/edit/friendly_link/FriendlyLink'//友情链接列表
 import AddFriendlyLink from '@/edit/friendly_link/AddFriendlyLink'//添加友情链接
+//文章标签管理
+import TagList from '@/edit/tag/TagList'
 
 
 
@@ -414,6 +416,10 @@ export default new Router({
                 {
                 path: 'add_friendly_link',
                 component: AddFriendlyLink
+            },
+                {
+                path: 'tag_list',
+                component: TagList
             },
         
             ]

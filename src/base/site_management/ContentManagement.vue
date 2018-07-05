@@ -11,7 +11,7 @@
           <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <el-select v-model="siteValue" clearable placeholder="站点" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getCategory();getData()">
+          <el-select v-model="siteValue" clearable placeholder="站点" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;categoryValue = '';getCategory();getData()">
               <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
           <el-select v-model="categoryValue" clearable placeholder="分类" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
