@@ -32,3 +32,11 @@ export function update(data) {
         console.log(err);
     })
 }
+//删除分类
+export function deleteCategory(data) {
+    return axios.post('/api/category/delete', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}
