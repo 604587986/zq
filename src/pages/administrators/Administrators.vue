@@ -100,6 +100,21 @@ export default {
             iconName: "icon-lanmuliebiao",
             entryName: "分类列表",
             entryUrl: "/pages/editor/editor/category_list"
+          },
+          {
+            iconName: "icon-fawenzhang",
+            entryName: "发文章",
+            entryUrl: "/pages/editor/editor/publish_article"
+          },
+          {
+            iconName: "icon-fawenzhang",
+            entryName: "发文章",
+            entryUrl: "/pages/editor/editor/publish_article"
+          },
+          {
+            iconName: "icon-lanmuliebiao",
+            entryName: "文章标签",
+            entryUrl: "/pages/editor/editor/tag_list"
           }
         ],
         sub_admin: [
@@ -117,6 +132,11 @@ export default {
             iconName: "icon-wenzhangliebiao",
             entryName: "文章列表",
             entryUrl: "/pages/editor/editor/article_list"
+          },
+          {
+            iconName: "icon-lanmuliebiao",
+            entryName: "文章标签",
+            entryUrl: "/pages/editor/editor/tag_list"
           },
           {
             iconName: "icon-lanmuliebiao",

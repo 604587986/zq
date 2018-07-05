@@ -12,7 +12,12 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
+<<<<<<< HEAD
         target: 'https://hengdian.q-huan.link//api',
+=======
+        // target: 'https://webmaster.q-huan.link/api',
+        target: 'https://hengdian.q-huan.link/api',
+>>>>>>> master
         // target: 'http://webmaster/api',
         changeOrigin: true,
         pathRewrite: {
@@ -20,7 +25,12 @@ module.exports = {
         }
       },
       '/attachment': {
+<<<<<<< HEAD
         target: 'https://hengdian.q-huan.link//attachment',
+=======
+        // target: 'https://webmaster.q-huan.link/attachment',
+        target: 'https://hengdian.q-huan.link/attachment',        
+>>>>>>> master
         changeOrigin: true,
         pathRewrite: {
           '^/attachment': ''
