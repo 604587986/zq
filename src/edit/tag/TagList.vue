@@ -153,14 +153,27 @@ export default {
     },
     //删除标签
     del(id) {
-      deleteTag({ id: id }).then(res => {
-        if (res.data.code == 200) {
-          this.$message.success("删除成功");
-          this.getData();
-        } else {
-          this.$message.error(res.data.message);
-        }
-      });
+      this.$confirm("此操作将删除该标签，同时删除在相关文章中的引用", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteTag({ id: id }).then(res => {
+            if (res.data.code == 200) {
+              this.$message.success("删除成功");
+              this.getData();
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     }
   }
 };
