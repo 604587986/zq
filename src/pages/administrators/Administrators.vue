@@ -102,11 +102,6 @@ export default {
             entryUrl: "/pages/editor/editor/publish_article"
           },
           {
-            iconName: "icon-fawenzhang",
-            entryName: "发文章",
-            entryUrl: "/pages/editor/editor/publish_article"
-          },
-          {
             iconName: "icon-lanmuliebiao",
             entryName: "文章标签",
             entryUrl: "/pages/editor/editor/tag_list"
