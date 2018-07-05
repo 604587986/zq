@@ -93,7 +93,6 @@ import Tag from "@/components/Tag";
 import Tinymce from "@/components/Tinymce";
 
 import { createArticle, saveArticle } from "@/api/article/ArticleList";
-
 export default {
   name: "PublishArtice",
   data() {
@@ -226,9 +225,9 @@ export default {
         }
       });
     },
-    //获取标签
+    //监听tag变化，将标签值绑定到form上
     getTags(val) {
-      console.log(val);
+      this.$set(this.form,'tag_id',val)
     }
   },
   beforeRouteLeave(to, from, next) {

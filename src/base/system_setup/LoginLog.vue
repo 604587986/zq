@@ -163,7 +163,7 @@ export default {
       })
         .then(() => {
           clearLog().then(res => {
-            if (res.data.result == "success") {
+            if (res.data.code == 200) {
               this.$message({
                 type: "success",
                 message: "操作成功!"
