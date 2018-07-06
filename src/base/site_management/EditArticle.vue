@@ -23,7 +23,7 @@
           <el-input v-model="form.photo"></el-input>
         </el-form-item>
         <el-form-item label="文章配图:">
-          <file-picker v-model="form.image_id"></file-picker>
+          <file-picker v-model="form.image_id" :receiveImg="form.image?form.image.url:''"></file-picker>
         </el-form-item>
         <el-form-item label="文章状态:">
           <el-select v-model="form.state" placeholder="状态" size="mini" disabled>

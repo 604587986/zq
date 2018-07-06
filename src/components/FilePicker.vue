@@ -10,6 +10,8 @@
             <!-- 视频预览 -->
             <video v-if="videoUrl" :src="videoUrl" controls></video>
             <slot name="img" v-if="!imageUrl"></slot>
+            <!-- 从远程获取的默认图片 -->
+            <img v-if="!imageUrl&&receiveImg" :src="formatUrl(receiveImg,'/160x160')" alt="">
         </div>
         <div id="file-picker" v-if="isShow">
             <div class="header">   
@@ -131,7 +133,8 @@ export default {
   },
   props: {
     //v-model双向绑定
-    value: [String, Number]
+    value: [String, Number],
+    receiveImg:[String]
   },
   watch: {
     //数据双向绑定
