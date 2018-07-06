@@ -38,9 +38,9 @@
               </div>
               <div class="filter">
                 <el-radio-group v-model="data.type" @change="getData">
-                    <el-radio :label="1">图片</el-radio>
-                    <el-radio :label="2">文档</el-radio>
-                    <el-radio :label="3">视频</el-radio>
+                    <el-radio :label="1" v-if="allowType.includes('image')">图片</el-radio>
+                    <el-radio :label="2" v-if="allowType.includes('doc')">文档</el-radio>
+                    <el-radio :label="3" v-if="allowType.includes('video')">视频</el-radio>
                 </el-radio-group>
                 <i class="el-icon-refresh" @click="refresh" ref="refresh"></i>
               </div>
@@ -76,7 +76,7 @@
               </div>
             </div>
             <div class="upload-file" v-show="currentIndex == 2">
-                  <upload @uploadSuccess="handleUpload"></upload>
+                  <upload @uploadSuccess="handleUpload" :allowType="allowType"></upload>
             </div>
           </div>
       </div>
@@ -122,19 +122,39 @@ export default {
       siteValue: "",
       //请求附件的地址
       url: "/api/attachment/index",
-      //请求附带参数
-      data: {
-        type: 1,
-        keyword: ""
-      },
       // 刷新次数
       count: 1
     };
   },
+
   props: {
     //v-model双向绑定
     value: [String, Number],
-    receiveImg:[String]
+    receiveImg: [String],
+    allowType: {
+      type: Array,
+      default() {
+        return ["image", "doc", "video"];
+      }
+    }
+  },
+  computed: {
+    //请求数据时的附带参数
+    data: function() {
+      let type;
+      let keyword;
+      if (this.allowType[0] == "image") {
+        type = 1;
+      } else if (this.allowType[0] == "doc") {
+        type = 2;
+      } else {
+        type = 3;
+      }
+      return {
+        type,
+        keyword: ""
+      };
+    }
   },
   watch: {
     //数据双向绑定
@@ -354,8 +374,8 @@ export default {
         overflow: hidden;
         position: relative;
       }
-      .my-doc-wrapper{
-        p{
+      .my-doc-wrapper {
+        p {
           text-align: left;
           height: 60px;
         }

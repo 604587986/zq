@@ -26,9 +26,11 @@
           <el-table-column prop="title" label="文件名称" width="160"></el-table-column>
           <el-table-column prop="preview" label="预览" width="150">
             <div slot-scope="scope">
-              <div v-if="scope.row.type == 1" class="carousel-img">
-                <img :src="format(scope.row.url,'/128')"/>
-              </div>
+              <a :href="scope.row.url" target="_blank" v-if="scope.row.type == 1">
+                <div class="carousel-img">
+                  <img :src="format(scope.row.url,'/128')"/>
+                </div>
+              </a>
               <div v-else>
                 <a :href="scope.row.url" target="_blank">{{scope.row.title}}</a>
               </div>
@@ -176,7 +178,7 @@ export default {
       let data = {
         site_id: this.siteValue,
         type: "",
-        keyword:this.titleSearchValue,
+        keyword: this.titleSearchValue,
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize
       };

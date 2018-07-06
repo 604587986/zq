@@ -44,7 +44,7 @@
         </el-form-item>
         </el-form-item>
         <el-form-item label="小图标：">
-          <file-picker v-model="form.icon_id"></file-picker>
+          <file-picker v-model="form.icon_id" :allowType="['image']"></file-picker>
         </el-form-item>
         </el-form-item>
         <el-form-item label="排序：">
@@ -62,6 +62,7 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
+import FilePicker from "@/components/FilePicker";
 
 import { EditColumn } from "@/api/column/ColumnList";
 import { UpdateColumn } from "@/api/column/ColumnList";
@@ -144,7 +145,8 @@ export default {
   },
   components: {
     Crumb,
-    Instructions
+    Instructions,
+    FilePicker
   },
   mounted: function() {
     //获取默认数据

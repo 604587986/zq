@@ -59,10 +59,10 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <file-picker v-model="form.qr_wechat"></file-picker>
+          <file-picker v-model="form.qr_wechat" :allowType="['image']"></file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <file-picker v-model="form.qr_weibo"></file-picker>
+          <file-picker v-model="form.qr_weibo" :allowType="['image']"></file-picker>
         </el-form-item>
         <el-form-item label="网站状态：" prop="state">
           <el-radio-group v-model="form.state">

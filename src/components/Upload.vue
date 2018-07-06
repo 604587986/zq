@@ -3,9 +3,9 @@
       <el-form>
         <el-form-item label="附件类型：" class="form-item">
           <el-radio-group v-model="type">
-            <el-radio :label="1">图片</el-radio>
-            <el-radio :label="2">文档</el-radio>
-            <el-radio :label="3">视频</el-radio>
+            <el-radio :label="1" v-if="allowType.includes('image')">图片</el-radio>
+            <el-radio :label="2" v-if="allowType.includes('doc')">文档</el-radio>
+            <el-radio :label="3" v-if="allowType.includes('video')">视频</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="附件标题：" class="form-item">
@@ -122,11 +122,31 @@ export default {
       title: "",
       //附件描述
       description: "",
-      //附件类型
-      type: 1,
       //从服务器获取的类型列表
       typeList: {}
     };
+  },
+  props: {
+    allowType: {
+      type: Array,
+      default() {
+        return ["image", "doc", "video"];
+      }
+    }
+  },
+  computed: {
+    //要上传的附件类型
+    type:function(){
+      let type;
+       if (this.allowType[0] == "image") {
+        type = 1;
+      } else if (this.allowType[0] == "doc") {
+        type = 2;
+      } else {
+        type = 3;
+      }
+      return type;
+    }
   },
   watch: {
     // uploader: function() {
@@ -196,7 +216,8 @@ export default {
         {
           // 时间点1：所有分块进行上传之前调用此函数
           beforeSendFile: function(file) {
-            if ($this.title == "") {//如果未填写附件标题，则填充为文件名
+            if ($this.title == "") {
+              //如果未填写附件标题，则填充为文件名
               $this.title = file.name;
             }
             const deferred = WebUploader.Deferred();
