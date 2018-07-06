@@ -122,24 +122,38 @@ export default {
       siteValue: "",
       //请求附件的地址
       url: "/api/attachment/index",
-      //请求附带参数
-      data: {
-        type: 1,
-        keyword: ""
-      },
       // 刷新次数
       count: 1
     };
   },
+
   props: {
     //v-model双向绑定
     value: [String, Number],
-    receiveImg:[String],
-    allowType:{
-      type:Array,
-      default(){
-        return ['image','doc','video']
+    receiveImg: [String],
+    allowType: {
+      type: Array,
+      default() {
+        return ["image", "doc", "video"];
       }
+    }
+  },
+  computed: {
+    //请求数据时的附带参数
+    data: function() {
+      let type;
+      let keyword;
+      if (this.allowType[0] == "image") {
+        type = 1;
+      } else if (this.allowType[0] == "doc") {
+        type = 2;
+      } else {
+        type = 3;
+      }
+      return {
+        type,
+        keyword: ""
+      };
     }
   },
   watch: {
@@ -360,8 +374,8 @@ export default {
         overflow: hidden;
         position: relative;
       }
-      .my-doc-wrapper{
-        p{
+      .my-doc-wrapper {
+        p {
           text-align: left;
           height: 60px;
         }

@@ -44,7 +44,7 @@
             <el-input v-model="form.source"></el-input>
         </el-form-item> 
         <el-form-item label="文章配图">
-          <file-picker v-model="form.image_id"></file-picker>
+          <file-picker v-model="form.image_id" :allowType="['image']"></file-picker>
         </el-form-item>     
         <el-form-item label="文章发布日期" class="form-item">
           <el-date-picker

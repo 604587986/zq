@@ -59,11 +59,11 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <file-picker v-model="form.qr_wechat" :receiveImg="form.wechat?form.wechat.url:''">
+          <file-picker v-model="form.qr_wechat" :receiveImg="form.wechat?form.wechat.url:''" :allowType="['image']">
           </file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <file-picker v-model="form.qr_weibo" :receiveImg="form.weibo?form.weibo.url:''">
+          <file-picker v-model="form.qr_weibo" :receiveImg="form.weibo?form.weibo.url:''" :allowType="['image']">
           </file-picker>
         </el-form-item>
         <el-form-item label="网站状态：" prop="state">
@@ -344,22 +344,6 @@ export default {
           this.$message.error(res.data.message);
         }
       });
-    },
-    //图片上传
-    handleAvatarSuccess(res, file) {
-      this.form.wechat_img = URL.createObjectURL(file.raw);
-    },
-    //上传限制
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        this.$message.error("上传缩略图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传缩略图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
     },
     //表单提交
     submitForm(formName) {

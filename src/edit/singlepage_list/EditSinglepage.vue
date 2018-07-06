@@ -56,7 +56,7 @@
           <div v-for="(row,index) in this.form.data.image" :key="createKey(index)" style="margin:10px 0">
             <span>图片:</span>
             <el-tag>id：{{row.id}}</el-tag>
-            <file-picker style="display:inline-block" v-model="row.id"></file-picker>
+            <file-picker style="display:inline-block" v-model="row.id" :allowType="['image']"></file-picker>
             <el-button @click="del_image(index)" size="mini" type="danger">删除本条</el-button>
           </div>
           <div><el-button @click="add_image()" size="mini" type="success">新增</el-button></div>
@@ -66,7 +66,7 @@
           <div v-for="(row,index) in this.form.data.movie" :key="createKey(index)" style="margin:10px 0">
             <span>视频:</span>
             <el-tag>id：{{row.id}}</el-tag>
-            <file-picker style="display:inline-block" v-model="row.id"></file-picker>
+            <file-picker style="display:inline-block" v-model="row.id" :allowType="['video']"></file-picker>
             <el-button @click="del_movie(index)" size="mini" type="danger">删除本条</el-button>
           </div>
           <div><el-button @click="add_movie()" size="mini" type="success">新增</el-button></div>
@@ -76,7 +76,7 @@
           <div v-for="(row,index) in this.form.data.attachment" :key="createKey(index)" style="margin:10px 0">
             <span>附件:</span>
             <el-tag>id：{{row.id}}</el-tag>
-            <file-picker style="display:inline-block" v-model="row.id"></file-picker>
+            <file-picker style="display:inline-block" v-model="row.id" :allowType="['doc']"></file-picker>
             <el-button @click="del_attachment(index)" size="mini" type="danger">删除本条</el-button>
           </div>
           <div><el-button @click="add_attachment()" size="mini" type="success">新增</el-button></div>

@@ -122,8 +122,6 @@ export default {
       title: "",
       //附件描述
       description: "",
-      //附件类型
-      type: 1,
       //从服务器获取的类型列表
       typeList: {}
     };
@@ -134,6 +132,20 @@ export default {
       default() {
         return ["image", "doc", "video"];
       }
+    }
+  },
+  computed: {
+    //要上传的附件类型
+    type:function(){
+      let type;
+       if (this.allowType[0] == "image") {
+        type = 1;
+      } else if (this.allowType[0] == "doc") {
+        type = 2;
+      } else {
+        type = 3;
+      }
+      return type;
     }
   },
   watch: {
