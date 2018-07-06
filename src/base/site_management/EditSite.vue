@@ -59,31 +59,13 @@
           <el-input v-model="form.tail_info" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="微信公众号二维码：">
-          <file-picker v-model="form.qr_wechat">
-            <div slot="img" v-if="form.qr_weibo">
-              <img class="small-img" :src="form.qr_wechat.url" alt="">
-            </div>
+          <file-picker v-model="form.qr_wechat" :receiveImg="form.wechat?form.wechat.url:''">
           </file-picker>
         </el-form-item>
         <el-form-item label="新浪微博二维码：">
-          <file-picker v-model="form.qr_weibo">
-            <div slot="img" v-if="form.qr_weibo">
-              <img class="small-img" :src="form.qr_weibo.url" alt="">
-            </div>
+          <file-picker v-model="form.qr_weibo" :receiveImg="form.weibo?form.weibo.url:''">
           </file-picker>
         </el-form-item>
-        <!-- <el-form-item label="微信公众号二维码：">
-          <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-            <img v-if="form.wechat_img" :src="form.wechat_img" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="新浪微博二维码：">
-          <el-upload action="" class="avatar-uploader wechat_weibo_uploader" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-            <img v-if="form.weibo_img" :src="form.weibo_img" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item> -->
         <el-form-item label="网站状态：" prop="state">
           <el-radio-group v-model="form.state">
             <el-radio :label="-1">关闭</el-radio>
