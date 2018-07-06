@@ -9,10 +9,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="附件标题：" class="form-item">
-          <el-input v-model="title"></el-input>
+          <el-input v-model="title" placeholder="附件标题，留空则默认为文件名"></el-input>
         </el-form-item>
         <el-form-item label="描述：" class="form-item">
-          <el-input type="textarea" v-model="description"></el-input>
+          <el-input type="textarea" v-model="description" placeholder="用于描述附件相关信息"></el-input>
         </el-form-item>
     </el-form>      
     <div :id="options.button.substring(1)" class="my-upload-btn">选择文件</div>
