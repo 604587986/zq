@@ -172,7 +172,7 @@ export default {
           count: ''
         },
         {
-          name: "附件总数(个)",
+          name: "附件总体积",
           count: ''
         },
         {

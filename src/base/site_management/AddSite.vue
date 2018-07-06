@@ -32,7 +32,7 @@
         </el-form-item>
         <el-form-item label="域名：">
           <el-input v-model="form.domain"></el-input>
-          <span class="site-item-info">网站绑定的域名。必须以http开头，例：http://jwc.caa.edu.cn</span>
+          <span class="site-item-info">网站绑定的域名。例如jwc.caa.edu.cn</span>
         </el-form-item>
         <el-form-item label="是否启用HTTPS：">
           <el-radio-group v-model="form.domain_https">
