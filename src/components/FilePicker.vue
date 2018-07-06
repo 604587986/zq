@@ -38,9 +38,9 @@
               </div>
               <div class="filter">
                 <el-radio-group v-model="data.type" @change="getData">
-                    <el-radio :label="1">图片</el-radio>
-                    <el-radio :label="2">文档</el-radio>
-                    <el-radio :label="3">视频</el-radio>
+                    <el-radio :label="1" v-if="allowType.includes('image')">图片</el-radio>
+                    <el-radio :label="2" v-if="allowType.includes('doc')">文档</el-radio>
+                    <el-radio :label="3" v-if="allowType.includes('video')">视频</el-radio>
                 </el-radio-group>
                 <i class="el-icon-refresh" @click="refresh" ref="refresh"></i>
               </div>
@@ -76,7 +76,7 @@
               </div>
             </div>
             <div class="upload-file" v-show="currentIndex == 2">
-                  <upload @uploadSuccess="handleUpload"></upload>
+                  <upload @uploadSuccess="handleUpload" :allowType="allowType"></upload>
             </div>
           </div>
       </div>
@@ -134,7 +134,13 @@ export default {
   props: {
     //v-model双向绑定
     value: [String, Number],
-    receiveImg:[String]
+    receiveImg:[String],
+    allowType:{
+      type:Array,
+      default(){
+        return ['image','doc','video']
+      }
+    }
   },
   watch: {
     //数据双向绑定

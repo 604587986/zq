@@ -3,9 +3,9 @@
       <el-form>
         <el-form-item label="附件类型：" class="form-item">
           <el-radio-group v-model="type">
-            <el-radio :label="1">图片</el-radio>
-            <el-radio :label="2">文档</el-radio>
-            <el-radio :label="3">视频</el-radio>
+            <el-radio :label="1" v-if="allowType.includes('image')">图片</el-radio>
+            <el-radio :label="2" v-if="allowType.includes('doc')">文档</el-radio>
+            <el-radio :label="3" v-if="allowType.includes('video')">视频</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="附件标题：" class="form-item">
@@ -128,6 +128,14 @@ export default {
       typeList: {}
     };
   },
+  props: {
+    allowType: {
+      type: Array,
+      default() {
+        return ["image", "doc", "video"];
+      }
+    }
+  },
   watch: {
     // uploader: function() {
     //   setTimeout(function() {
@@ -196,7 +204,8 @@ export default {
         {
           // 时间点1：所有分块进行上传之前调用此函数
           beforeSendFile: function(file) {
-            if ($this.title == "") {//如果未填写附件标题，则填充为文件名
+            if ($this.title == "") {
+              //如果未填写附件标题，则填充为文件名
               $this.title = file.name;
             }
             const deferred = WebUploader.Deferred();
