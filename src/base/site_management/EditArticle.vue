@@ -22,8 +22,14 @@
         <el-form-item label="摄影:">
           <el-input v-model="form.photo"></el-input>
         </el-form-item>
+        <el-form-item label="编辑" class="form-item">
+            <el-input v-model="form.editor"></el-input>
+        </el-form-item> 
+        <el-form-item label="来源" class="form-item">
+            <el-input v-model="form.source"></el-input>
+        </el-form-item> 
         <el-form-item label="文章配图:">
-          <file-picker v-model="form.image_id"></file-picker>
+          <file-picker v-model="form.image_id" :receiveImg="form.image?form.image.url:''"></file-picker>
         </el-form-item>
         <el-form-item label="文章状态:">
           <el-select v-model="form.state" placeholder="状态" size="mini" disabled>
@@ -47,7 +53,7 @@
         </el-form-item> -->
         <el-form-item label="文章发布日期" class="form-item">
           <el-date-picker
-            v-model="form.publish_date"
+            v-model="form.release_time"
             type="datetime"
             value-format="yyyy-MM-dd hh:mm:ss"
             placeholder="文章发布日期">
@@ -190,9 +196,11 @@ export default {
             photo: that.form.photo,
             content: that.form.content,
             image_id: that.form.image_id,
-            publish_date: that.form.publish_date,
+            release_time: that.form.release_time,
             pin_date: that.form.pin_date,
-            tag_id:that.form.tag_id
+            tag_id:that.form.tag_id,
+            editor:that.form.editor,
+            source:that.form.source
           };
           saveArticle(data).then(res => {
             that.subLoading = false;
