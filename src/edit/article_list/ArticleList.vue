@@ -186,7 +186,7 @@ export default {
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
-        category_id:this.categoryValue
+        category_id: this.categoryValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -263,10 +263,10 @@ export default {
         }
       });
     },
-        //获取分类列表
+    //获取分类列表
     getCategory() {
       let data = {
-
+        page: 0
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
@@ -275,7 +275,7 @@ export default {
           this.$message.error(res.data.message);
         }
       });
-    },
+    }
   }
 };
 </script>

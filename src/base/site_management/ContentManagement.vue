@@ -163,7 +163,7 @@ export default {
       siteValue: "",
       //分类列表
       categoryList: [],
-      categoryValue: '',
+      categoryValue: "",
       //表格数据
       tableInfo: [],
       //用于全选
@@ -198,7 +198,7 @@ export default {
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
         site_id: this.siteValue,
-        category_id:this.categoryValue
+        category_id: this.categoryValue
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -227,7 +227,8 @@ export default {
     //获取分类列表
     getCategory() {
       let data = {
-        site_id:this.siteValue
+        site_id: this.siteValue,
+        page: 0
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {

@@ -284,7 +284,7 @@ export default {
             //获取分类列表
     getCategory() {
       let data = {
-
+        page: 0
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
