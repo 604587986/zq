@@ -14,6 +14,7 @@
             <img v-if="!imageUrl&&receiveImg" :src="formatUrl(receiveImg,'/160x160')" alt="">
         </div>
         <el-dialog
+          append-to-body
           :visible.sync="isShow">
           <div id="file-picker" v-if="isShow">
               <div class="header">   
@@ -157,10 +158,13 @@ export default {
       };
     },
     //检查是否为管理员使用
-    level:function(){
-      if(window.localStorage.getItem("group") == 0 && !window.localStorage.getItem("mockUser")){
+    level: function() {
+      if (
+        window.localStorage.getItem("group") == 0 &&
+        !window.localStorage.getItem("mockUser")
+      ) {
         return true;
-      }else{
+      } else {
         return false;
       }
     }
