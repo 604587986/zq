@@ -24,6 +24,7 @@
               <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
           </el-input>
       </div>
+      <div class="notice" v-show="show_keyword">搜索到{{currentPaging.totals}}篇关于“{{show_keyword}}”的文章：</div>      
       <!-- 表格 -->
       <div class="table-body">
           <el-table ref="multipleTable" border :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
@@ -158,6 +159,8 @@ export default {
       stateValue: 1,
       //搜索关键字
       titleSearchValue: "",
+      //搜索后用于展示的关键词
+      show_keyword:'',
       //站点列表
       siteList: [],
       siteValue: "",
@@ -206,6 +209,7 @@ export default {
         if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
+          this.show_keyword = this.titleSearchValue;          
         } else {
           this.$message.error(res.data.message);
         }

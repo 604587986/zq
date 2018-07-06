@@ -18,10 +18,11 @@
           <router-link to="/pages/editor/editor/article_recycle_bin" class="float-right">
             <el-button size="mini" type="primary">回收站</el-button>
           </router-link>
-                    <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
+           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
               <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
           </el-input>
       </div>
+      <div class="notice" v-show="show_keyword">搜索到{{currentPaging.totals}}篇关于“{{show_keyword}}”的文章：</div>
       <!-- 表格 -->
       <div class="table-body">
           <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
@@ -153,6 +154,8 @@ export default {
       columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
+      //搜索后用于展示的关键词
+      show_keyword:'',
       //分类列表
       categoryList: [],
       categoryValue: "",
@@ -194,6 +197,7 @@ export default {
         if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
+          this.show_keyword = this.titleSearchValue;
         } else {
           this.$message.error(res.data.message);
         }

@@ -13,73 +13,76 @@
             <!-- 从远程获取的默认图片 -->
             <img v-if="!imageUrl&&receiveImg" :src="formatUrl(receiveImg,'/160x160')" alt="">
         </div>
-        <div id="file-picker" v-if="isShow">
-            <div class="header">   
-              <div class="close-wrapper">
-                <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1">选择附件</el-button>
-                <el-button type="primary" v-show="currentIndex == 1" @click="currentIndex = 2">上传附件</el-button>            
-                <i class="el-icon-close close" @click="isShow=false"></i>
-              </div>
-            <div class="select-file" v-show="currentIndex == 1">
-              <div class="my-input-wrapper">
-                  <el-select v-model="siteValue" placeholder="请选择站点" v-if="level" @change="getData" clearable>
-                    <el-option
-                      v-for="item in siteList"
-                      :key="item.id"
-                      :label="item.title"
-                      :value="item.id">
-                    </el-option>
-                  </el-select>
-                  <div class="search">
-                    <el-input placeholder="请输入内容" v-model="data.keyword">
-                        <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
-                    </el-input>
-                  </div>
-              </div>
-              <div class="filter">
-                <el-radio-group v-model="data.type" @change="getData">
-                    <el-radio :label="1" v-if="allowType.includes('image')">图片</el-radio>
-                    <el-radio :label="2" v-if="allowType.includes('doc')">文档</el-radio>
-                    <el-radio :label="3" v-if="allowType.includes('video')">视频</el-radio>
-                </el-radio-group>
-                <i class="el-icon-refresh" @click="refresh" ref="refresh"></i>
-              </div>
-              <div class="content">
-                <div class="item" v-for="item in info" :key="item.id" @click="select(item)" v-if="info.length">
-                  <div v-if="item.type == 1">
-                    <div class="my-img-wrapper">
-                      <img :src="formatUrl(item.url,'/160')" alt=""> 
-                    </div>
-                    <p class="title">{{item.title}}</p>
-                  </div>   
-                  <div v-if="item.type == 2">
-                    <div class="my-doc-wrapper">
-                      <p class="title">{{item.title}}</p>
-                    <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
-                    </div>
-                  </div>   
-                  <div v-if="item.type == 3">
-                    <div class="my-doc-wrapper">
-                      <p class="title">{{item.title}}</p>
-                      <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
-                    </div>
-                  </div>   
+        <el-dialog
+          :visible.sync="isShow">
+          <div id="file-picker" v-if="isShow">
+              <div class="header">   
+                <div class="close-wrapper">
+                  <el-button type="primary" v-show="currentIndex == 2" @click="currentIndex = 1">选择附件</el-button>
+                  <el-button type="primary" v-show="currentIndex == 1" @click="currentIndex = 2">上传附件</el-button>            
                 </div>
-                <!-- 当列表为空时显示 -->
-                <div class="no-data" v-if="!info.length">
-                  暂无数据
-                </div>           
+              <div class="select-file" v-show="currentIndex == 1">
+                <div class="my-input-wrapper">
+                    <el-select v-model="siteValue" placeholder="请选择站点" v-if="level" @change="getData" clearable>
+                      <el-option
+                        v-for="item in siteList"
+                        :key="item.id"
+                        :label="item.title"
+                        :value="item.id">
+                      </el-option>
+                    </el-select>
+                    <div class="search">
+                      <el-input placeholder="请输入内容" v-model="data.keyword">
+                          <el-button slot="append" icon="el-icon-search" @click="getData"></el-button>
+                      </el-input>
+                    </div>
+                </div>
+                <div class="notice" v-show="data.keyword">搜索到{{currentPaging.totals}}个关于“{{data.keyword}}”的附件：</div>
+                <div class="filter">
+                  <el-radio-group v-model="data.type" @change="getData">
+                      <el-radio :label="1" v-if="allowType.includes('image')">图片</el-radio>
+                      <el-radio :label="2" v-if="allowType.includes('doc')">文档</el-radio>
+                      <el-radio :label="3" v-if="allowType.includes('video')">视频</el-radio>
+                  </el-radio-group>
+                  <i class="el-icon-refresh" @click="refresh" ref="refresh"></i>
+                </div>
+                <div class="content">
+                  <div class="item" v-for="item in info" :key="item.id" @click="select(item)" v-if="info.length">
+                    <div v-if="item.type == 1">
+                      <div class="my-img-wrapper">
+                        <img :src="formatUrl(item.url,'/160')" alt=""> 
+                      </div>
+                      <p class="title">{{item.title}}</p>
+                    </div>   
+                    <div v-if="item.type == 2">
+                      <div class="my-doc-wrapper">
+                        <p class="title">{{item.title}}</p>
+                      <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                      </div>
+                    </div>   
+                    <div v-if="item.type == 3">
+                      <div class="my-doc-wrapper">
+                        <p class="title">{{item.title}}</p>
+                        <!-- <a :href="item.url" target="_blank">{{item.title}}</a> -->
+                      </div>
+                    </div>   
+                  </div>
+                  <!-- 当列表为空时显示 -->
+                  <div class="no-data" v-if="!info.length">
+                    暂无数据
+                  </div>           
+                </div>
+                <div class="footer">
+                  <!-- 分页 -->
+                  <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
+                </div>
               </div>
-              <div class="footer">
-                <!-- 分页 -->
-                <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
+              <div class="upload-file" v-show="currentIndex == 2">
+                    <upload @uploadSuccess="handleUpload" :allowType="allowType"></upload>
               </div>
-            </div>
-            <div class="upload-file" v-show="currentIndex == 2">
-                  <upload @uploadSuccess="handleUpload" :allowType="allowType"></upload>
             </div>
           </div>
-      </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -115,8 +118,6 @@ export default {
       label: "",
       //组件绑定值
       currentValue: this.value,
-      //是否为管理员
-      level: window.localStorage.getItem("group") == 0 ? true : false,
       // 站点列表
       siteList: [],
       siteValue: "",
@@ -154,6 +155,14 @@ export default {
         type,
         keyword: ""
       };
+    },
+    //检查是否为管理员使用
+    level:function(){
+      if(window.localStorage.getItem("group") == 0 && !window.localStorage.getItem("mockUser")){
+        return true;
+      }else{
+        return false;
+      }
     }
   },
   watch: {
@@ -321,18 +330,18 @@ export default {
   z-index: 10;
 }
 #file-picker {
-  position: fixed;
+  // position: fixed;
   width: 600px;
   height: 600px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  padding: 10px 20px;
-  border-radius: 10px;
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+  // background: #fff;
+  // box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  // padding: 10px 20px;
+  // border-radius: 10px;
   overflow-y: auto;
-  z-index: 999;
+  // z-index: 999;
   .header {
     .close-wrapper {
       span {
@@ -422,8 +431,7 @@ export default {
   .upload-file {
     position: absolute;
     left: 20px;
-    right: 20px;
-    top: 50;
+    right: 40px;
     z-index: 20;
     background: #fff;
   }
