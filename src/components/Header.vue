@@ -2,7 +2,7 @@
   <div id="Header">
     <div class="header-container">
       <div class="float-left header-left">
-        <p class="site float-left">
+        <p class="site float-left" v-if="site">
           <span class="float-left">所属站点：</span>
           <span class="float-left">{{site}}</span>
         </p>
@@ -40,8 +40,10 @@ export default {
   data() {
     return {
       user: "",
-      site: ""
     };
+  },
+  props:{
+    site:""
   },
   mounted: function() {
     this.user = JSON.parse(localStorage.getItem("userInfo")).nickname;

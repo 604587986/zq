@@ -16,3 +16,11 @@ export function deleteEnclosure(data) {
         console.log(err);
     })
 }
+//附件更改
+export function saveEnclosure(data) {
+    return axios.post('/api/attachment/save', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}

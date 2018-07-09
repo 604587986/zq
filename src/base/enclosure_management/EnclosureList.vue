@@ -47,7 +47,7 @@
           <el-table-column prop="ext" label="文件类型" width="70"></el-table-column>
           <el-table-column label="操作" width="130">
             <div slot-scope="scope" class="control-btn">
-              <el-button size="small">更改</el-button>
+              <el-button @click.native.prevent="save(scope.row.id)" size="small">更改</el-button>
               <el-button @click.native.prevent="del(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
             </div>
           </el-table-column>
@@ -71,7 +71,7 @@ import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
 
 import { formatUrl } from "@/utils";
-import { getEnclosureList,deleteEnclosure } from "@/api/enclosure/EnclosureList.js";
+import { getEnclosureList,deleteEnclosure,saveEnclosure } from "@/api/enclosure/EnclosureList.js";
 import { getSiteList } from "@/api/site_management/SiteList";
 
 /* 附件列表 */
@@ -210,7 +210,7 @@ export default {
         }
       });
     },
-    //删除表格行
+    //删除
     del(id) {
       this.$confirm("此操作将删除该文件和文件在其他地方的引用, 请谨慎操作?", "提示", {
         confirmButtonText: "确定",
@@ -233,6 +233,10 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    //更改
+    save(id){
+
     },
     //选中的时候触发
     handleSelectionChange(val) {
