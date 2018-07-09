@@ -8,3 +8,11 @@ export function getEnclosureList(data) {
         console.log(err);
     })
 }
+//附件删除
+export function deleteEnclosure(data) {
+    return axios.post('/api/attachment/delete', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}
