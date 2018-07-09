@@ -237,7 +237,7 @@ export default {
       this.getData();
     },
     //表单提交
-    submitForm(formName) {
+    submitForm(formName) {     
       var that = this;
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
@@ -245,8 +245,8 @@ export default {
           addMember(that.form).then(res => {
             that.subLoading = false;
             if (res.data.code == 200) {
-              that.$message.success("提交成功");
-              that.$refs[formName].resetField();
+              that.$message.success("添加成功");
+              that.$refs[formName].resetFields();
               that.dialogVisible = false;
             } else {
               that.$message.error(res.data.message);
