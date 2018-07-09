@@ -47,8 +47,8 @@
           <el-table-column prop="ext" label="文件类型" width="70"></el-table-column>
           <el-table-column label="操作" width="130">
             <div slot-scope="scope" class="control-btn">
-              <el-button size="small">更改</el-button>
-              <el-button @click.native.prevent="deleteRow(scope.$index, tableInfo)" size="small" class="control-btn-del">删除</el-button>
+              <el-button @click.native.prevent="save(scope.row.id)" size="small">更改</el-button>
+              <el-button @click.native.prevent="del(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
             </div>
           </el-table-column>
         </el-table>
@@ -71,7 +71,7 @@ import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
 
 import { formatUrl } from "@/utils";
-import { getEnclosureList } from "@/api/enclosure/EnclosureList.js";
+import { getEnclosureList,deleteEnclosure,saveEnclosure } from "@/api/enclosure/EnclosureList.js";
 import { getSiteList } from "@/api/site_management/SiteList";
 
 /* 附件列表 */
@@ -210,19 +210,22 @@ export default {
         }
       });
     },
-    //删除表格行
-    deleteRow(index, rows) {
-      this.$confirm("此操作将删除该文件, 是否继续?", "提示", {
+    //删除
+    del(id) {
+      this.$confirm("此操作将删除该文件和文件在其他地方的引用, 请谨慎操作?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          rows.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
+          deleteEnclosure({id:id}).then(res=>{
+            if(res.data.code == 200){
+              this.$message.success('删除成功');
+              this.getData()
+            }else{
+              this.$message.error(res.data.message)
+            }
+          })
         })
         .catch(() => {
           this.$message({
@@ -230,6 +233,10 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    //更改
+    save(id){
+
     },
     //选中的时候触发
     handleSelectionChange(val) {

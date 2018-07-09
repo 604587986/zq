@@ -198,11 +198,11 @@ export default {
     //初始化获取数据
     init().then(res=>{
       if(res.data.code == 200){
-        this.data_all[0].count = res.data.data.statistics.SiteCount
-        this.data_all[1].count = res.data.data.statistics.ArticleCount
-        this.data_all[2].count = res.data.data.statistics.PageCount
-        this.data_all[3].count = res.data.data.statistics.AttachmentSize
-        this.data_all[4].count = res.data.data.statistics.ManagerCount
+        this.data_all[0].count = res.data.data.init.statistics.SiteCount
+        this.data_all[1].count = res.data.data.init.statistics.ArticleCount
+        this.data_all[2].count = res.data.data.init.statistics.PageCount
+        this.data_all[3].count = res.data.data.init.statistics.AttachmentSize
+        this.data_all[4].count = res.data.data.init.statistics.ManagerCount
       }
     })
     //侧边导航定位

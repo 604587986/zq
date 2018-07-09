@@ -1,9 +1,9 @@
 <template>
   <div id="admin">
     <!-- Header -->
-    <Header></Header>
+    <Header :site="site"></Header>
     <!-- nav -->
-    <Nav :adminNavShow="true"></Nav>
+    <Nav :adminNavShow="true" :article="article"></Nav>
     <!-- list -->
     <div id="entry-list" :class="listClass">
       <div class="float-left" :class="{'editor-list':editor}">
@@ -33,11 +33,17 @@
 import Nav from "@/components/Nav";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+import { init } from "@/api/login/login";
 /* 后台登录页 */
 export default {
   name: "Administrators",
   data() {
     return {
+      //当前用户所在的站点信息
+      site:'',
+      //当前站点的文章数据
+      article:{},
       adminNavShow: true, //本页面需要展示在nav的元素
       entryList: [],
       editor: false,
@@ -240,6 +246,7 @@ export default {
   mounted: function() {
     var that = this;
     that.getMenus();
+    that.init()
   },
   methods: {
     //获取导航菜单
@@ -273,6 +280,15 @@ export default {
         }
       }
       localStorage.setItem("entryList", JSON.stringify(this.entryList));
+    },
+    // 登录初始化
+    init() {
+      init().then(res=>{
+        if(res.data.code == 200){
+          this.site = res.data.data.site.title;
+          this.article = res.data.data.init.statistics
+        }
+      });
     }
   }
 };

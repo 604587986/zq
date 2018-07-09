@@ -75,19 +75,19 @@
         <ul class="notice-list float-right">
           <li class="float-left">
             <span class="list-title float-left">发布文章</span>
-            <span class="list-info float-left">150</span>
+            <span class="list-info float-left">{{article.PublishCount}}</span>
           </li>
           <li class="float-left">
             <span class="list-title float-left">今日发布</span>
-            <span class="list-info float-left">3</span>
+            <span class="list-info float-left">{{article.TodayPublishCount}}</span>
           </li>
           <li class="float-left">
             <span class="list-title float-left">待审文章</span>
-            <span class="list-info float-left">2</span>
+            <span class="list-info float-left">{{article.VerifyPendingCount}}</span>
           </li>
           <li class="float-left">
             <span class="list-title float-left">文章总数</span>
-            <span class="list-info float-left">1565</span>
+            <span class="list-info float-left">{{article.ArticleCount}}</span>
           </li>
         </ul>
       </div>
@@ -146,7 +146,9 @@ export default {
     searchNavShow: false, //前台搜索页面展示模块
     rankNavShow: false, //排行榜页面展示模块
     adminNavShow: false, //后台首页页面展示模块
-    systemNavShow: false //系统管理员页面展示模块
+    systemNavShow: false, //系统管理员页面展示模块
+    // 导航上显示的文章信息
+    article:{}
   },
   data() {
     return {
