@@ -23,7 +23,7 @@
         <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
           <el-table-column type="selection"></el-table-column>
           <el-table-column prop="id" label="ID" width="80"></el-table-column>
-          <el-table-column prop="title" label="文件名称" width="160"></el-table-column>
+          <el-table-column prop="title" label="文件名称" width="100"></el-table-column>
           <el-table-column prop="preview" label="预览" width="150">
             <div slot-scope="scope">
               <a :href="scope.row.url" target="_blank" v-if="scope.row.type == 1">
@@ -61,6 +61,19 @@
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
+    <el-dialog
+      title="附件更改"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <el-form ref="form" :model="form" :rules="rules" status-icon label-width="108px" size="mini" label-position="right">
+        <el-form-item label="标题：" class="form-item" prop="title">
+            <el-input v-model="form.title"></el-input>
+        </el-form-item>
+        <el-form-item class="form-control-btn">
+            <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
+        </el-form-item>
+    </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -71,7 +84,11 @@ import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
 
 import { formatUrl } from "@/utils";
-import { getEnclosureList,deleteEnclosure,saveEnclosure } from "@/api/enclosure/EnclosureList.js";
+import {
+  getEnclosureList,
+  deleteEnclosure,
+  saveEnclosure
+} from "@/api/enclosure/EnclosureList.js";
 import { getSiteList } from "@/api/site_management/SiteList";
 
 /* 附件列表 */
@@ -155,7 +172,32 @@ export default {
       titleSearchValue: "",
       //表格
       tableInfo: [],
-      tableList: []
+      tableList: [],
+      // 弹出框
+      dialogVisible: false,
+      //更改附件表单
+      form: {},
+      //表单验证
+      rules: {
+        title: [
+          {
+            required: true,
+            validator: function(rule, value, callback) {
+              var reg = /\S/;
+              if (!value) {
+                callback(new Error("不能为空"));
+              } else if (reg.test(value) == false) {
+                callback(new Error("不能为空"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ]
+      },
+      //提交按钮loading
+      subLoading:false
     };
   },
   components: {
@@ -212,20 +254,24 @@ export default {
     },
     //删除
     del(id) {
-      this.$confirm("此操作将删除该文件和文件在其他地方的引用, 请谨慎操作?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+      this.$confirm(
+        "此操作将删除该文件和文件在其他地方的引用, 请谨慎操作?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
         .then(() => {
-          deleteEnclosure({id:id}).then(res=>{
-            if(res.data.code == 200){
-              this.$message.success('删除成功');
-              this.getData()
-            }else{
-              this.$message.error(res.data.message)
+          deleteEnclosure({ id: id }).then(res => {
+            if (res.data.code == 200) {
+              this.$message.success("删除成功");
+              this.getData();
+            } else {
+              this.$message.error(res.data.message);
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
@@ -235,8 +281,10 @@ export default {
         });
     },
     //更改
-    save(id){
-
+    save(id) {
+      this.dialogVisible = true;
+      this.$set(this.form,'id',id)
+      this.submitForm()
     },
     //选中的时候触发
     handleSelectionChange(val) {
@@ -289,6 +337,30 @@ export default {
     handleCurrentChange(val) {
       this.currentPaging.currentPage = val;
       this.getData();
+    },
+    //表单提交
+    submitForm(formName) {
+      var that = this;
+      that.$refs[formName].validate(function(valid) {
+        that.subLoading = true;
+        if (valid) {
+          saveEnclosure(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("更改成功");
+              that.$refs[formName].resetFields();
+              that.dialogVisible = false;
+              that.getData()
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        } else {
+          that.subLoading = false;
+          that.$message.error("提交失败!");
+          return false;
+        }
+      });
     }
   },
   filters: {
