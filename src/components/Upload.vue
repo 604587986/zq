@@ -104,9 +104,7 @@ export default {
         button: "#picker" + new Date().getTime(),
         multiple: true,
         accept: {
-          title: "Images",
-          extensions: "gif,jpg,jpeg,bmp,png",
-          mimeTypes: "image/*"
+
         },
         threads: 1,
         fileNumLimit: 1,
@@ -123,7 +121,8 @@ export default {
       //附件描述
       description: "",
       //从服务器获取的类型列表
-      typeList: {}
+      typeList: {},
+      type: ""
     };
   },
   props: {
@@ -134,20 +133,30 @@ export default {
       }
     }
   },
-  computed: {
-    //要上传的附件类型
-    type:function(){
-      let type;
-       if (this.allowType[0] == "image") {
-        type = 1;
-      } else if (this.allowType[0] == "doc") {
-        type = 2;
-      } else {
-        type = 3;
-      }
-      return type;
-    }
-  },
+  // computed: {
+  //   //要上传的附件类型
+  //   type: {
+  //     get: function() {
+  //       let type;
+  //       if (this.allowType[0] == "image") {
+  //         type = 1;
+  //       } else if (this.allowType[0] == "doc") {
+  //         type = 2;
+  //       } else {
+  //         type = 3;
+  //       }
+  //       return type;
+  //     },
+  //     set: function(val) {
+  //       // if (val == 1) {
+  //       //   this.options.accept = {
+  //       //     extensions: this.typeList[1].ext,
+  //       //     mimeTypes: this.typeList[1].mime
+  //       //   };
+  //       // }
+  //     }
+  //   }
+  // },
   watch: {
     // uploader: function() {
     //   setTimeout(function() {
@@ -190,6 +199,13 @@ export default {
         if (res.data.code == 200) {
           //保存接收的文件类型
           this.typeList = res.data.data.accept;
+          if (this.allowType[0] == "image") {
+            this.type = 1;
+          } else if (this.allowType[0] == "doc") {
+            this.type = 2;
+          } else {
+            this.type = 3;
+          }
           //
           this.options = Object.assign(this.options, {
             chunkRetry: res.data.data.chunkRetry,

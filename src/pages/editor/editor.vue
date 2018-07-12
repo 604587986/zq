@@ -1,9 +1,7 @@
 <template>
   <div id="editor" class="public-wap">
     <!-- Header -->
-    <Header></Header>
-    <!-- nav -->
-    <Nav :adminNavShow="true"></Nav>
+    <Header :site="site"></Header>
 
     <div class="main">
       <!-- Subject -->
@@ -31,7 +29,6 @@
 /* 引入组件 */
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
 
 /* 后台首页 */
 export default {
@@ -44,10 +41,15 @@ export default {
       is_mock_user: window.localStorage.getItem("mockUser")
     };
   },
+  computed: {
+    //当前用户所在的站点信息
+    site() {
+      return this.$store.state.site_title;
+    }
+  },
   components: {
     Header,
     Footer,
-    Nav
   },
   mounted: function() {
     const navMenus = eval("(" + window.localStorage.getItem("entryList") + ")");

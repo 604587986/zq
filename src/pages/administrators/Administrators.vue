@@ -40,10 +40,8 @@ export default {
   name: "Administrators",
   data() {
     return {
-      //当前用户所在的站点信息
-      site:'',
       //当前站点的文章数据
-      article:{},
+      article: {},
       adminNavShow: true, //本页面需要展示在nav的元素
       entryList: [],
       editor: false,
@@ -238,6 +236,12 @@ export default {
       }
     };
   },
+  computed: {
+    //当前用户所在的站点信息
+    site(){
+      return this.$store.state.site_title
+    }
+  },
   components: {
     Header,
     Nav,
@@ -246,7 +250,7 @@ export default {
   mounted: function() {
     var that = this;
     that.getMenus();
-    that.init()
+    that.init();
   },
   methods: {
     //获取导航菜单
@@ -283,10 +287,10 @@ export default {
     },
     // 登录初始化
     init() {
-      init().then(res=>{
-        if(res.data.code == 200){
-          this.site = res.data.data.site.title;
-          this.article = res.data.data.init.statistics
+      init().then(res => {
+        if (res.data.code == 200) {
+          this.$store.commit('get_site_title',res.data.data.site.title)
+          this.article = res.data.data.init.statistics;
         }
       });
     }
