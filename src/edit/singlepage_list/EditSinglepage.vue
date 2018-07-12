@@ -243,8 +243,6 @@ export default {
           //将附加数据转为json格式
           this.form.data = eval("(" + this.form.data + ")");
           //将form.data.image 和form.data.movie和form.data.attachment转换为带id的数组
-          console.log(this.form.data);
-          
           if (this.form.data) {
             if (this.form.data.image) {
               let arr1 = [];
@@ -288,7 +286,6 @@ export default {
               movie: [],
               attachment: []
             };
-            console.log(this.form.data);
             
           }
         } else {
@@ -356,7 +353,6 @@ export default {
     //新增一行附加数据：分类
     add_category() {
       this.form.data.category.push({ id: "", size: "" });
-      console.log(this.form.data);
       
     },
     //删除一行附加数据：链接
@@ -390,7 +386,6 @@ export default {
     //新增一行附加数据：附件
     add_attachment() {
       this.form.data.attachment.push({ id: "" });
-      console.log(this.form.data);
       
     },
     // 生成循环时所需唯一数（用于绑定key）
