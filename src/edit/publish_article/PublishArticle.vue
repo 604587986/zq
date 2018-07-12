@@ -70,8 +70,17 @@
                 <el-radio label="置顶"></el-radio>
             </el-radio-group>
         </el-form-item> -->
-        <el-form-item label="文章标签" class="form-item" prop="comeFrom">
+        <el-form-item label="文章标签" class="form-item">
             <tag @change="getTags"></tag>
+        </el-form-item>
+        <el-form-item label="是否推荐" class="form-item">
+            <el-switch
+            v-model="form.recommend"
+            :active-value="1"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
         </el-form-item>
         <el-form-item label="文章内容">
           <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
@@ -125,10 +134,10 @@ export default {
         // state_verify: "",
         // image_id: "",
         // sort: "",
-        release_time:'',
+        release_time: "",
         pin_date: "",
-        editor:'',
-        source:'',
+        editor: "",
+        source: "",
         // create_time: "",
         // update_time: "",
         // user_id: "",
@@ -136,7 +145,8 @@ export default {
         category_id: "",
         author: "",
         photo: "",
-        tag_id:''
+        tag_id: "",
+        recommend:0,
         // url: ""
       },
       rules: {
@@ -236,7 +246,7 @@ export default {
     },
     //监听tag变化，将标签值绑定到form上
     getTags(val) {
-      this.$set(this.form,'tag_id',val)
+      this.$set(this.form, "tag_id", val);
     }
   },
   beforeRouteLeave(to, from, next) {
