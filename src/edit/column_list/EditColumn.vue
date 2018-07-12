@@ -80,11 +80,11 @@ export default {
           url: "/pages/administrators/Administrators"
         },
         {
-          name: "栏目列表",
+          name: "菜单列表",
           url: "/pages/editor/editor/column_list"
         },
         {
-          name: "编辑栏目",
+          name: "编辑菜单",
           url: ""
         }
       ],
@@ -101,18 +101,20 @@ export default {
       ],
       //站点列表
       siteList: [{ label: "站点1", value: 1 }, { label: "站点2", value: 2 }],
-      //栏目类型列表
+      //菜单类型列表
       typeList: [
         { label: "单页/模板", value: 1 },
         { label: "列表", value: 2 },
-        { label: "链接", value: 3 }
+        { label: "链接", value: 3 },
+        // { label: "链接1", value: 4 },
+        { label: "推荐", value: 5 }
       ],
       //类型为单页时的文章列表
       articleList: [],
       //类型为列表时的分类列表
       categoryList: [],
       articleList: [],
-      //栏目状态列表
+      //菜单状态列表
       stateList: [
         { label: "隐藏", value: 0 },
         { label: "正常", value: 1 }

@@ -15,7 +15,7 @@
         <div v-if="switch_control == 1" class="btn-container">
             <el-button type="primary">一键生成首页</el-button>
             <el-button type="primary">一键生成所有内容</el-button>
-            <el-button type="primary">一键生成所有栏目</el-button>
+            <el-button type="primary">一键生成所有菜单</el-button>
             <el-button type="primary">一键生成所有单页</el-button>
             <div class="btn-container">
                 <el-button type="primary">一键生成某时间段内容</el-button>
@@ -45,13 +45,13 @@
             </el-select>
             <el-button type="primary" size="small" class="btn">生成频道页</el-button>
         </div>
-        <!-- 生成栏目页 -->
+        <!-- 生成菜单页 -->
         <div v-if="switch_control == 4" class="btn-container">
-            <span class="remarks2">选择栏目</span>
-            <el-select v-model="selectColumns" placeholder="选择栏目" size="small" class="modules-input">
+            <span class="remarks2">选择菜单</span>
+            <el-select v-model="selectColumns" placeholder="选择菜单" size="small" class="modules-input">
                 <el-option v-for="item in columns" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-button type="primary" size="small" class="btn">生成栏目页</el-button>
+            <el-button type="primary" size="small" class="btn">生成菜单页</el-button>
         </div>
         <!-- 生成单页 -->
         <div v-if="switch_control == 5" class="btn-container">
@@ -63,7 +63,7 @@
         </div>
         <!-- 生成内容页 -->
         <div v-if="switch_control == 6" class="btn-container">
-            <span class="remarks2">选择栏目</span>
+            <span class="remarks2">选择菜单</span>
             <el-select v-model="selectContentPages" placeholder="选择单页" size="small" class="modules-input">
                 <el-option v-for="item in contentPages" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
@@ -128,7 +128,7 @@ export default {
           classCon: false
         },
         {
-          name: "生成栏目页",
+          name: "生成菜单页",
           classCon: false
         },
         {
@@ -217,7 +217,7 @@ export default {
         }
       ],
       selectChannels: "新闻中心",
-      //选择栏目
+      //选择菜单
       columns: [
         {
           value: 0,
@@ -287,7 +287,7 @@ export default {
       } else if (index == 2) {
         that.crumbs[2].name = "生成频道页";
       } else if (index == 3) {
-        that.crumbs[2].name = "生成栏目页";
+        that.crumbs[2].name = "生成菜单页";
       } else if (index == 4) {
         that.crumbs[2].name = "生成单页";
       } else if (index == 5) {

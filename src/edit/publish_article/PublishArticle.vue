@@ -10,13 +10,13 @@
     <div class="form-container">
       <!-- 表单 -->
       <el-form ref="form" :model="form" :rules="rules" status-icon label-width="108px" size="mini" label-position="right">
-        <!-- <el-form-item label="主栏目" class="form-item" prop="mainColumn">
-            <el-select v-model="form.mainColumn" placeholder="请选择主栏目" style="width:100%;">
+        <!-- <el-form-item label="主菜单" class="form-item" prop="mainColumn">
+            <el-select v-model="form.mainColumn" placeholder="请选择主菜单" style="width:100%;">
                 <el-option v-for="item in mainColumnList" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="副栏目" class="form-item">
-            <el-select v-model="form.subColumn" placeholder="请选择副栏目" style="width:100%;">
+        <el-form-item label="副菜单" class="form-item">
+            <el-select v-model="form.subColumn" placeholder="请选择副菜单" style="width:100%;">
                 <el-option v-for="item in subColumnList" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
         </el-form-item> -->

@@ -41,7 +41,7 @@ export default {
           count: "3"
         },
         {
-          name: "栏目总数",
+          name: "菜单总数",
           count: "10"
         },
         {

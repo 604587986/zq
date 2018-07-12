@@ -60,14 +60,14 @@ import ArticleList from '@/edit/article_list/ArticleList'
 import EditArticle from '@/edit/article_list/EditArticle'
 //文章回收站
 import ArticleRecycleBin from '@/edit/article_list/ArticleRecycleBin'
-//栏目列表
+//菜单列表
 import ColumnList2 from '@/edit/column_list/ColumnList'
 
 //分类操作
 import CategoryList from '@/edit/category/CategoryList'//分类列表
 import AddCategory from '@/edit/category/AddCategory'//添加分类
 import EditCategory from '@/edit/category/EditCategory'//编辑分类
-//编辑栏目
+//编辑菜单
 import EditColumn2 from '@/edit/column_list/EditColumn'
 //轮播图管理
 import CarouselList from '@/edit/carousel_list/CarouselList'//轮播图列表

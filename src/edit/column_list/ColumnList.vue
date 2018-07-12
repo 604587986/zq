@@ -5,7 +5,7 @@
     <!-- 使用说明 -->
     <Instructions :instructionsInfo="instructionsInfo"></Instructions>
     <div class="table-filter">
-      <el-button type="primary" size="mini" @click="add_child(0,0,'顶级栏目')">添加栏目</el-button>
+      <el-button type="primary" size="mini" @click="add_child(0,0,'顶级菜单')">添加菜单</el-button>
     </div>
     <!-- Form -->
     <div class="table-container">
@@ -77,7 +77,7 @@
                             </el-table-column>
                             <el-table-column width="270">
                                 <div slot-scope="scope" class="control-btn">
-                                    <el-button size="small" @click="add_child(scope.row.id,2,'三级栏目')">添加子类</el-button>
+                                    <el-button size="small" @click="add_child(scope.row.id,2,'三级菜单')">添加子类</el-button>
                                     <el-button size="small">预览</el-button>
                                     <router-link :to="{path:'/pages/editor/editor/edit_column',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
                                     <el-button @click.native.prevent="deleteRow(scope.$index, column_list)" size="small" class="control-btn-del">删除</el-button>
@@ -101,15 +101,15 @@
                     <div v-show="scope.row.state==1">正常</div>
                   </div>
                 </el-table-column>
-                <el-table-column prop="level" label="级别" width="80"></el-table-column>
-                <el-table-column label="排序" width="60">
+                <!-- <el-table-column prop="level" label="级别" width="80"></el-table-column> -->
+                <el-table-column label="排序">
                     <div slot-scope="scope" class="table-sort-input">
                         <el-input type="text" size="mini" @blur="sortBlur(scope.$index, column_list)" :value="scope.row.sort"></el-input>
                     </div>
                 </el-table-column>
                 <el-table-column label="操作" width="270">
                     <div slot-scope="scope" class="control-btn">
-                        <el-button size="small" @click="add_child(scope.row.id,1,'二级栏目')">添加子类</el-button>
+                        <el-button size="small" @click="add_child(scope.row.id,1,'二级菜单')">添加子类</el-button>
                         <router-link :to="{path:'/pages/editor/editor/edit_column',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
                         <el-button @click.native.prevent="deleteRow(scope.$index, column_list)" size="small" class="control-btn-del">删除</el-button>
                     </div>
@@ -193,7 +193,7 @@ export default {
           url: "/pages/administrators/Administrators"
         },
         {
-          name: "栏目列表",
+          name: "菜单列表",
           url: ""
         }
       ],
@@ -216,7 +216,7 @@ export default {
       dialogFormVisible: false,
       //弹出框的表单
       form: {
-        data:''
+        data: ""
       },
       //站点列表
       siteList: [{ label: "站点1", value: 1 }, { label: "站点2", value: 2 }],
@@ -224,13 +224,15 @@ export default {
       articleList: [],
       //类型为列表时的分类列表
       categoryList: [],
-      //栏目类型列表
+      //菜单类型列表
       typeList: [
         { label: "单页/模板", value: 1 },
         { label: "列表", value: 2 },
-        { label: "链接", value: 3 }
+        { label: "链接", value: 3 },
+        // { label: "链接1", value: 4 },
+        { label: "推荐", value: 5 }
       ],
-      //栏目状态列表
+      //菜单状态列表
       stateList: [{ label: "隐藏", value: 0 }, { label: "正常", value: 1 }],
       //表格loading
       table_loading: false,
@@ -238,7 +240,7 @@ export default {
       subLoading: false,
       //表单验证
       rules: {
-        title:[{ required: true, message: '请填写名称', trigger: 'blur' }]
+        title: [{ required: true, message: "请填写名称", trigger: "blur" }]
       },
       //表格
       tableInfo: [
@@ -362,7 +364,7 @@ export default {
     //获取表格数据
     this.getData();
     //获取分类列表
-    this.getCategory()
+    this.getCategory();
   },
   methods: {
     //获取表格数据
@@ -421,7 +423,7 @@ export default {
     },
     //切换类型时清空一些数据
     clearData() {
-      this.form.data = '';
+      this.form.data = "";
       this.articleList = [];
     },
     //表单提交
@@ -474,7 +476,7 @@ export default {
     .el-table__row > td {
       background: #f5f7fa;
     }
-    .el-icon-arrow-right{
+    .el-icon-arrow-right {
       left: 56%;
     }
   }
@@ -491,15 +493,15 @@ export default {
       max-width: 300px;
     }
   }
-  .el-table__expand-icon>.el-icon{
+  .el-table__expand-icon > .el-icon {
     font-size: 20px;
     margin-top: -8px;
   }
-  .second-table{
-    .el-table__expand-icon>.el-icon{
-    font-size: 14px;
-    margin-top: -5px;
-  }
+  .second-table {
+    .el-table__expand-icon > .el-icon {
+      font-size: 14px;
+      margin-top: -5px;
+    }
   }
 }
 </style>
