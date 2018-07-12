@@ -89,7 +89,7 @@ export default {
         }
       ],
       typeValue: '整站模板',
-      //栏目检索
+      //菜单检索
       titleSearchValue: "",
       //模板列表
       templates: [

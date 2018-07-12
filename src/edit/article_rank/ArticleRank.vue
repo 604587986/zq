@@ -9,7 +9,7 @@
                 <el-table-column prop="title" label="标题" width="500"></el-table-column>
                 <el-table-column prop="count" label="浏览次数"></el-table-column>
                 <el-table-column prop="author" label="作者"></el-table-column>
-                <el-table-column prop="column" label="栏目"></el-table-column>
+                <el-table-column prop="column" label="菜单"></el-table-column>
                 <el-table-column prop="date" label="创建日期"></el-table-column>
                 <el-table-column prop="site" label="所属站点"></el-table-column>
             </el-table>

@@ -24,7 +24,7 @@
               <el-table-column type="selection"></el-table-column>
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
               <el-table-column prop="title" label="标题" resizable></el-table-column>
-              <el-table-column prop="category_title" label="栏目" width="100"></el-table-column>
+              <el-table-column prop="category_title" label="菜单" width="100"></el-table-column>
               <el-table-column label="文章状态" width="90">
                   <div slot-scope="scope">
                       <el-tag close-transition size="mini" v-show="scope.row.state==-1">已删除</el-tag>
@@ -150,7 +150,7 @@ export default {
         }
       ],
       stateValue: 0,
-      //选择栏目
+      //选择菜单
       columnSelection: [
         {
           value: 0,

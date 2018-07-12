@@ -82,7 +82,7 @@ export default {
           },
           {
             iconName: "icon-lanmuliebiao",
-            entryName: "栏目列表",
+            entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
           },
           // {
@@ -139,7 +139,7 @@ export default {
           },
           {
             iconName: "icon-lanmuliebiao",
-            entryName: "栏目列表",
+            entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
           },
           {
@@ -223,7 +223,7 @@ export default {
           },
           {
             iconName: "icon-lanmuliebiao",
-            entryName: "栏目列表",
+            entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
           },
           {

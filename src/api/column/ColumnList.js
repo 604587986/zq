@@ -1,6 +1,6 @@
 import axios from '@/utils/request'
 
-//栏目列表
+//菜单列表
 export function getColumnList(data) {
     return axios.post('/api/navigation/index', data).then(res => {
         return Promise.resolve(res)
@@ -8,7 +8,7 @@ export function getColumnList(data) {
         console.log(err);
     })
 }
-//添加栏目
+//添加菜单
 export function AddColumn(data) {
     return axios.post('/api/navigation/create', data).then(res => {
         return Promise.resolve(res)
@@ -16,7 +16,7 @@ export function AddColumn(data) {
         console.log(err);
     })
 }
-//编辑栏目
+//编辑菜单
 export function EditColumn(data) {
     return axios.post('/api/navigation/edit', data).then(res => {
         return Promise.resolve(res)
@@ -24,7 +24,7 @@ export function EditColumn(data) {
         console.log(err);
     })
 }
-//修改栏目
+//修改菜单
 export function UpdateColumn(data) {
     return axios.post('/api/navigation/save', data).then(res => {
         return Promise.resolve(res)

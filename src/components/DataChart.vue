@@ -90,7 +90,7 @@ export default {
         ]
       },
       echarts_filter: ["2018-01-15", "2018-01-31"],
-      //选择栏目
+      //选择菜单
       earchts_filter_list: [
         {
           value: 0,

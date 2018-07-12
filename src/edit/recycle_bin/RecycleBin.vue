@@ -11,7 +11,7 @@
           <el-select v-model="stateValue" clearable placeholder="发布状态" size="mini" class="float-left state-selection">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <el-select v-model="columnSelectionValue" clearable placeholder="栏目" size="mini" class="float-left column-selection">
+          <el-select v-model="columnSelectionValue" clearable placeholder="菜单" size="mini" class="float-left column-selection">
               <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
@@ -24,7 +24,7 @@
               <el-table-column type="selection"></el-table-column>
               <el-table-column prop="uid" label="ID" width="70"></el-table-column>
               <el-table-column prop="title" label="标题" resizable></el-table-column>
-              <el-table-column prop="column" label="栏目" width="100"></el-table-column>
+              <el-table-column prop="column" label="菜单" width="100"></el-table-column>
               <el-table-column prop="state" label="发布状态" width="90" :filters="[{ text: '已发', value: '已发' }, { text: '待审', value: '待审' }, { text: '草稿', value: '草稿' }]"
                   :filter-method="filterState" filter-placement="bottom-end">
                   <div slot-scope="scope">
@@ -101,7 +101,7 @@ export default {
         }
       ],
       stateValue: "",
-      //选择栏目
+      //选择菜单
       columnSelection: [
         {
           value: 0,

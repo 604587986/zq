@@ -82,7 +82,7 @@ export default {
           content: "添加站点使用说明"
         }
       ],
-      //栏目检索
+      //菜单检索
       titleSearchValue: "",
       //表格
       tableInfo: [

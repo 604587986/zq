@@ -178,7 +178,7 @@ export default {
         }
       ],
       stateValue: 1,
-      //选择栏目
+      //选择菜单
       columnSelection: [
         {
           value: 0,

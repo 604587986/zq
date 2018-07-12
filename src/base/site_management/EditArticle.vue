@@ -71,6 +71,15 @@
         <el-form-item label="文章标签" class="form-item" prop="comeFrom">
             <tag @change="getTags" :receiveTags="form.tag"></tag>
         </el-form-item>
+        <el-form-item label="是否推荐" class="form-item">
+            <el-switch
+            v-model="form.recommend"
+            :active-value="1"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
         <el-form-item label="文章内容:">
             <tinymce :height="300" v-model="form.content" id='tinymce'></tinymce>
         </el-form-item>
@@ -200,7 +209,9 @@ export default {
             pin_date: that.form.pin_date,
             tag_id:that.form.tag_id,
             editor:that.form.editor,
-            source:that.form.source
+            source:that.form.source,
+            recommend:that.form.recommend
+            
           };
           saveArticle(data).then(res => {
             that.subLoading = false;

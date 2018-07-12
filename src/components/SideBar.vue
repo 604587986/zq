@@ -204,7 +204,7 @@ export default {
           path: "/pages/system_administrators/System_Administrators/Workbench"
         });
       }
-      this.side_bar[index].column_open = !this.side_bar[index].column_open; //展开栏目
+      this.side_bar[index].column_open = !this.side_bar[index].column_open; //展开菜单
       sessionStorage.setItem("system_menu_idx", index); //将导航idx存入sessionStorage数据库
       this.$store.commit("update_system_menu_idx", index); //更新vuex
     }

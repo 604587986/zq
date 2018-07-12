@@ -104,7 +104,7 @@ export default {
       ],
       //表格loading
       table_loading: false,
-      //栏目检索
+      //菜单检索
       titleSearchValue: "",
       //表格
       tableInfo: [],
