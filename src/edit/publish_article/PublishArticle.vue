@@ -21,9 +21,8 @@
             </el-select>
         </el-form-item> -->
         <el-form-item label="分类" class="form-item" prop="category_id">
-            <el-select v-model="form.category_id" placeholder="请选择" style="width:100%;">
-                <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
-            </el-select>
+          <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
+          </el-cascader>
         </el-form-item>
         <el-form-item label="标题" class="form-item" prop="title">
             <el-input v-model="form.title"></el-input>
@@ -125,6 +124,7 @@ export default {
       ],
       //分类列表
       categoryList: [],
+      categoryValue: [],
       form: {
         id: "",
         title: "",
@@ -247,6 +247,11 @@ export default {
     //监听tag变化，将标签值绑定到form上
     getTags(val) {
       this.$set(this.form, "tag_id", val);
+    }
+  },
+  watch:{
+    categoryValue:function(val){
+      this.$set(this.form,'category_id',val[val.length-1])
     }
   },
   beforeRouteLeave(to, from, next) {
