@@ -11,12 +11,12 @@
           <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <el-select v-model="siteValue" clearable placeholder="站点" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;categoryValue = '';getCategory();getData()">
+          <el-select v-model="siteValue" clearable placeholder="站点" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;categoryValue = [];getCategory();getData()">
               <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
-          <el-select v-model="categoryValue" clearable placeholder="分类" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
-              <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
-          </el-select>
+          <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
+              <!-- <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option> -->
+          </el-cascader>
           <router-link to="/pages/system_administrators/System_Administrators/ContentRecycleBin" class="float-right">
             <el-button size="mini" type="primary">回收站</el-button>
           </router-link>
@@ -166,7 +166,7 @@ export default {
       siteValue: "",
       //分类列表
       categoryList: [],
-      categoryValue: "",
+      categoryValue:[],
       //表格数据
       tableInfo: [],
       //用于全选
@@ -201,7 +201,7 @@ export default {
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
         site_id: this.siteValue,
-        category_id: this.categoryValue
+        category_id: this.categoryValue[this.categoryValue.length-1]
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -232,7 +232,8 @@ export default {
     getCategory() {
       let data = {
         site_id: this.siteValue,
-        page: 0
+        page: 0,
+        tree:1
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
