@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 2">
           <el-select v-model="form.data" size="mini" placeholder="请选择分类" :popper-append-to-body="false">
-            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="String(item.id)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 3">
@@ -115,10 +115,7 @@ export default {
       categoryList: [],
       articleList: [],
       //菜单状态列表
-      stateList: [
-        { label: "隐藏", value: 0 },
-        { label: "正常", value: 1 }
-      ],
+      stateList: [{ label: "隐藏", value: 0 }, { label: "正常", value: 1 }],
 
       //提交按钮loading
       subLoading: false,
@@ -141,7 +138,7 @@ export default {
       form: {},
       //表单验证
       rules: {
-        title:[{ required: true, message: '请填写名称', trigger: 'blur' }]
+        title: [{ required: true, message: "请填写名称", trigger: "blur" }]
       }
     };
   },
@@ -153,9 +150,8 @@ export default {
   mounted: function() {
     //获取默认数据
     this.getData();
-    //侧边导航定位
-    sessionStorage.setItem("system_menu_idx", 1);
-    this.$store.commit("update_system_menu_idx", 1);
+    //获取分类列表
+    this.getCategory();
   },
   methods: {
     //获取数据
@@ -203,7 +199,7 @@ export default {
         }
       });
     },
-        //远程搜索文章列表
+    //远程搜索文章列表
     remoteArticle(query) {
       this.articleList = [];
       let data = {
@@ -223,7 +219,7 @@ export default {
     },
     //获取分类列表
     getCategory() {
-      let data = {};
+      let data = { page: 0 };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
           this.categoryList = res.data.data.list;
@@ -234,9 +230,9 @@ export default {
     },
     //切换类型时清空一些数据
     clearData() {
-      this.form.data = '';
+      this.form.data = "";
       this.articleList = [];
-    },
+    }
   }
 };
 </script>
