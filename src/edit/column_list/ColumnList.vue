@@ -156,7 +156,7 @@
         </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 2">
           <el-select v-model="form.data" size="mini" placeholder="请选择分类" :popper-append-to-body="false">
-            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="String(item.id)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="数据：" v-if="form.type == 3">
@@ -412,7 +412,7 @@ export default {
     },
     //获取分类列表
     getCategory() {
-      let data = {};
+      let data = {page:0};
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
           this.categoryList = res.data.data.list;
