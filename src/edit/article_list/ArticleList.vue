@@ -11,9 +11,8 @@
           <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <el-select v-model="categoryValue" clearable placeholder="分类" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
-              <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
-          </el-select>
+          <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
+          </el-cascader>
         
           <router-link to="/pages/editor/editor/article_recycle_bin" class="float-right">
             <el-button size="mini" type="primary">回收站</el-button>
@@ -158,7 +157,7 @@ export default {
       show_keyword:'',
       //分类列表
       categoryList: [],
-      categoryValue: "",
+      categoryValue: [],
       //表格数据
       tableInfo: [],
       //用于全选
@@ -189,7 +188,7 @@ export default {
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
-        category_id: this.categoryValue
+        category_id: this.categoryValue[this.categoryValue.length-1]
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -270,7 +269,8 @@ export default {
     //获取分类列表
     getCategory() {
       let data = {
-        page: 0
+        page: 0,
+        tree:1
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
