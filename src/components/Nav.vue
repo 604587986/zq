@@ -1,9 +1,3 @@
-/*
- * @Author: alex (chenzeyongjsj@163.com) 
- * @Date: 2018-01-25 22:03:48 
- * @Last Modified by: alex (chenzeyongjsj@163.com)
- * @Last Modified time: 2018-02-02 01:02:57
- */
 <template>
   <div id="nav">
     <div class="nav-container">
@@ -73,21 +67,30 @@
           <router-link to="/pages/administrators/Administrators" class="underline-hover">工作台</router-link>
         </div>
         <ul class="notice-list float-right">
+            <li class="float-left">
+              <router-link to="/pages/editor/editor/article_list">              
+                <span class="list-title float-left">发布文章</span>
+                <span class="list-info float-left">{{article.PublishCount}}</span>
+              </router-link>
+            </li>          
+          
           <li class="float-left">
-            <span class="list-title float-left">发布文章</span>
-            <span class="list-info float-left">{{article.PublishCount}}</span>
+            <router-link to="/pages/editor/editor/article_list">
+              <span class="list-title float-left">今日发布</span>
+              <span class="list-info float-left">{{article.TodayPublishCount}}</span>
+            </router-link>
           </li>
           <li class="float-left">
-            <span class="list-title float-left">今日发布</span>
-            <span class="list-info float-left">{{article.TodayPublishCount}}</span>
+            <router-link to="/pages/editor/editor/article_list">
+              <span class="list-title float-left">待审文章</span>
+              <span class="list-info float-left">{{article.VerifyPendingCount}}</span>
+            </router-link>
           </li>
           <li class="float-left">
-            <span class="list-title float-left">待审文章</span>
-            <span class="list-info float-left">{{article.VerifyPendingCount}}</span>
-          </li>
-          <li class="float-left">
+          <router-link to="/pages/editor/editor/article_list">            
             <span class="list-title float-left">文章总数</span>
             <span class="list-info float-left">{{article.ArticleCount}}</span>
+          </router-link>           
           </li>
         </ul>
       </div>

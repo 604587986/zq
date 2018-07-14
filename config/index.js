@@ -27,6 +27,14 @@ module.exports = {
         pathRewrite: {
           '^/attachment': ''
         }
+      },
+      '/files': {
+        // target: 'https://webmaster.q-huan.link/attachment',
+        target: 'https://hengdian.q-huan.link/files',        
+        changeOrigin: true,
+        pathRewrite: {
+          '^/files': ''
+        },
       }
     },
 

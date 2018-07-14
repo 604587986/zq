@@ -289,7 +289,6 @@ export default {
     init() {
       init().then(res => {
         if (res.data.code == 200) {
-          this.$store.commit('get_site_title',res.data.data.site.title)
           this.article = res.data.data.init.statistics;
         }
       });
