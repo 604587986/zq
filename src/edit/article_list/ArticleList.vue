@@ -27,7 +27,8 @@
           <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
               <el-table-column type="selection"></el-table-column>
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
-              <el-table-column prop="title" label="标题" resizable></el-table-column>
+              <el-table-column prop="title" label="标题">
+              </el-table-column>
               <el-table-column prop="category_title" label="菜单" width="100"></el-table-column>
               <el-table-column label="文章状态" width="90">
                   <div slot-scope="scope">
@@ -56,6 +57,9 @@
                       <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
                       <el-button size="small" v-if="scope.row.state_verify==0" @click="verify(scope.row.id,1)">通过</el-button>
                       <el-button size="small" v-if="scope.row.state_verify==0" @click="verify(scope.row.id,-1)">驳回</el-button>
+                      <a v-if="scope.row.state_verify==1" :href="'//'+$store.state.domain+'/#/pages/Details?zhuyuan_details_id='+scope.row.id">
+                        <el-button size="small">前往</el-button>
+                      </a>
                       <router-link :to="{path:'/pages/editor/editor/edit_article',query:{id:scope.row.id}}"><el-button size="small">编辑</el-button></router-link>
                       <el-button @click="toDelete(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                   </div>
@@ -74,7 +78,7 @@
       <el-dialog
         :title="preview.title"
         :visible.sync="previewDialog"
-        width="60%"
+        width="1200px"
         center>
         <div v-html="preview.content">
           

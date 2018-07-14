@@ -2,9 +2,9 @@
   <div id="Header">
     <div class="header-container">
       <div class="float-left header-left">
-        <p class="site float-left" v-if="site">
+        <p class="site float-left" v-if="site_title">
           <span class="float-left">所属站点：</span>
-          <span class="float-left">{{site}}</span>
+          <span class="float-left">{{site_title}}</span>
         </p>
         <p class="reception float-left">
           <router-link to="/" class="underline-hover" target="_blank">前台首页</router-link>
@@ -35,18 +35,18 @@
 
 <script>
 import { toLogout } from "@/api/login/login.js";
+import { init } from "@/api/login/login";
 export default {
   name: "Header",
   data() {
     return {
       user: "",
+      site_title: ""
     };
   },
-  props:{
-    site:""
-  },
   mounted: function() {
-    this.user = JSON.parse(localStorage.getItem("userInfo")).nickname;
+    // this.user = JSON.parse(localStorage.getItem("userInfo")).nickname;
+    this.init();
   },
   methods: {
     clear_local() {
@@ -55,10 +55,22 @@ export default {
           localStorage.removeItem("userInfo"); //退出登录清除登录信息
           localStorage.removeItem("group"); //退出登录清除登录信息
           localStorage.removeItem("isEditor"); //退出登录清除登录信息
-          localStorage.removeItem("entryList"); //退出登录清除登录信息         
-          localStorage.removeItem("mockUser"); //退出登录清除登录信息         
+          localStorage.removeItem("entryList"); //退出登录清除登录信息
+          localStorage.removeItem("mockUser"); //退出登录清除登录信息
           sessionStorage.setItem("system_menu_idx", 0);
           this.$router.push({ path: "/pages/admin/Login" });
+        }
+      });
+    },
+    // 登录初始化
+    init() {
+      init().then(res => {
+        if (res.data.code == 200) {
+          if (res.data.data.site) {
+            this.site_title = res.data.data.site.title;
+            this.$store.commit('set_domain',res.data.data.site.domain)
+          }
+          this.user = res.data.data.user.nickname;
         }
       });
     }
