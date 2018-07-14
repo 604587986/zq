@@ -82,14 +82,11 @@ export default {
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
-<<<<<<< HEAD
             iconName: "icon-jiaoshifengcai",
             entryName: "会员管理",
             entryUrl: "/pages/editor/editor/member_list"
           },
           {
-=======
->>>>>>> master
             iconName: "icon-zhandianxinxi",
             entryName: "站点信息",
             entryUrl: "/pages/editor/editor/site_information"
