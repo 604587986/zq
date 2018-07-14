@@ -210,6 +210,8 @@ export default {
           this.form.id = res.data.data.data.id;
           //赋值分类列表
           this.categoryList = res.data.data.fields.category;
+          //赋值当前创建时间到发布时间上
+          this.form.release_time = res.data.data.data.create_time;
         } else {
           this.$message.error(res.data.message);
         }
