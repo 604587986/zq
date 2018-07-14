@@ -8,7 +8,7 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter">
-          <el-select v-model="stateValue" placeholder="审核状态" size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
+          <el-select v-model="stateValue" placeholder="审核状态" clearable size="mini" class="float-left state-selection" @change="currentPaging.currentPage = 1;getData()">
               <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
@@ -149,7 +149,7 @@ export default {
           label: "通过"
         }
       ],
-      stateValue: 1,
+      stateValue: '',
       columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
