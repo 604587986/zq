@@ -78,7 +78,7 @@
             :active-value="1"
             :inactive-value="0"
             active-color="#13ce66"
-            inactive-color="#ff4949">
+            inactive-color="#909399">
           </el-switch>
         </el-form-item>
         <el-form-item label="文章内容">
@@ -226,13 +226,8 @@ export default {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.isSubmit = true;
-              that.$alert("提交成功，请等待审核", "提示", {
-                confirmButtonText: "确定",
-                callback: () => {
-                  that.$refs[formName].resetFields();
-                  that.$router.push("/pages/editor/editor/article_list");
-                }
-              });
+              that.$message.success('发布成功');
+              that.$router.push("/pages/editor/editor/article_list");
             } else {
               that.$message.error(res.data.message);
             }
