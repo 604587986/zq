@@ -30,7 +30,14 @@
           <el-table ref="multipleTable" border :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange" v-loading="table_loading" element-loading-text="数据载入中">
               <el-table-column type="selection"></el-table-column>
               <el-table-column prop="id" label="ID" width="50"></el-table-column>
-              <el-table-column prop="title" label="标题" width="200"></el-table-column>
+              <el-table-column prop="title" label="标题" width="200">
+                <div slot-scope="scope">
+                  <el-tag type="warning" v-if="scope.row.image_id" size="mini">图</el-tag>                  
+                  <el-tag type="warning" v-if="scope.row.pin_date" size="mini">置顶</el-tag>
+                  <el-tag type="warning" v-if="scope.row.recommend" size="mini">推荐</el-tag>
+                  {{scope.row.title}}
+                </div>
+              </el-table-column>
               <el-table-column prop="category_title" label="所属分类"></el-table-column>
               <el-table-column prop="site_title" label="所属站点"></el-table-column>
               <el-table-column label="文章状态">
@@ -47,7 +54,7 @@
                       <el-tag close-transition size="mini" type="success" v-show="scope.row.state_verify==1">通过</el-tag>
                   </div>
               </el-table-column>
-              <el-table-column prop="create_time" label="创建日期"></el-table-column>
+              <el-table-column prop="release_time" label="发布时间"></el-table-column>
               <el-table-column prop="author" label="作者"></el-table-column>
               <!-- <el-table-column prop="count" label="浏览次数"></el-table-column> -->
               <!-- <el-table-column label="排序">

@@ -29,8 +29,9 @@
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
               <el-table-column prop="title" label="标题">
                 <div slot-scope="scope">
-                  <el-tag type="warning" v-if="scope.row.pin_date">置顶</el-tag>
-                  <el-tag type="warning" v-if="scope.row.recommend">推荐</el-tag>
+                  <el-tag type="warning" v-if="scope.row.image_id" size="mini">图</el-tag>                                    
+                  <el-tag type="warning" v-if="scope.row.pin_date" size="mini">置顶</el-tag>
+                  <el-tag type="warning" v-if="scope.row.recommend" size="mini">推荐</el-tag>
                   {{scope.row.title}}
                 </div>
               </el-table-column>
