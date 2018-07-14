@@ -93,6 +93,7 @@ export default {
         default_link_target: "_blank",
         link_title: false,
         language: "zh_CN",
+        relative_urls: false,
         init_instance_callback: editor => {
           if (_this.value) {
             editor.setContent(_this.value);
