@@ -28,6 +28,11 @@
               <el-table-column type="selection"></el-table-column>
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
               <el-table-column prop="title" label="标题">
+                <div slot-scope="scope">
+                  <el-tag type="warning" v-if="scope.row.pin_date">置顶</el-tag>
+                  <el-tag type="warning" v-if="scope.row.recommend">推荐</el-tag>
+                  {{scope.row.title}}
+                </div>
               </el-table-column>
               <el-table-column prop="category_title" label="菜单" width="100"></el-table-column>
               <el-table-column label="文章状态" width="90">
@@ -37,7 +42,7 @@
                       <el-tag close-transition size="mini" v-show="scope.row.state==1">正常</el-tag>
                   </div>
               </el-table-column>
-              <el-table-column prop="create_time" label="创建日期" width="100"></el-table-column>
+              <el-table-column prop="release_time" label="发布时间" width="100"></el-table-column>
               <el-table-column prop="author" label="创建人" width="85"></el-table-column>
               <!-- <el-table-column prop="count" label="浏览次数" width="70"></el-table-column> -->
               <el-table-column prop="state_verify" label="审核状态" width="70">
