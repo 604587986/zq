@@ -53,10 +53,10 @@
         <el-form-item label="上一次登陆时间：" class="form-item">
           <el-input v-model="form.last_time" disabled readonly></el-input>
         </el-form-item>
-        <el-form-item label="邮箱：" class="form-item" prop="mail">
+        <el-form-item label="邮箱：" class="form-item">
           <el-input v-model="form.mail"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：" class="form-item" prop="mobile">
+        <el-form-item label="手机号：" class="form-item">
           <el-input v-model="form.mobile"></el-input>
         </el-form-item>
 

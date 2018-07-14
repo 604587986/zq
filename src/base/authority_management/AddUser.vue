@@ -36,10 +36,10 @@
             <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮箱：" class="form-item" prop="mail">
+        <el-form-item label="邮箱：" class="form-item">
           <el-input v-model="form.mail"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：" class="form-item" prop="mobile">
+        <el-form-item label="手机号：" class="form-item">
           <el-input v-model="form.mobile"></el-input>
         </el-form-item>
 
