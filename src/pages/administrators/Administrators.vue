@@ -49,56 +49,27 @@ export default {
       newsInfo: [],
       // 不同用户的工作台菜单
       authority: {
+        // 主站管理员
         main_admin: [
           {
-            iconName: "icon-shujukanban",
-            entryName: "数据看板",
-            entryUrl: "/pages/editor/editor/data_board"
+            iconName: "icon-fawenzhang",
+            entryName: "发文章",
+            entryUrl: "/pages/editor/editor/publish_article"
           },
           {
-            iconName: "icon-zhandianfangwenpaihang",
-            entryName: "站点访问排行",
-            entryUrl: "/pages/editor/editor/access_rank"
-          },
-          {
-            iconName: "icon-wenzhangshenhe",
-            entryName: "文章审核",
-            entryUrl: "/pages/editor/editor/pending_article"
-          },
-          {
-            iconName: "icon-zhandianwenzhangshuliangpaihang",
-            entryName: "站点文章数量排行",
-            entryUrl: "/pages/editor/editor/count_rank"
-          },
-          {
-            iconName: "icon-wenzhangfangwenpaihang",
-            entryName: "文章访问排行",
-            entryUrl: "/pages/editor/editor/article_rank"
-          },
-          {
-            iconName: "icon-chakanwenzhang",
-            entryName: "查看文章",
+            iconName: "icon-wenzhangliebiao",
+            entryName: "文章列表",
             entryUrl: "/pages/editor/editor/article_list"
           },
-          {
-            iconName: "icon-lanmuliebiao",
-            entryName: "菜单列表",
-            entryUrl: "/pages/editor/editor/column_list"
-          },
-          // {
-          //   iconName: "icon-wenzhangliebiao",
-          //   entryName: "网页生成",
-          //   entryUrl: "/pages/editor/editor/page_generation"
-          // },
           {
             iconName: "icon-lanmuliebiao",
             entryName: "单页列表",
             entryUrl: "/pages/editor/editor/singlepage_list"
           },
           {
-            iconName: "icon-jiaoshifengcai",
-            entryName: "会员管理",
-            entryUrl: "/pages/editor/editor/member_list"
+            iconName: "icon-lanmuliebiao",
+            entryName: "菜单列表",
+            entryUrl: "/pages/editor/editor/column_list"
           },
           {
             iconName: "icon-lanmuliebiao",
@@ -106,15 +77,45 @@ export default {
             entryUrl: "/pages/editor/editor/category_list"
           },
           {
-            iconName: "icon-fawenzhang",
-            entryName: "发文章",
-            entryUrl: "/pages/editor/editor/publish_article"
-          },
-          {
             iconName: "icon-lanmuliebiao",
             entryName: "文章标签",
             entryUrl: "/pages/editor/editor/tag_list"
-          }
+          },
+          {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "会员管理",
+            entryUrl: "/pages/editor/editor/member_list"
+          },
+          {
+            iconName: "icon-zhandianxinxi",
+            entryName: "站点信息",
+            entryUrl: "/pages/editor/editor/site_information"
+          },
+          // {
+          //   iconName: "icon-shujukanban",
+          //   entryName: "数据看板",
+          //   entryUrl: "/pages/editor/editor/data_board"
+          // },
+          // {
+          //   iconName: "icon-zhandianfangwenpaihang",
+          //   entryName: "站点访问排行",
+          //   entryUrl: "/pages/editor/editor/access_rank"
+          // },
+          // {
+          //   iconName: "icon-zhandianwenzhangshuliangpaihang",
+          //   entryName: "站点文章数量排行",
+          //   entryUrl: "/pages/editor/editor/count_rank"
+          // },
+          // {
+          //   iconName: "icon-wenzhangfangwenpaihang",
+          //   entryName: "文章访问排行",
+          //   entryUrl: "/pages/editor/editor/article_rank"
+          // },
+          // {
+          //   iconName: "icon-wenzhangliebiao",
+          //   entryName: "网页生成",
+          //   entryUrl: "/pages/editor/editor/page_generation"
+          // },
         ],
         sub_admin: [
           {
@@ -238,8 +239,8 @@ export default {
   },
   computed: {
     //当前用户所在的站点信息
-    site(){
-      return this.$store.state.site_title
+    site() {
+      return this.$store.state.site_title;
     }
   },
   components: {
