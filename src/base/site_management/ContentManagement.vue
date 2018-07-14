@@ -50,11 +50,11 @@
               <el-table-column prop="create_time" label="创建日期"></el-table-column>
               <el-table-column prop="author" label="作者"></el-table-column>
               <!-- <el-table-column prop="count" label="浏览次数"></el-table-column> -->
-              <el-table-column label="排序">
+              <!-- <el-table-column label="排序">
                   <div slot-scope="scope" class="table-sort-input">
                       <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>
                   </div>
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column label="操作">
                   <div slot-scope="scope" class="control-btn">
                       <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
@@ -156,7 +156,7 @@ export default {
           label: "通过"
         }
       ],
-      stateValue: 1,
+      stateValue: '',
       //搜索关键字
       titleSearchValue: "",
       //搜索后用于展示的关键词

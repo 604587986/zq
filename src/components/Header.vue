@@ -7,7 +7,7 @@
           <span class="float-left">{{site_title}}</span>
         </p>
         <p class="reception float-left">
-          <router-link to="/" class="underline-hover" target="_blank">前台首页</router-link>
+          <a :href="'//'+$store.state.domain" class="underline-hover" target="_blank">前台首页</a>
         </p>
       </div>
       <div class="float-right header-right" v-if="user">
