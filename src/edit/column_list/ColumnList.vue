@@ -6,6 +6,10 @@
     <Instructions :instructionsInfo="instructionsInfo"></Instructions>
     <div class="table-filter">
       <el-button type="primary" size="mini" @click="add_child(0,0,'顶级菜单')">添加菜单</el-button>
+      <el-select v-model="group" placeholder="菜单类型" size="mini" @change="getData()">
+          <el-option label="首页菜单" :value="1"></el-option>
+          <el-option label="会员菜单" :value="2"></el-option>
+      </el-select>
     </div>
     <!-- Form -->
     <div class="table-container">
@@ -126,11 +130,12 @@
         <el-form-item label="路径：">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="所属站点：">
-          <el-select v-model="form.site_id" size="mini">
-            <el-option v-for="item in siteList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item> -->
+        <el-form-item label="菜单分组：">
+          <el-select v-model="form.group" placeholder="请选择" size="mini">
+            <el-option label="首页菜单" :value="1"></el-option>
+          <el-option label="会员菜单" :value="2"></el-option>
+      </el-select>
+        </el-form-item>
         <el-form-item label="类型：">
           <el-select v-model="form.type" size="mini" @change="clearData">
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -244,115 +249,9 @@ export default {
       },
       //表格
       tableInfo: [
-        {
-          uid: 1,
-          column_title: "学院概况",
-          column: "单页",
-          state: "显示",
-          leavel: 1,
-          sort: 1,
-          leavel2: [
-            {
-              uid: 8,
-              column_title: "学校简介",
-              column: "单页",
-              state: "显示",
-              leavel: 2,
-              sort: 8,
-              leavel3: [
-                {
-                  uid: 10,
-                  column_title: "中文网概况",
-                  column: "单页",
-                  state: "显示",
-                  leavel: 3,
-                  sort: 13
-                },
-                {
-                  uid: 11,
-                  column_title: "英文网概况",
-                  column: "列表",
-                  state: "显示",
-                  leavel: 3,
-                  sort: 14
-                }
-              ]
-            },
-            {
-              uid: 9,
-              column_title: "学校历史",
-              column: "单页",
-              state: "显示",
-              leavel: 2,
-              sort: 9
-            },
-            {
-              uid: 10,
-              column_title: "领导介绍",
-              column: "单页",
-              state: "显示",
-              leavel: 2,
-              sort: 10
-            },
-            {
-              uid: 11,
-              column_title: "校园风光",
-              column: "列表",
-              state: "显示",
-              leavel: 2,
-              sort: 11
-            }
-          ]
-        },
-        {
-          uid: 2,
-          column_title: "学院与学科",
-          column: "单页",
-          state: "显示",
-          leavel: 1,
-          sort: 2
-        },
-        {
-          uid: 3,
-          column_title: "职能部门",
-          column: "单页",
-          state: "显示",
-          leavel: 1,
-          sort: 3
-        },
-        {
-          uid: 4,
-          column_title: "人才培养",
-          column: "单页",
-          state: "显示",
-          leavel: 1,
-          sort: 4
-        },
-        {
-          uid: 5,
-          column_title: "科学研究",
-          column: "单页",
-          state: "显示",
-          leavel: 1,
-          sort: 5
-        },
-        {
-          uid: 6,
-          column_title: "招生就业",
-          column: "单页",
-          state: "显示",
-          leavel: 1,
-          sort: 6
-        },
-        {
-          uid: 7,
-          column_title: "管理与服务",
-          column: "单页",
-          state: "隐藏",
-          leavel: 1,
-          sort: 7
-        }
-      ]
+      ],
+      // 菜单组
+      group:1
     };
   },
   components: {
@@ -371,7 +270,8 @@ export default {
     getData() {
       let data = {
         site_id: "",
-        tree: 1
+        tree: 1,
+        group:this.group
       };
       this.table_loading = true;
       getColumnList(data).then(res => {
