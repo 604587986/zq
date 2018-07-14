@@ -27,9 +27,9 @@
         <el-form-item label="标题" class="form-item" prop="title">
             <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="SEO标题" class="form-item">
+        <!-- <el-form-item label="SEO标题" class="form-item">
             <el-input v-model="form.name" placeholder="请输入英文字母"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="作者" class="form-item" prop="author">
             <el-input v-model="form.author"></el-input>
         </el-form-item>
@@ -128,7 +128,7 @@ export default {
       form: {
         id: "",
         title: "",
-        name: "",
+        // name: "",
         image_id: "",
         // state: "",
         // state_verify: "",
