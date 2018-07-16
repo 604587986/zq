@@ -34,14 +34,17 @@ service.interceptors.request.use(
     }
 );
 // respone拦截器
+var once = true;
 service.interceptors.response.use(
     response => {
-        if (response.data.code == 401) {
+        if (response.data.code == 401 && once) {
+            once = false;
             MessageBox.alert('请先登录！', '提示', {
                 confirmButtonText: '确定',
                 callback: () => {
                     localStorage.clear();
                     router.push('/pages/admin/Login')
+                    once = true;
                 }
             })
         } else
