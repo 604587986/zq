@@ -33,7 +33,7 @@
               <el-table-column prop="title" label="标题" width="200">
                 <div slot-scope="scope">
                   <el-tag type="warning" v-if="scope.row.image_id" size="mini">图</el-tag>                  
-                  <el-tag type="warning" v-if="scope.row.pin_date" size="mini">置顶</el-tag>
+                  <el-tag type="warning" v-if="scope.row.pin_date" size="mini">{{scope.row.pin_date | overdue}}</el-tag>
                   <el-tag type="warning" v-if="scope.row.recommend" size="mini">推荐</el-tag>
                   {{scope.row.title}}
                 </div>
@@ -163,17 +163,17 @@ export default {
           label: "通过"
         }
       ],
-      stateValue: '',
+      stateValue: "",
       //搜索关键字
       titleSearchValue: "",
       //搜索后用于展示的关键词
-      show_keyword:'',
+      show_keyword: "",
       //站点列表
       siteList: [],
       siteValue: "",
       //分类列表
       categoryList: [],
-      categoryValue:[],
+      categoryValue: [],
       //表格数据
       tableInfo: [],
       //用于全选
@@ -208,7 +208,7 @@ export default {
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
         site_id: this.siteValue,
-        category_id: this.categoryValue[this.categoryValue.length-1]
+        category_id: this.categoryValue[this.categoryValue.length - 1]
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -216,7 +216,7 @@ export default {
         if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
-          this.show_keyword = this.titleSearchValue;          
+          this.show_keyword = this.titleSearchValue;
         } else {
           this.$message.error(res.data.message);
         }
@@ -240,7 +240,7 @@ export default {
       let data = {
         site_id: this.siteValue,
         page: 0,
-        tree:1
+        tree: 1
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
@@ -312,6 +312,20 @@ export default {
           this.$message.error(res.data.message);
         }
       });
+    }
+  },
+  filters: {
+    overdue: function(value) {
+      if (null == value || value == "") {
+        return "";
+      }
+      var now = new Date().getTime();
+      var this_time = new Date(value);
+      if (now > this_time) {
+        return "置顶(过期)";
+      } else {
+        return "置顶";
+      }
     }
   }
 };
