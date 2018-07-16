@@ -30,7 +30,7 @@
               <el-table-column prop="title" label="标题">
                 <div slot-scope="scope">
                   <el-tag type="warning" v-if="scope.row.image_id" size="mini">图</el-tag>                                    
-                  <el-tag type="warning" v-if="scope.row.pin_date" size="mini">置顶</el-tag>
+                  <el-tag type="warning" v-if="scope.row.pin_date" size="mini">{{scope.row.pin_date | overdue}}</el-tag>
                   <el-tag type="warning" v-if="scope.row.recommend" size="mini">推荐</el-tag>
                   {{scope.row.title}}
                 </div>
@@ -289,6 +289,20 @@ export default {
           this.$message.error(res.data.message);
         }
       });
+    }
+  },
+    filters: {
+    overdue: function(value) {
+      if (null == value || value == "") {
+        return "";
+      }
+      var now = new Date().getTime();
+      var this_time = new Date(value);
+      if(now>this_time){
+        return '置顶(过期)'
+      }else{
+        return '置顶'
+      }
     }
   }
 };
