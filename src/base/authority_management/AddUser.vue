@@ -36,10 +36,10 @@
             <el-option v-for="item in siteList" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="邮箱：" class="form-item">
+        <el-form-item label="邮箱：" class="form-item" prop="mail">
           <el-input v-model="form.mail"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：" class="form-item">
+        <el-form-item label="手机号：" class="form-item" prop="mobile">
           <el-input v-model="form.mobile"></el-input>
         </el-form-item>
 
@@ -152,16 +152,16 @@ export default {
           }
         ],
         mail: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: false, message: "请输入邮箱地址", trigger: "blur" },
           {
             type: "email",
             message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
+            trigger: "blur"
           }
         ],
         mobile: [
           {
-            required: true,
+            required: false,
             validator: function(rule, value, callback) {
               var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
               if (!value) {
@@ -229,6 +229,7 @@ export default {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.$message.success("添加成功");
+              that.$router.push('/pages/system_administrators/System_Administrators/UserList')
             } else {
               that.$message.error(res.data.message);
             }
