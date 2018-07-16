@@ -136,7 +136,7 @@ export default {
           }
         ],
         mail: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: false, message: "请输入邮箱地址", trigger: "blur" },
           {
             type: "email",
             message: "请输入正确的邮箱地址",
@@ -145,7 +145,7 @@ export default {
         ],
         mobile: [
           {
-            required: true,
+            required: false,
             validator: function(rule, value, callback) {
               var reg = /0?(13|14|15|17|18|19)[0-9]{9}/;
               if (!value) {
@@ -248,6 +248,7 @@ export default {
               that.$message.success("添加成功");
               that.$refs[formName].resetFields();
               that.dialogVisible = false;
+              that.getData()
             } else {
               that.$message.error(res.data.message);
             }
