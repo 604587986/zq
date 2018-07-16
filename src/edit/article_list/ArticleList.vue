@@ -159,12 +159,12 @@ export default {
           label: "通过"
         }
       ],
-      stateValue: '',
+      stateValue: "",
       columnSelectionValue: "",
       //搜索关键字
       titleSearchValue: "",
       //搜索后用于展示的关键词
-      show_keyword:'',
+      show_keyword: "",
       //分类列表
       categoryList: [],
       categoryValue: [],
@@ -198,7 +198,7 @@ export default {
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
-        category_id: this.categoryValue[this.categoryValue.length-1]
+        category_id: this.categoryValue[this.categoryValue.length - 1]
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
@@ -280,7 +280,7 @@ export default {
     getCategory() {
       let data = {
         page: 0,
-        tree:1
+        tree: 1
       };
       getCategoryList(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
@@ -291,17 +291,17 @@ export default {
       });
     }
   },
-    filters: {
+  filters: {
     overdue: function(value) {
       if (null == value || value == "") {
         return "";
       }
       var now = new Date().getTime();
       var this_time = new Date(value);
-      if(now>this_time){
-        return '置顶(过期)'
-      }else{
-        return '置顶'
+      if (now > this_time) {
+        return "置顶(过期)";
+      } else {
+        return "置顶";
       }
     }
   }
