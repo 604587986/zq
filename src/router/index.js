@@ -122,6 +122,8 @@ import MemberList from '@/edit/member/MemberList'//会员列表
 import EditMember from '@/edit/member/EditMember'//编辑会员
 //文章标签管理
 import TagList from '@/edit/tag/TagList'
+//录取查询
+import Enroll from '@/edit/enroll/enroll'
 
 
 
@@ -431,6 +433,10 @@ export default new Router({
                 {
                 path: 'tag_list',
                 component: TagList
+            },
+                {
+                path: 'enroll',
+                component: Enroll
             },
         
             ]

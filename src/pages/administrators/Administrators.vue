@@ -82,6 +82,11 @@ export default {
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
+            iconName: "icon-user",
+            entryName: "录取管理",
+            entryUrl: "/pages/editor/editor/enroll"
+          },
+          {
             iconName: "icon-jiaoshifengcai",
             entryName: "会员管理",
             entryUrl: "/pages/editor/editor/member_list"
@@ -117,6 +122,7 @@ export default {
           //   entryUrl: "/pages/editor/editor/page_generation"
           // },
         ],
+        // 分站管理员
         sub_admin: [
           {
             iconName: "icon-fawenzhang",
@@ -189,6 +195,7 @@ export default {
             entryUrl: "/pages/editor/editor/site_information"
           }
         ],
+        // 领导
         leader: [
           {
             iconName: "icon-wenzhangliebiao",
@@ -211,6 +218,7 @@ export default {
             entryUrl: "/pages/editor/editor/article_rank"
           }
         ],
+        //编辑
         editor: [
           {
             iconName: "icon-fawenzhang",
