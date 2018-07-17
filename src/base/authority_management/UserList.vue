@@ -20,9 +20,10 @@
         <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
           <el-table-column prop="id" label="ID" width="50"></el-table-column>
           <el-table-column prop="account" label="登录用户名"></el-table-column>
-          <el-table-column prop="nickname" label="姓名"></el-table-column>
+          <el-table-column prop="title" label="姓名"></el-table-column>
+          <el-table-column prop="nickname" label="昵称"></el-table-column>
           <el-table-column prop="group_title" label="用户组"></el-table-column>
-          <el-table-column prop="department_id" label="所属部门"></el-table-column>
+          <!-- <el-table-column prop="department_id" label="所属部门"></el-table-column> -->
           <el-table-column prop="site_title" label="管理站点"></el-table-column>
           <!-- <el-table-column prop="count" label="登陆次数"></el-table-column> -->
           <el-table-column prop="last_time" label="最后一次登录时间" width="120"></el-table-column>

@@ -37,3 +37,11 @@ export function updateUser(data) {
         console.log(err);
     })
 }
+//密码修改
+export function modifyPasswd(data) {
+    return axios.post('/api/user/modifyPasswd', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}

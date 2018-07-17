@@ -16,7 +16,7 @@
           <span class="float-left header-name">欢迎您，{{user}}</span>
         </div>
         <div class="control-box float-left">
-          <a href="javascript:void(0);" class="underline-hover float-left">修改密码</a>
+          <a href="javascript:void(0);" class="underline-hover float-left" @click="dialogVisible = true">修改密码</a>
           <i class="iconfont icon-shuxian float-left"></i>
           <a href="javascript:void(0);" class="underline-hover float-left" @click="clear_local()">退出</a>
         </div>
@@ -30,18 +30,98 @@
         </router-link>
       </div>
     </div>
+    <!-- 修改密码弹出框 -->
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <el-form ref="form" :model="form" :rules="rules" status-icon label-width="108px" size="mini" label-position="right">
+        <el-form-item label="原密码：" class="form-item" prop="oldpasswd">
+            <el-input type="password" v-model="form.oldpasswd"></el-input>
+        </el-form-item>
+        <el-form-item label="登录密码：" class="form-item" prop="passwd">
+            <el-input type="password" v-model="form.passwd"></el-input>
+            <span class="site-item-info">6~15位，英文与数字或下划线组合</span>
+        </el-form-item>
+        <el-form-item label="确认密码：" class="form-item" prop="passwdconfirm">
+            <el-input type="password" v-model="form.passwdconfirm"></el-input>
+        </el-form-item>
+        <el-form-item class="form-control-btn">
+            <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
+        </el-form-item>
+    </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { toLogout } from "@/api/login/login.js";
 import { init } from "@/api/login/login";
+import { modifyPasswd } from "@/api/user/user";
+
 export default {
   name: "Header",
   data() {
     return {
       user: "",
-      site_title: ""
+      site_title: "",
+      // 表单验证
+      rules: {
+        oldpasswd: [
+          {
+            required: true,
+            validator: function(rule, value, callback) {
+              var reg = /^[0-9a-zA-Z_]{6,15}$/; //6-15位数字字母下划线
+              if (!value) {
+                callback(new Error("密码不能为空"));
+              } else if (reg.test(value) == false) {
+                callback(
+                  new Error("密码必须为数字/字母/下划线,长度6-15位之间")
+                );
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
+        passwd: [
+          {
+            required: true,
+            validator: function(rule, value, callback) {
+              var reg = /^[0-9a-zA-Z_]{6,15}$/; //6-15位数字字母下划线
+              if (!value) {
+                callback(new Error("密码不能为空"));
+              } else if (reg.test(value) == false) {
+                callback(
+                  new Error("密码必须为数字/字母/下划线,长度6-15位之间")
+                );
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
+        passwdconfirm: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请再次输入密码"));
+              } else if (value !== this.form.passwd) {
+                callback(new Error("两次输入密码不一致!"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ]
+      },
+      form:{},
+      dialogVisible:false,
+      subLoading:false
     };
   },
   mounted: function() {
@@ -68,12 +148,39 @@ export default {
         if (res.data.code == 200) {
           if (res.data.data.site) {
             this.site_title = res.data.data.site.title;
-            this.$store.commit('set_domain',res.data.data.site.domain)
+            this.$store.commit("set_domain", res.data.data.site.domain);
           }
           this.user = res.data.data.user.nickname;
         }
       });
-    }
+    },
+    //修改密码
+    submitForm(formName) {
+      var that = this;
+      that.$refs[formName].validate(function(valid) {
+        that.subLoading = true;
+        if (valid) {
+          // let data = {
+          //   oldpasswd:that.form.oldpasswd,
+          //   passwd:that.form.passwd
+          // }
+          modifyPasswd(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("修改成功");
+              that.$refs[formName].resetFields();
+              that.dialogVisible = false;
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        } else {
+          that.subLoading = false;
+          that.$message.error("提交失败!");
+          return false;
+        }
+      });
+    },
   }
 };
 </script>
