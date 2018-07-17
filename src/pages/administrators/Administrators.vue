@@ -82,24 +82,6 @@ export default {
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
-<<<<<<< HEAD
-=======
-            iconName: "icon-user",
-            entryName: "录取管理",
-            entryUrl: "/pages/editor/editor/enroll"
-          },
-          {
-            iconName: "icon-piaofuguanggao",
-            entryName: "工资管理",
-            entryUrl: "/pages/editor/editor/salary"
-          },
-          {
-            iconName: "icon-jiaoshifengcai",
-            entryName: "会员管理",
-            entryUrl: "/pages/editor/editor/member_list"
-          },
-          {
->>>>>>> 7b29e73... 修改密码完成，身份切换完善
             iconName: "icon-zhandianxinxi",
             entryName: "站点信息",
             entryUrl: "/pages/editor/editor/site_information"
