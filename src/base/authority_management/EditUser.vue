@@ -174,7 +174,7 @@ export default {
             validator: function(rule, value, callback) {
               var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
               if (!value) {
-                callback(new Error("号码不能为空"));
+                callback();
               } else if (reg.test(value) == false) {
                 callback(new Error("请输入正确的手机号"));
               } else {

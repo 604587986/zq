@@ -82,10 +82,28 @@ export default {
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
+<<<<<<< HEAD
+=======
+            iconName: "icon-user",
+            entryName: "录取管理",
+            entryUrl: "/pages/editor/editor/enroll"
+          },
+          {
+            iconName: "icon-piaofuguanggao",
+            entryName: "工资管理",
+            entryUrl: "/pages/editor/editor/salary"
+          },
+          {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "会员管理",
+            entryUrl: "/pages/editor/editor/member_list"
+          },
+          {
+>>>>>>> 7b29e73... 修改密码完成，身份切换完善
             iconName: "icon-zhandianxinxi",
             entryName: "站点信息",
             entryUrl: "/pages/editor/editor/site_information"
-          },
+          }
           // {
           //   iconName: "icon-shujukanban",
           //   entryName: "数据看板",
@@ -254,9 +272,27 @@ export default {
       var that = this;
       const group = window.localStorage.getItem("group"); //当前用户所在用户组
       const mockUser = window.localStorage.getItem("mockUser"); //管理员模拟用户
+      const mockGroup = window.localStorage.getItem("mockGroup"); //管理员模拟用户所在组
       //如果是管理员模拟用户则获取分站管理员的菜单，否则根据用户组获取菜单
       if (mockUser) {
-        this.entryList = this.authority.sub_admin;
+        switch (mockGroup) {
+          case "2":
+            this.entryList = this.authority.main_admin;
+            localStorage.setItem("entryList", JSON.stringify(this.entryList));
+            return;
+          case "3":
+            this.entryList = this.authority.sub_admin;
+            localStorage.setItem("entryList", JSON.stringify(this.entryList));
+            return;
+          case "4":
+            this.entryList = this.authority.leader;
+            localStorage.setItem("entryList", JSON.stringify(this.entryList));
+            return;
+          case "5":
+            this.entryList = this.authority.editor;
+            localStorage.setItem("entryList", JSON.stringify(this.entryList));
+            return;
+        }
       } else {
         if (group == 1) {
           this.entryList = this.authority.main_admin;

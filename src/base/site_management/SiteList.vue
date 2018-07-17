@@ -40,7 +40,8 @@
           <el-table-column label="操作" width="500" resizable>
             <div slot-scope="scope" class="control-btn">
               <el-button size="mini" @click="visit(scope.row.domain)">访问</el-button>
-              <el-button size="mini" @click="mockUser(scope.row.user_id)">切换</el-button>
+              <!-- <el-button size="mini" @click="mockUser(scope.row.user_id)">切换</el-button> -->
+              <el-button size="mini" @click="open(scope.row.id)">切换</el-button>
               <router-link :to="{path:'/pages/system_administrators/System_Administrators/EditSite',query:{id:scope.row.id}}"><el-button size="mini">编辑</el-button></router-link>
               <el-button size="mini" @click="update(scope.row.id)">更新缓存</el-button>
               <el-button size="mini" @click="backup(scope.row.id)">数据备份</el-button>
@@ -52,6 +53,25 @@
       </div>
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
+      <el-dialog
+        title="切换身份"
+        :visible.sync="dialogVisible"
+        width="30%">
+        <el-collapse>
+          <el-collapse-item title="主站管理员" name="1">
+            <el-button type="success" size="mini" v-for="item in userList.main_admin" :key="item.id" @click="mockUser(item.id,item.group_id)">{{item.title}}</el-button>
+          </el-collapse-item>
+          <el-collapse-item title="分站管理员" name="2">
+            <el-button type="success" size="mini" v-for="item in userList.sub_admin" :key="item.id" @click="mockUser(item.id,item.group_id)">{{item.title}}</el-button>
+          </el-collapse-item>
+          <el-collapse-item title="领导" name="3">
+            <el-button type="success" size="mini" v-for="item in userList.leader" :key="item.id" @click="mockUser(item.id,item.group_id)">{{item.title}}</el-button>
+          </el-collapse-item>
+          <el-collapse-item title="编辑" name="4">
+            <el-button type="success" size="mini" v-for="item in userList.editor" :key="item.id" @click="mockUser(item.id,item.group_id)">{{item.title}}</el-button>
+          </el-collapse-item>
+        </el-collapse>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -63,6 +83,7 @@ import Paging from "@/components/Paging";
 import Instructions from "@/components/Instructions";
 
 import { getSiteList } from "@/api/site_management/SiteList";
+import { userList } from "@/api/user/user";
 
 /* 站点列表 */
 export default {
@@ -108,7 +129,16 @@ export default {
       titleSearchValue: "",
       //表格
       tableInfo: [],
-      tableList: []
+      tableList: [],
+      //用于切换身份的弹出框
+      dialogVisible: false,
+      //当前选择站点的管理员列表
+      userList: {
+        main_admin: [],
+        sub_admin: [],
+        leader: [],
+        editor: []
+      }
     };
   },
   components: {
@@ -146,17 +176,38 @@ export default {
     visit(url) {
       window.open("//" + url);
     },
+    //打开弹窗
+    open(site_id) {
+      this.dialogVisible = true;
+      userList({ site_id: site_id }).then(res => {
+        if ((res.data.code = 200)) {
+          this.userList = {
+            main_admin: [],
+            sub_admin: [],
+            leader: [],
+            editor: []
+          };
+          if (res.data.data.list) {
+            for (let i in res.data.data.list) {
+              if (res.data.data.list[i].group_id == 2) {
+                this.userList.main_admin.push(res.data.data.list[i]);
+              } else if (res.data.data.list[i].group_id == 3) {
+                this.userList.sub_admin.push(res.data.data.list[i]);
+              } else if (res.data.data.list[i].group_id == 4) {
+                this.userList.leader.push(res.data.data.list[i]);
+              } else if (res.data.data.list[i].group_id == 5) {
+                this.userList.editor.push(res.data.data.list[i]);
+              }
+            }
+          }
+        }
+      });
+    },
     //切换
-    mockUser(id) {
-      if (id) {
-        window.localStorage.setItem("mockUser", id);
-        this.$router.push("/pages/administrators/Administrators");
-      } else {
-        this.$alert("该站点暂无站点管理员", "提示", {
-          confirmButtonText: "确定",
-          callback: () => {}
-        });
-      }
+    mockUser(id, group) {
+      window.localStorage.setItem("mockUser", id);
+      window.localStorage.setItem("mockGroup", group);
+      this.$router.push("/pages/administrators/Administrators");
     },
     //更新缓存
     update(id) {
