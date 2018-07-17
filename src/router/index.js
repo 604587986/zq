@@ -124,6 +124,8 @@ import EditMember from '@/edit/member/EditMember'//编辑会员
 import TagList from '@/edit/tag/TagList'
 //录取查询
 import Enroll from '@/edit/enroll/enroll'
+//工资管理
+import Salary from '@/edit/salary/salary'
 
 
 
@@ -437,6 +439,10 @@ export default new Router({
                 {
                 path: 'enroll',
                 component: Enroll
+            },
+                {
+                path: 'salary',
+                component: Salary
             },
         
             ]

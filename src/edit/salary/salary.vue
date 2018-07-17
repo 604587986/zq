@@ -6,16 +6,17 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter"> 
-          <el-button type="primary" size="mini" @click="dialogVisible=true">导入工资信息</el-button>      
+          <el-button type="primary" size="mini" @click="dialogVisible=true">上传工资报表</el-button>      
           <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
             <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
           </el-input>
       </div>
       <!-- 表格 -->
       <div class="table-body">
-          <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
+        开发中
+          <!-- <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
-              <el-table-column prop="title" label="姓名"></el-table-column>
+              <el-table-column prop="member_id" label="姓名"></el-table-column>
               <el-table-column prop="account" label="考生号码"></el-table-column>
               <el-table-column prop="mail" label="身份证号"></el-table-column>
               <el-table-column prop="mobile" label="录取时间"></el-table-column>
@@ -27,7 +28,7 @@
                       <el-button @click="" size="small" class="control-btn-del">删除</el-button>                    
                   </div>
               </el-table-column>
-          </el-table>
+          </el-table> -->
       </div>
       <!-- 表格筛选 -->
       <!-- <div class="table-filter">
@@ -38,16 +39,16 @@
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
     <!-- 表单 -->
-    <!-- <el-dialog
-      title="导入录取信息"
+    <el-dialog
+      title="上传工资报表"
       :visible.sync="dialogVisible"
       width="50%">
       <el-form ref="form" :model="form" :rules="rules" status-icon label-width="100px" size="mini" label-position="left">
         <el-form-item label="下载模板：">
-            <a href="/api/admission/down">
+            <a href="/api/month/down">
                 <el-button type="primary" size="mini">下载模板</el-button>
             </a>
-            请先下载模板，按规定格式填写学生信息
+            请先下载模板，按规定格式填写信息(模板已关联所有会员)
         </el-form-item>
         <el-form-item label="上传模板：">
             <el-button type="primary" size="mini" @click="uploadVisible=true">点击上传</el-button>
@@ -68,14 +69,14 @@
             <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
         </el-form-item>
     </el-form>
-    </el-dialog> -->
+    </el-dialog>
     <!-- 上传 -->
-    <!-- <el-dialog
+    <el-dialog
         title="附件上传"
         :visible.sync="uploadVisible"       
         >
         <upload @uploadSuccess="handleSuccess" :allowType="['doc']"></upload>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -85,7 +86,7 @@ import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Upload from "@/components/Upload";
 
-import { addMember, memberList, modifyPassword } from "@/api/member/member";
+import { importExcel,index} from "@/api/salary/salary";
 export default {
   name: "salary",
   data() {
@@ -118,22 +119,19 @@ export default {
       tableList: [],
       // 添加用户表单
       form: {
-          id:'',
-          del:true
+        id: "",
+        del: true
       },
       // 表单验证
-      rules: {
-        
-      
-      },
+      rules: {},
       // 弹出框
       dialogVisible: false,
       //上传组件弹出框
-      uploadVisible:false,
+      uploadVisible: false,
       // 提交按钮loading
       subLoading: false,
       //当前选择的文件
-      current_title:''
+      current_title: ""
     };
   },
   components: {
@@ -153,14 +151,14 @@ export default {
         keyword: this.titleSearchValue
       };
       this.table_loading = true;
-      memberList(data).then(res => {
+      index(data).then(res => {
         this.table_loading = false;
-        // if (res.data.code == 200 || res.data.code == 404) {
-        //   this.tableInfo = res.data.data.list;
-        //   this.currentPaging.totals = res.data.data.count;
-        // } else {
-        //   this.$message.error(res.data.message);
-        // }
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
+        }
       });
     },
     //处理sizeChange
@@ -175,22 +173,22 @@ export default {
       this.getData();
     },
     //表单提交
-    submitForm(formName) {     
+    submitForm(formName) {
       var that = this;
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-        //   addMember(that.form).then(res => {
-        //     that.subLoading = false;
-        //     if (res.data.code == 200) {
-        //       that.$message.success("添加成功");
-        //       that.$refs[formName].resetFields();
-        //       that.dialogVisible = false;
-        //       that.getData()
-        //     } else {
-        //       that.$message.error(res.data.message);
-        //     }
-        //   });
+          importExcel(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("信息导入成功");
+              that.$refs[formName].resetFields();
+              that.dialogVisible = false;
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");
@@ -199,10 +197,33 @@ export default {
       });
     },
     //上传成功的回调
-    handleSuccess(item){
-        this.current_title = item.title;
-        this.form.id = item.id;
-        this.uploadVisible = false;
+    handleSuccess(item) {
+      this.current_title = item.title;
+      this.form.id = item.id;
+      this.uploadVisible = false;
+    },
+    // 删除
+    del(id) {
+      this.$confirm("是否删除该条录取信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(()=>{
+        let data = {id:id};
+        del(data).then(res=>{
+          if(res.data.code == 200){
+            this.$message.success('删除成功');
+            this.getData();
+          }else{
+            this.$message.error(res.data.message);            
+          }
+        })
+      }).catch(()=>{
+        this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });  
+      });
     }
   }
 };

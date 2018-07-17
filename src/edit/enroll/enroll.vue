@@ -15,16 +15,16 @@
       <div class="table-body">
           <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
-              <el-table-column prop="title" label="姓名"></el-table-column>
-              <el-table-column prop="account" label="考生号码"></el-table-column>
-              <el-table-column prop="mail" label="身份证号"></el-table-column>
-              <el-table-column prop="mobile" label="录取时间"></el-table-column>
+              <el-table-column prop="name" label="姓名"></el-table-column>
+              <el-table-column prop="studentnum" label="考生号码"></el-table-column>
+              <el-table-column prop="cardid" label="身份证号"></el-table-column>
+              <el-table-column prop="luqutime" label="录取时间"></el-table-column>
               <el-table-column label="操作" width="200">
                   <div slot-scope="scope" class="control-btn">
-                    <router-link :to="{path:'/pages/editor/editor/edit_member',query:{id:scope.row.id}}">
+                    <!-- <router-link :to="{path:'/pages/editor/editor/edit_member',query:{id:scope.row.id}}">
                       <el-button size="small">编辑</el-button>
-                    </router-link>
-                      <el-button @click="" size="small" class="control-btn-del">删除</el-button>                    
+                    </router-link> -->
+                      <el-button @click="del(scope.row.id)" size="small" class="control-btn-del">删除</el-button>                    
                   </div>
               </el-table-column>
           </el-table>
@@ -85,7 +85,7 @@ import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
 import Upload from "@/components/Upload";
 
-import { addMember, memberList, modifyPassword } from "@/api/member/member";
+import { importExcel, index, del } from "@/api/enroll/enroll";
 export default {
   name: "enroll",
   data() {
@@ -118,21 +118,19 @@ export default {
       tableList: [],
       // 添加用户表单
       form: {
-          id:'',
-          del:true
+        id: "",
+        del: true
       },
       // 表单验证
-      rules: {
-       
-      },
+      rules: {},
       // 弹出框
       dialogVisible: false,
       //上传组件弹出框
-      uploadVisible:false,
+      uploadVisible: false,
       // 提交按钮loading
       subLoading: false,
       //当前选择的文件
-      current_title:''
+      current_title: ""
     };
   },
   components: {
@@ -152,14 +150,14 @@ export default {
         keyword: this.titleSearchValue
       };
       this.table_loading = true;
-      memberList(data).then(res => {
+      index(data).then(res => {
         this.table_loading = false;
-        // if (res.data.code == 200 || res.data.code == 404) {
-        //   this.tableInfo = res.data.data.list;
-        //   this.currentPaging.totals = res.data.data.count;
-        // } else {
-        //   this.$message.error(res.data.message);
-        // }
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
+        }
       });
     },
     //处理sizeChange
@@ -174,22 +172,22 @@ export default {
       this.getData();
     },
     //表单提交
-    submitForm(formName) {     
+    submitForm(formName) {
       var that = this;
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-        //   addMember(that.form).then(res => {
-        //     that.subLoading = false;
-        //     if (res.data.code == 200) {
-        //       that.$message.success("添加成功");
-        //       that.$refs[formName].resetFields();
-        //       that.dialogVisible = false;
-        //       that.getData()
-        //     } else {
-        //       that.$message.error(res.data.message);
-        //     }
-        //   });
+          importExcel(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("信息导入成功");
+              that.$refs[formName].resetFields();
+              that.dialogVisible = false;
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");
@@ -198,10 +196,33 @@ export default {
       });
     },
     //上传成功的回调
-    handleSuccess(item){
-        this.current_title = item.title;
-        this.form.id = item.id;
-        this.uploadVisible = false;
+    handleSuccess(item) {
+      this.current_title = item.title;
+      this.form.id = item.id;
+      this.uploadVisible = false;
+    },
+    // 删除
+    del(id) {
+      this.$confirm("是否删除该条录取信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(()=>{
+        let data = {id:id};
+        del(data).then(res=>{
+          if(res.data.code == 200){
+            this.$message.success('删除成功');
+            this.getData();
+          }else{
+            this.$message.error(res.data.message);            
+          }
+        })
+      }).catch(()=>{
+        this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });  
+      });
     }
   }
 };

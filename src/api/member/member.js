@@ -40,3 +40,11 @@ export function modifyPassword(data) {
         console.log(err);
     })
 }
+//导入excel
+export function importExcel(data) {
+    return axios.post('/api/member/importMember', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}

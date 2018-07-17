@@ -6,7 +6,8 @@
     <div class="table-container">
       <!-- 表格筛选 -->
       <div class="table-filter"> 
-          <el-button type="primary" size="mini" @click="dialogVisible=true">添加会员</el-button>      
+          <el-button type="primary" size="mini" @click="dialogVisible=true">添加会员</el-button>  
+          <el-button type="primary" size="mini" @click="excelVisible=true">批量导入会员</el-button>                    
           <el-input placeholder="请输入昵称关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
             <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
           </el-input>
@@ -39,6 +40,7 @@
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
+    <!-- 添加会员弹出框 -->
     <el-dialog
       title="添加会员"
       :visible.sync="dialogVisible"
@@ -68,6 +70,45 @@
         </el-form-item>
     </el-form>
     </el-dialog>
+    <!-- 批量导入会员信息 -->
+    <el-dialog
+      title="批量导入会员"
+      :visible.sync="excelVisible"
+      width="50%">
+      <el-form ref="form2" :model="form2" :rules="rules" status-icon label-width="100px" size="mini" label-position="left">
+        <el-form-item label="下载模板：">
+            <a href="/api/member/download">
+                <el-button type="primary" size="mini">下载模板</el-button>
+            </a>
+            请先下载模板，按规定格式填写信息
+        </el-form-item>
+        <el-form-item label="上传模板：">
+            <el-button type="primary" size="mini" @click="uploadVisible=true">点击上传</el-button>
+             请选择填好的表格进行上传
+        </el-form-item>
+        <el-form-item label="当前文件：">
+            <el-input v-model="form2.id" style="display:none"></el-input>
+            {{form.id?current_title:'请上传文件！'}}
+        </el-radio-group>
+        </el-form-item>
+        <el-form-item label="上传后是否删除文件：">
+            <el-radio-group v-model="form2.del">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+        </el-radio-group>
+        </el-form-item>
+        <el-form-item class="form-control-btn">
+            <el-button type="primary" @click="submitForm2('form2')" size="large" :loading="subLoading">提交</el-button>
+        </el-form-item>
+    </el-form>
+    </el-dialog>
+    <!-- 上传 -->
+    <el-dialog
+        title="附件上传"
+        :visible.sync="uploadVisible"       
+        >
+        <upload @uploadSuccess="handleSuccess" :allowType="['doc']"></upload>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,8 +116,9 @@
 /* 引入组件 */
 import Crumb from "@/components/Crumb";
 import Paging from "@/components/Paging";
+import Upload from "@/components/Upload";
 
-import { addMember, memberList, modifyPassword } from "@/api/member/member";
+import { addMember, memberList, modifyPassword ,importExcel} from "@/api/member/member";
 export default {
   name: "MemberList",
   data() {
@@ -149,7 +191,7 @@ export default {
             validator: function(rule, value, callback) {
               var reg = /0?(13|14|15|17|18|19)[0-9]{9}/;
               if (!value) {
-                callback(new Error("手机不能为空"));
+                callback();
               } else if (reg.test(value) == false) {
                 callback(new Error("请输入正确的手机号码格式"));
               } else {
@@ -196,12 +238,22 @@ export default {
       // 弹出框
       dialogVisible: false,
       // 提交按钮loading
-      subLoading: false
+      subLoading: false,
+      // excel弹出框
+      excelVisible: false,
+      //上传组件弹出框
+      uploadVisible: false,
+      // excel表单
+      form2: {
+        id: "",
+        del: true
+      }
     };
   },
   components: {
     Crumb,
-    Paging
+    Paging,
+    Upload
   },
   mounted() {
     this.getData();
@@ -237,7 +289,7 @@ export default {
       this.getData();
     },
     //表单提交
-    submitForm(formName) {     
+    submitForm(formName) {
       var that = this;
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
@@ -248,7 +300,7 @@ export default {
               that.$message.success("添加成功");
               that.$refs[formName].resetFields();
               that.dialogVisible = false;
-              that.getData()
+              that.getData();
             } else {
               that.$message.error(res.data.message);
             }
@@ -270,11 +322,15 @@ export default {
         .then(() => {
           modifyPassword({ id: id }).then(res => {
             if (res.data.code == 200) {
-              this.$alert(`新密码为：${res.data.data.passwd}  请牢记密码`, "新密码", {
-                confirmButtonText: "确定"
-              });
-            }else{
-              this.$message.error(res.data.message)
+              this.$alert(
+                `新密码为：${res.data.data.passwd}  请牢记密码`,
+                "新密码",
+                {
+                  confirmButtonText: "确定"
+                }
+              );
+            } else {
+              this.$message.error(res.data.message);
             }
           });
         })
@@ -284,6 +340,36 @@ export default {
             message: "已取消"
           });
         });
+    },
+    //上传成功的回调
+    handleSuccess(item) {
+      this.current_title = item.title;
+      this.form.id = item.id;
+      this.uploadVisible = false;
+    },
+    //excel表单提交
+    submitForm2(formName) {
+      var that = this;
+      that.$refs[formName].validate(function(valid) {
+        that.subLoading = true;
+        if (valid) {
+          importExcel(that.form).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("信息导入成功");
+              that.$refs[formName].resetFields();
+              that.excelVisible = false;
+              that.getData();
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        } else {
+          that.subLoading = false;
+          that.$message.error("提交失败!");
+          return false;
+        }
+      });
     }
   }
 };

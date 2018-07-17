@@ -112,7 +112,7 @@ export default {
             validator: function(rule, value, callback) {
               var reg = /0?(13|14|15|17|18|19)[0-9]{9}/;
               if (!value) {
-                callback(new Error("手机不能为空"));
+                callback();
               } else if (reg.test(value) == false) {
                 callback(
                   new Error("请输入正确的手机号码格式")
