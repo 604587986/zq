@@ -75,7 +75,7 @@
       <!-- 表格筛选 -->
       <div class="table-filter">
           <el-button type="primary" size="mini" @click="selection(tableInfo)">全选</el-button>
-          <el-button type="primary" size="mini">批量删除</el-button>
+          <el-button type="primary" size="mini" @click="del_all">批量删除</el-button>
       </div>
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
@@ -105,7 +105,8 @@ import Paging from "@/components/Paging";
 import {
   getArticleList,
   verifyArticle,
-  deleteArticle
+  deleteArticle,
+  deleteAll
 } from "@/api/article/ArticleList";
 import { getCategoryList } from "@/api/category/category";
 
@@ -230,6 +231,31 @@ export default {
       } else {
         that.$refs.multipleTable.clearSelection();
       }
+    },
+    //批量删除
+    del_all() {
+      this.$confirm("是否批量删除选中文件？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let data = { id: this.tableList.join(",") };
+          deleteAll(data).then(res=>{
+            if(res.data.code == 200){
+              this.$message.success('批量删除成功');
+              this.getData()
+            }else{
+              this.$message.error(res.data.message);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     //处理sizeChange
     handleSizeChange(val) {
