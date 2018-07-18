@@ -21,6 +21,9 @@
           <el-input v-model="form.passwd" type="password"></el-input>
           <span class="site-item-info">最少6位，英文与数字或下划线组合</span>
         </el-form-item>
+        <el-form-item label="确认密码：" class="form-item" prop="passwdconfirm">
+            <el-input type="password" v-model="form.passwdconfirm"></el-input>
+        </el-form-item>
         <el-form-item label="用户组：" class="form-item">
           <el-select v-model="form.group_id" clearable size="mini">
             <el-option v-for="item in groupList" :key="item.id" :label="item.title" :value="item.id"></el-option>
@@ -139,6 +142,21 @@ export default {
             trigger: "blur"
           }
         ],
+        passwdconfirm: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请再次输入密码"));
+              } else if (value !== this.form.passwd) {
+                callback(new Error("两次输入密码不一致!"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
         nickname: [
           {
             required: true,
@@ -229,7 +247,9 @@ export default {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.$message.success("添加成功");
-              that.$router.push('/pages/system_administrators/System_Administrators/UserList')
+              that.$router.push(
+                "/pages/system_administrators/System_Administrators/UserList"
+              );
             } else {
               that.$message.error(res.data.message);
             }
