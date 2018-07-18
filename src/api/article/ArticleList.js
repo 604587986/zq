@@ -64,3 +64,11 @@ export function editArticle(data) {
         console.log(err);
     })
 }
+// 批量删除
+export function deleteAll(data) {
+    return axios.post('/api/article/deleteAll', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}
