@@ -2,33 +2,36 @@
   <div id="salary">
     <!-- 面包屑 -->
     <Crumb :crumbs="crumbs"></Crumb>
+          <!-- 表格筛选 -->
+      <div class="table-filter"> 
+          <el-button type="primary" size="mini" @click="dialogVisible=true">上传工资报表</el-button> 
+          <el-select v-model="type" placeholder="工资类型" size="mini" @change="currentPaging.currentPage = 1;getData()">
+            <el-option label="教师月工资" :value="1"></el-option>
+            <el-option label="行政月工资" :value="2"></el-option>
+          </el-select>   
+          <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="float-right" size="mini" style="width:300px">
+            <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
+          </el-input>  
+      </div>
     <!-- Form -->
     <div class="table-container">
-      <!-- 表格筛选 -->
-      <div class="table-filter"> 
-          <el-button type="primary" size="mini" @click="dialogVisible=true">上传工资报表</el-button>      
-          <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-            <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
-          </el-input>
-      </div>
       <!-- 表格 -->
       <div class="table-body">
-        开发中
-          <!-- <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
+          <el-table ref="multipleTable" :data="tableInfo" stripe size="small" v-loading="table_loading" element-loading-text="数据载入中">
               <el-table-column prop="id" label="ID" width="70"></el-table-column>
               <el-table-column prop="member_id" label="姓名"></el-table-column>
-              <el-table-column prop="account" label="考生号码"></el-table-column>
-              <el-table-column prop="mail" label="身份证号"></el-table-column>
-              <el-table-column prop="mobile" label="录取时间"></el-table-column>
+              <el-table-column prop="year" label="年份"></el-table-column>
+              <el-table-column prop="month" label="月份"></el-table-column>
+              <el-table-column prop="remark" label="备注"></el-table-column>
               <el-table-column label="操作" width="200">
                   <div slot-scope="scope" class="control-btn">
-                    <router-link :to="{path:'/pages/editor/editor/edit_member',query:{id:scope.row.id}}">
+                    <!-- <router-link :to="{path:'/pages/editor/editor/edit_member',query:{id:scope.row.id}}">
                       <el-button size="small">编辑</el-button>
-                    </router-link>
+                    </router-link> -->
                       <el-button @click="" size="small" class="control-btn-del">删除</el-button>                    
                   </div>
               </el-table-column>
-          </el-table> -->
+          </el-table>
       </div>
       <!-- 表格筛选 -->
       <!-- <div class="table-filter">
@@ -131,7 +134,9 @@ export default {
       // 提交按钮loading
       subLoading: false,
       //当前选择的文件
-      current_title: ""
+      current_title: "",
+      // 工资类型
+      type:1
     };
   },
   components: {
@@ -148,7 +153,8 @@ export default {
       let data = {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
-        keyword: this.titleSearchValue
+        keyword: this.titleSearchValue,
+        type:this.type
       };
       this.table_loading = true;
       index(data).then(res => {
