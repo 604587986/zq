@@ -169,19 +169,19 @@ export default {
         case 1:
           this.options.accept = {
             extensions: this.typeList[1].ext,
-            mimeTypes: this.typeList[1].mime
+            mimeTypes: this.typeList[1].mimeTypes
           };
           break;
         case 2:
           this.options.accept = {
             extensions: this.typeList[2].ext,
-            mimeTypes: this.typeList[2].mime
+            mimeTypes: this.typeList[2].mimeTypes
           };
           break;
         case 3:
           this.options.accept = {
             extensions: this.typeList[3].ext,
-            mimeTypes: this.typeList[3].mime
+            mimeTypes: this.typeList[3].mimeTypes
           };
           break;
       }
