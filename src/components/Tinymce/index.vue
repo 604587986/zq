@@ -153,7 +153,7 @@ export default {
           node = `<img class="wscnph" src="${item.url}" >`;
           break;
         case 2:
-          node = `<img src="./static/img/${item.ext}.gif" style="vertical-align:top"> <a href="${item.url}" target="_blank">${item.title}</a>`;
+          node = `<br><img src="./static/img/${item.ext}.gif" style="vertical-align:top"><span>附件：</span> <a href="${item.url}" target="_blank">${item.title}</a><br>`;
           break;
         case 3:
           node = `<video controls><source src="${item.url}"></source></video>`;
