@@ -33,6 +33,11 @@
           <el-form-item class="form-control-btn item-padding">
             <el-button type="primary" id="btn" size="large">登录</el-button>
           </el-form-item>
+          <el-form-item class=" item-padding" label="登录说明：">   
+            <br>            
+            <p class="notice">1.浏览器建议使用Chrome、Firefox、360极速浏览器</p>
+            <p class="notice">2.分辨率建议使用1366*768以上</p>   
+          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -278,7 +283,7 @@ export default {
       var that = this;
       this.$http({
         method: "get",
-        url: "/api/login/gee_init?t=" + (new Date()).getTime()
+        url: "/api/login/gee_init?t=" + new Date().getTime()
       }).then(res => {
         window.initGeetest(
           {
@@ -302,7 +307,7 @@ export default {
           $("#wait").hide();
         })
         .validate(function() {
-          let bool;//对表单进行验证
+          let bool; //对表单进行验证
           that.$refs["form"].validate(function(valid) {
             if (!valid) {
               bool = false;
@@ -341,8 +346,8 @@ export default {
               } else {
                 that.$router.push("/pages/administrators/Administrators");
               }
-            } else {    
-              captchaObj.reset();                     
+            } else {
+              captchaObj.reset();
               that.$message.error(res.data.message);
             }
           });
@@ -351,7 +356,7 @@ export default {
         captchaObj.verify();
       });
       $("#password").keyup(function(e) {
-        e.keyCode == 13 &&   captchaObj.verify();  
+        e.keyCode == 13 && captchaObj.verify();
       });
     }
   }
