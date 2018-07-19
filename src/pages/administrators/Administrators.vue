@@ -62,12 +62,12 @@ export default {
             entryUrl: "/pages/editor/editor/article_list"
           },
           {
-            iconName: "icon-lanmuliebiao",
+            iconName: "icon-danye",
             entryName: "单页列表",
             entryUrl: "/pages/editor/editor/singlepage_list"
           },
           {
-            iconName: "icon-lanmuliebiao",
+            iconName: "icon-caidan",
             entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
           },
@@ -77,17 +77,17 @@ export default {
             entryUrl: "/pages/editor/editor/category_list"
           },
           {
-            iconName: "icon-lanmuliebiao",
+            iconName: "icon-biaoqian",
             entryName: "文章标签",
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
-            iconName: "icon-user",
+            iconName: "icon-luqu",
             entryName: "录取管理",
             entryUrl: "/pages/editor/editor/enroll"
           },
           {
-            iconName: "icon-piaofuguanggao",
+            iconName: "icon-gongzi",
             entryName: "工资管理",
             entryUrl: "/pages/editor/editor/salary"
           },
@@ -140,17 +140,17 @@ export default {
             entryUrl: "/pages/editor/editor/article_list"
           },
           {
-            iconName: "icon-lanmuliebiao",
+            iconName: "icon-biaoqian",
             entryName: "文章标签",
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
-            iconName: "icon-lanmuliebiao",
+            iconName: "icon-caidan",
             entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
           },
           {
-            iconName: "icon-jiaoshifengcai",
+            iconName: "icon-danye",
             entryName: "单页列表",
             entryUrl: "/pages/editor/editor/singlepage_list"
           },
@@ -160,17 +160,17 @@ export default {
             entryUrl: "/pages/editor/editor/category_list"
           },
           {
-            iconName: "icon-huandengpian",
+            iconName: "icon-lunbo",
             entryName: "轮播图",
             entryUrl: "/pages/editor/editor/carousel_list"
           },
           {
-            iconName: "icon-huandengpian",
+            iconName: "icon-youqinglianjie",
             entryName: "友情链接",
             entryUrl: "/pages/editor/editor/friendly_link"
           },
           {
-            iconName: "icon-piaofuguanggao",
+            iconName: "icon-guanggao",
             entryName: "广告管理",
             entryUrl: "/pages/editor/editor/advertisement_list"
           },
@@ -203,11 +203,6 @@ export default {
             entryUrl: "/pages/editor/editor/article_list"
           },
           {
-            iconName: "icon-daishenwenzhang",
-            entryName: "待审文章",
-            entryUrl: "/pages/editor/editor/pending_article"
-          },
-          {
             iconName: "icon-shujukanban",
             entryName: "数据看板",
             entryUrl: "/pages/editor/editor/data_board"
@@ -231,12 +226,12 @@ export default {
             entryUrl: "/pages/editor/editor/article_list"
           },
           {
-            iconName: "icon-lanmuliebiao",
+            iconName: "icon-caidan",
             entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
           },
           {
-            iconName: "icon-huandengpian",
+            iconName: "icon-lunbo",
             entryName: "轮播图",
             entryUrl: "/pages/editor/editor/carousel_list"
           }
