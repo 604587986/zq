@@ -21,9 +21,9 @@
         <el-form-item label="链接:">
           <el-input v-model="form.link"></el-input>
         </el-form-item>
-        <el-form-item label="排序:">
+        <!-- <el-form-item label="排序:">
           <el-input v-model="form.sort"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-form-item label="是否启用:">
           <el-radio-group v-model="form.state">
               <el-radio :label="1">显示</el-radio>
