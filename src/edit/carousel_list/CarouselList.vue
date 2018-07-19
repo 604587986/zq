@@ -65,8 +65,13 @@
         <el-form-item label="标题:">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
+<<<<<<< HEAD
         <el-form-item label="分类" class="form-item" prop="category_id">
           原分类：{{form.category_title}}
+=======
+        <el-form-item label="分类:" class="form-item" prop="category_id">
+          <span v-show="!form.categoryValue || !form.categoryValue.length">原分类：{{form.category_title}}</span>
+>>>>>>> master
           <el-cascader v-model="form.categoryValue" :options="categoryList" clearable placeholder="选择新分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="column-selection" @change="currentPaging.currentPage = 1;getData()">
           </el-cascader>
         </el-form-item>
@@ -243,7 +248,7 @@ export default {
           let data = {
             id:that.form.id,
             title:that.form.title,
-            category_id:that.form.categoryValue?that.form.categoryValue[that.form.categoryValue.length-1]: that.form.category_id,
+            category_id:that.form.categoryValue || that.form.categoryValue.length?that.form.categoryValue[that.form.categoryValue.length-1]: that.form.category_id,
             image_id:that.form.image_id,
             link:that.form.link,
             // sort:that.form.sort,
