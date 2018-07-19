@@ -82,24 +82,6 @@ export default {
             entryUrl: "/pages/editor/editor/tag_list"
           },
           {
-<<<<<<< HEAD
-=======
-            iconName: "icon-luqu",
-            entryName: "录取管理",
-            entryUrl: "/pages/editor/editor/enroll"
-          },
-          {
-            iconName: "icon-gongzi",
-            entryName: "工资管理",
-            entryUrl: "/pages/editor/editor/salary"
-          },
-          {
-            iconName: "icon-jiaoshifengcai",
-            entryName: "会员管理",
-            entryUrl: "/pages/editor/editor/member_list"
-          },
-          {
->>>>>>> 43460d8... 工作台新图标更换
             iconName: "icon-zhandianxinxi",
             entryName: "站点信息",
             entryUrl: "/pages/editor/editor/site_information"
