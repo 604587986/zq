@@ -12,8 +12,9 @@
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="分类" class="form-item" prop="category_id">
-          <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
-          </el-cascader>
+        <el-select v-model="form.category_id" placeholder="分类" clearable size="mini" class="state-selection">
+            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        </el-select>
         </el-form-item>
         <el-form-item label="图片:">
           <file-picker v-model="form.image_id" :allowType="['image']"></file-picker>
@@ -44,7 +45,7 @@ import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
 
-import { getCategoryList } from "@/api/category/category";
+import {index} from "@/api/gallery_category/index";
 import { createCarousel } from "@/api/carousel/carousel";
 
 /* 添加轮播图 */
@@ -148,8 +149,8 @@ export default {
       },
       //分类列表
       categoryList: [],
-      //当前分类数组
-      categoryValue:[]
+      //当前分类
+      categoryValue:''
     };
   },
   components: {
@@ -157,14 +158,9 @@ export default {
     Instructions,
     FilePicker
   },
-  watch: {
-    categoryValue: function(val) {
-      this.$set(this.form, "category_id", val[val.length - 1]);
-    }
-  },
   mounted: function() {
     //获取分类列表
-    this.getCategory();
+    this.getAllCategory();
   },
   methods: {
     //表单提交
@@ -189,20 +185,20 @@ export default {
         }
       });
     },
-    //获取分类列表
-    getCategory() {
+    //获取所有分类
+    getAllCategory() {
       let data = {
         page: 0,
-        tree: 1
+        type: 1
       };
-      getCategoryList(data).then(res => {
+      index(data).then(res => {
         if (res.data.code == 200 || res.data.code == 404) {
           this.categoryList = res.data.data.list;
         } else {
           this.$message.error(res.data.message);
         }
       });
-    }
+    },
   }
 };
 </script>
