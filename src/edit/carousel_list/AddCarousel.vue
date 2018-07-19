@@ -89,63 +89,8 @@ export default {
       typeList: [],
       //表单验证
       rules: {
-        title: [
-          {
-            required: true,
-            message: "请输入站点名称",
-            trigger: "blur"
-          },
-          {
-            min: 1,
-            message: "站点名称不能为空",
-            trigger: "blur"
-          }
-        ],
-        alias: [
-          {
-            required: true,
-            message: "请输入别名",
-            trigger: "blur"
-          },
-          {
-            min: 1,
-            message: "别名不能为空",
-            trigger: "blur"
-          }
-        ],
-        state: [
-          {
-            required: true,
-            message: "请选择站点状态",
-            trigger: "blur"
-          }
-        ],
-        close_info: [
-          {
-            required: true,
-            message: "请输入关闭原因",
-            trigger: "blur"
-          },
-          {
-            min: 1,
-            max: 50,
-            message: "不能超过50个字",
-            trigger: "blur"
-          }
-        ],
-        sort: [
-          {
-            required: true,
-            validator: function(rule, value, callback) {
-              if (!Number.isInteger(value)) {
-                callback(new Error("请输入数字值"));
-              } else {
-                callback();
-              }
-            },
-            trigger: "blur"
-          }
-        ]
+        
+        
       },
       //分类列表
       categoryList: [],
