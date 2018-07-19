@@ -21,20 +21,20 @@
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column prop="id" label="ID" width="65"></el-table-column>
                 <el-table-column prop="title" label="标题"></el-table-column>
-                <el-table-column prop="category_id" label="分类"></el-table-column>
-                <el-table-column prop="img" label="图片">
+                <el-table-column prop="category_title" label="分类"></el-table-column>
+                <el-table-column label="图片">
                     <div slot-scope="scope" class="carousel-img">
-                        <img :src="scope.row.img" />
+                        <img :src="scope.row.image_url" />
                     </div>
                 </el-table-column>
                 <el-table-column prop="link" label="链接">
                     <a :href="scope.row.link" slot-scope="scope" target="_blank" class="carousel-link">{{scope.row.link}}</a>
                 </el-table-column>
-                <el-table-column label="排序" width="65">
+                <!-- <el-table-column label="排序" width="65">
                     <div slot-scope="scope" class="table-sort-input">
                         <el-input type="text" size="mini" @blur="sortBlur(scope.$index, carouselInfo)" :value="scope.row.count"></el-input>
                     </div>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column label="是否显示" width="90">
                   <div slot-scope="scope">
                     {{scope.row.type==1?'显示':'隐藏'}}
@@ -43,7 +43,7 @@
                 <el-table-column prop="create_time" label="添加时间" width="96"></el-table-column>
                 <el-table-column label="操作" width="130">
                     <div slot-scope="scope" class="control-btn">
-                        <el-button size="small">编辑</el-button>
+                        <el-button size="small" @click="editDialog=true;form=scope.row">编辑</el-button>
                         <el-button @click.native.prevent="deleteRow(scope.$index, carouselInfo)" size="small" class="control-btn-del">删除</el-button>
                     </div>
                 </el-table-column>
@@ -56,7 +56,40 @@
       </div>
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
-</div>
+    </div>
+    <el-dialog
+        title="编辑"
+        :visible.sync="editDialog"
+       >
+        <el-form ref="form" :model="form" status-icon label-width="150px" size="mini" label-position="right">
+        <el-form-item label="标题:">
+          <el-input v-model="form.title"></el-input>
+        </el-form-item>
+        <el-form-item label="分类" class="form-item" prop="category_id">
+          原分类：{{form.category_title}}
+          <el-cascader v-model="form.categoryValue" :options="categoryList" clearable placeholder="选择新分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="column-selection" @change="currentPaging.currentPage = 1;getData()">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="图片:">
+          <file-picker v-model="form.image_id" :allowType="['image']" :receiveImg="form.image_url"></file-picker>
+        </el-form-item>
+        <el-form-item label="链接:">
+          <el-input v-model="form.link"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="排序:">
+          <el-input v-model="form.sort"></el-input>
+        </el-form-item> -->
+        <el-form-item label="是否启用:">
+          <el-radio-group v-model="form.type">
+              <el-radio :label="1">显示</el-radio>
+              <el-radio :label="0">隐藏</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item class="form-control-btn">
+          <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -65,9 +98,10 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
-import { carouselList } from "@/api/carousel/carousel";
-import { getCategoryList } from "@/api/category/category";
+import FilePicker from "@/components/FilePicker";
 
+import { carouselList,editCarousel } from "@/api/carousel/carousel";
+import { getCategoryList } from "@/api/category/category";
 
 /* 轮播图列表 */
 export default {
@@ -108,18 +142,27 @@ export default {
       //分类列表
       categoryList: [],
       categoryValue: [],
-      //菜单检索
+      //轮播状态
+      type: "",
+      //检索
       titleSearchValue: "",
       //表格
       tableInfo: [],
       //用于多选
-      tableList: []
+      tableList: [],
+      // 编辑弹出框
+      editDialog: false,
+      //编辑form
+      form: {},
+      //提交按钮loading
+      subLoading: false
     };
   },
   components: {
     Crumb,
     Instructions,
-    Paging
+    Paging,
+    FilePicker
   },
   mounted() {
     this.getData();
@@ -133,6 +176,7 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
+        type:this.type,
         category_id: this.categoryValue[this.categoryValue.length - 1]
       };
       this.table_loading = true;
@@ -179,7 +223,7 @@ export default {
         }
       });
     },
-        //处理sizeChange
+    //处理sizeChange
     handleSizeChange(val) {
       this.currentPaging.pageSize = val;
       this.currentPaging.currentPage = 1;
@@ -190,6 +234,38 @@ export default {
       this.currentPaging.currentPage = val;
       this.getData();
     },
+    //表单提交(编辑)
+    submitForm(formName) {
+      var that = this;
+      that.$refs[formName].validate(function(valid) {
+        that.subLoading = true;
+        if (valid) {
+          let data = {
+            id:that.form.id,
+            title:that.form.title,
+            category_id:that.form.categoryValue?that.form.categoryValue[that.form.categoryValue.length-1]: that.form.category_id,
+            image_id:that.form.image_id,
+            link:that.form.link,
+            // sort:that.form.sort,
+            type:that.form.type
+          }
+          editCarousel(data).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("修改成功");
+              that.editDialog = false;
+              that.getData()
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        } else {
+          that.subLoading = false;
+          that.$message.error("提交失败!");
+          return false;
+        }
+      });
+    }
   }
 };
 </script>

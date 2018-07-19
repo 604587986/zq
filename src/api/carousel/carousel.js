@@ -16,3 +16,11 @@ export function createCarousel(data) {
         console.log(err);
     })
 }
+//轮播编辑
+export function editCarousel(data) {
+    return axios.post('/api/carousel/save', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}
