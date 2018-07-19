@@ -11,13 +11,12 @@
         <el-form-item label="标题:">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="分类:">
-          <el-select v-model="form.type" placeholder="请选择">
-              <el-option v-for="item in typeList" :key="item.id" :label="item.title" :value="item.id"></el-option>
-          </el-select>
+        <el-form-item label="分类" class="form-item" prop="category_id">
+          <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="float-left column-selection" @change="currentPaging.currentPage = 1;getData()">
+          </el-cascader>
         </el-form-item>
         <el-form-item label="图片:">
-          <file-picker v-model="form.img"></file-picker>
+          <file-picker v-model="form.image_id" :allowType="['image']"></file-picker>
         </el-form-item>
         <el-form-item label="链接:">
           <el-input v-model="form.link"></el-input>
@@ -25,12 +24,12 @@
         <el-form-item label="排序:">
           <el-input v-model="form.sort"></el-input>
         </el-form-item>
-        <el-form-item label="是否启用:">
+        <!-- <el-form-item label="是否启用:">
           <el-radio-group v-model="form.state">
               <el-radio :label="1">显示</el-radio>
               <el-radio :label="0">隐藏</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
         </el-form-item>
@@ -46,7 +45,7 @@ import Instructions from "@/components/Instructions";
 import FilePicker from "@/components/FilePicker";
 
 import { getCategoryList } from "@/api/category/category";
-// import { toAddCategory } from "@/api/category/category";
+import { createCarousel } from "@/api/carousel/carousel";
 
 /* 添加轮播图 */
 export default {
@@ -86,9 +85,7 @@ export default {
       //表单
       form: {},
       //分类列表
-      typeList: [
-        
-      ],
+      typeList: [],
       //表单验证
       rules: {
         title: [
@@ -148,7 +145,11 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      //分类列表
+      categoryList: [],
+      //当前分类数组
+      categoryValue:[]
     };
   },
   components: {
@@ -156,12 +157,14 @@ export default {
     Instructions,
     FilePicker
   },
+  watch: {
+    categoryValue: function(val) {
+      this.$set(this.form, "category_id", val[val.length - 1]);
+    }
+  },
   mounted: function() {
-    //侧边导航定位
-    sessionStorage.setItem("system_menu_idx", 1);
-    this.$store.commit("update_system_menu_idx", 1);
     //获取分类列表
-    this.getCategory()
+    this.getCategory();
   },
   methods: {
     //表单提交
@@ -170,14 +173,15 @@ export default {
       that.$refs[formName].validate(function(valid) {
         that.subLoading = true;
         if (valid) {
-          //   toAddCategory(that.form).then(res=>{
-          //     that.subLoading = false;
-          //     if(res.data.code == 200){
-          //       that.$message.success('添加成功')
-          //     }else{
-          //       that.$message.error(res.data.message)
-          //     }
-          //   })
+            createCarousel(that.form).then(res=>{
+              that.subLoading = false;
+              if(res.data.code == 200){
+                that.$message.success('添加成功');
+                that.$router.push('/pages/editor/editor/carousel_list')
+              }else{
+                that.$message.error(res.data.message)
+              }
+            })
         } else {
           that.subLoading = false;
           that.$message.error("提交失败!");
@@ -187,9 +191,15 @@ export default {
     },
     //获取分类列表
     getCategory() {
-      getCategoryList().then(res => {
-        if(res.data.code == 200 || res.data.code == 404){
-          this.typeList = res.data.data.list
+      let data = {
+        page: 0,
+        tree: 1
+      };
+      getCategoryList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
         }
       });
     }

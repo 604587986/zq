@@ -4,47 +4,43 @@
     <Crumb :crumbs="crumbs"></Crumb>
     <!-- 使用说明 -->
     <Instructions :instructionsInfo="instructionsInfo"></Instructions>
-    <!-- Form -->
+    <!-- 表格筛选 -->
+    <div class="table-filter">
+      <router-link to="/pages/editor/editor/add_carousel"><el-button type="primary" size="mini">添加轮播图</el-button></router-link>
+      <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class=" column-selection" @change="currentPaging.currentPage = 1;getData()">
+      </el-cascader>
+      <el-select v-model="type" placeholder="状态" clearable size="mini" class="state-selection" @change="currentPaging.currentPage = 1;getData()">
+          <el-option label="启用" :value="1"></el-option>
+          <el-option label="隐藏" :value="-1"></el-option>
+      </el-select>
+    </div>
     <div class="table-container">
-        <!-- 表格筛选 -->
-        <div class="table-filter">
-         <router-link to="/pages/editor/editor/add_carousel"><el-button type="primary" size="mini">添加轮播图</el-button></router-link>
-          <!-- <el-button type="primary" size="mini">轮播图分类</el-button> -->
-        </div>
-        <!-- 表格筛选 -->
-        <div class="table-filter">
-            <el-select v-model="columnSelectionValue" clearable placeholder="分类" size="mini" class="float-left column-selection">
-                <el-option v-for="item in columnSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <el-select v-model="stateValue" clearable placeholder="启用状态" size="mini" class="float-left state-selection">
-                <el-option v-for="item in stateSelection" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <el-input placeholder="请输入关键字" v-model="titleSearchValue" class="input-with-select title-search float-right" size="mini">
-                <el-button slot="append" icon="el-icon-search" @click="articleSearch()"></el-button>
-            </el-input>
-        </div>
         <!-- 表格 -->
         <div class="table-body carousel_container">
             <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
-                <el-table-column prop="uid" label="ID" width="65"></el-table-column>
-                <el-table-column prop="title" label="标题" resizable></el-table-column>
-                <el-table-column prop="column" label="分类" width="65"></el-table-column>
+                <el-table-column prop="id" label="ID" width="65"></el-table-column>
+                <el-table-column prop="title" label="标题"></el-table-column>
+                <el-table-column prop="category_id" label="分类"></el-table-column>
                 <el-table-column prop="img" label="图片">
                     <div slot-scope="scope" class="carousel-img">
                         <img :src="scope.row.img" />
                     </div>
                 </el-table-column>
-                <el-table-column prop="imgUrl" label="链接" width="150">
-                    <a :href="scope.row.imgUrl" slot-scope="scope" target="_blank" class="carousel-link">{{scope.row.imgUrl}}</a>
+                <el-table-column prop="link" label="链接">
+                    <a :href="scope.row.link" slot-scope="scope" target="_blank" class="carousel-link">{{scope.row.link}}</a>
                 </el-table-column>
                 <el-table-column label="排序" width="65">
                     <div slot-scope="scope" class="table-sort-input">
                         <el-input type="text" size="mini" @blur="sortBlur(scope.$index, carouselInfo)" :value="scope.row.count"></el-input>
                     </div>
                 </el-table-column>
-                <el-table-column prop="open" label="启用" width="70"></el-table-column>
-                <el-table-column prop="date" label="添加时间" width="100"></el-table-column>
+                <el-table-column label="是否显示" width="90">
+                  <div slot-scope="scope">
+                    {{scope.row.type==1?'显示':'隐藏'}}
+                  </div>
+                </el-table-column>
+                <el-table-column prop="create_time" label="添加时间" width="96"></el-table-column>
                 <el-table-column label="操作" width="130">
                     <div slot-scope="scope" class="control-btn">
                         <el-button size="small">编辑</el-button>
@@ -59,7 +55,7 @@
           <el-button type="primary" size="mini">批量删除</el-button>
       </div>
       <!-- 分页 -->
-      <!-- <Paging></Paging> -->
+      <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
 </div>
   </div>
 </template>
@@ -69,6 +65,9 @@
 import Crumb from "@/components/Crumb";
 import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
+import { carouselList } from "@/api/carousel/carousel";
+import { getCategoryList } from "@/api/category/category";
+
 
 /* 轮播图列表 */
 export default {
@@ -97,75 +96,22 @@ export default {
           content: "添加站点使用说明"
         }
       ],
-      //分类
-      columnSelection: [
-        {
-          value: 0,
-          label: "首页"
-        },
-        {
-          value: 1,
-          label: "关于我们"
-        }
-      ],
-      columnSelectionValue: "",
-      //启用状态
-      stateSelection: [
-        {
-          value: 0,
-          label: "启用"
-        },
-        {
-          value: 1,
-          label: "隐藏"
-        }
-      ],
-      stateValue: "",
+      //分页数据
+      currentPaging: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
+      //表格loading
+      table_loading: false,
+      //分类列表
+      categoryList: [],
+      categoryValue: [],
       //菜单检索
       titleSearchValue: "",
       //表格
-      tableInfo: [
-        {
-          uid: 4,
-          title: "元旦汇演海报",
-          column: "首页",
-          date: "2017-02-20",
-          img: "./images/test1.jpg",
-          imgUrl: "http://www.caa.edu.cn/gmrx/201801/t20180106_71798.html",
-          count: "4",
-          open: "显示"
-        },
-        {
-          uid: 3,
-          title: "元旦汇演海报",
-          column: "首页",
-          date: "2017-02-20",
-          img: "./images/test2.jpg",
-          imgUrl: "http://www.caa.edu.cn/gmrx/201801/t20180106_71798.html",
-          count: "3",
-          open: "显示"
-        },
-        {
-          uid: 2,
-          title: "元旦汇演海报",
-          column: "首页",
-          date: "2017-02-20",
-          img: "./images/test3.jpg",
-          imgUrl: "http://www.caa.edu.cn/gmrx/201801/t20180106_71798.html",
-          count: "2",
-          open: "显示"
-        },
-        {
-          uid: 1,
-          title: "郎朗独奏音乐会",
-          column: "关于我们",
-          date: "2017-02-20",
-          img: "./images/test4.jpg",
-          imgUrl: "http://www.caa.edu.cn/gmrx/201801/t20180106_71798.html",
-          count: "1",
-          open: "隐藏"
-        }
-      ],
+      tableInfo: [],
       //用于多选
       tableList: []
     };
@@ -175,8 +121,32 @@ export default {
     Instructions,
     Paging
   },
-  mounted: function() {},
+  mounted() {
+    this.getData();
+    //获取分类列表
+    this.getCategory();
+  },
   methods: {
+    //获取表格信息
+    getData() {
+      let data = {
+        page: this.currentPaging.currentPage,
+        size: this.currentPaging.pageSize,
+        keyword: this.titleSearchValue,
+        category_id: this.categoryValue[this.categoryValue.length - 1]
+      };
+      this.table_loading = true;
+      carouselList(data).then(res => {
+        this.table_loading = false;
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.tableInfo = res.data.data.list;
+          this.currentPaging.totals = res.data.data.count;
+          this.show_keyword = this.titleSearchValue;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
     //选中的时候触发
     handleSelectionChange(val) {
       this.tableList = [];
@@ -194,7 +164,32 @@ export default {
       } else {
         that.$refs.multipleTable.clearSelection();
       }
-    }
+    },
+    //获取分类列表
+    getCategory() {
+      let data = {
+        page: 0,
+        tree: 1
+      };
+      getCategoryList(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+        //处理sizeChange
+    handleSizeChange(val) {
+      this.currentPaging.pageSize = val;
+      this.currentPaging.currentPage = 1;
+      this.getData();
+    },
+    //处理currentChange
+    handleCurrentChange(val) {
+      this.currentPaging.currentPage = val;
+      this.getData();
+    },
   }
 };
 </script>

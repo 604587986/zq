@@ -172,7 +172,7 @@ export default {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.$message.success("添加成功");
-              that.$router.push('/pages/editor/editor/column_list')
+              that.$router.push('/pages/editor/editor/category_list')
             } else {
               that.$message.error(res.data.message);
             }

@@ -429,7 +429,7 @@ export default {
 
       this.uploader = WebUploader.create({
         auto: options.auto,
-        swf: "/static/upload/Uploader.swf",
+        swf: "./static/upload/Uploader.swf",
         server: options.url,
         // pick: {
         //   id: options.button,
@@ -573,33 +573,6 @@ export default {
       // 在ui上移除
       let index = this.fileList.findIndex(ele => ele.id === file.id);
       this.fileList.splice(index, 1);
-    },
-    getAccept(accept) {
-      switch (accept) {
-        case "text":
-          return {
-            title: "Texts",
-            exteensions: "doc,docx,xls,xlsx,ppt,pptx,pdf,txt",
-            mimeTypes: ".doc,docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt"
-          };
-          break;
-        case "video":
-          return {
-            title: "Videos",
-            exteensions: "mp4",
-            mimeTypes: ".mp4"
-          };
-          break;
-        case "image":
-          return {
-            title: "Images",
-            exteensions: "gif,jpg,jpeg,bmp,png",
-            mimeTypes: ".gif,.jpg,.jpeg,.bmp,.png"
-          };
-          break;
-        default:
-          return accept;
-      }
     },
     getStatus(file) {
       var txt = "";
