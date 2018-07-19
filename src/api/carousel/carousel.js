@@ -24,3 +24,11 @@ export function editCarousel(data) {
         console.log(err);
     })
 }
+//轮播删除
+export function delCarousel(data) {
+    return axios.post('/api/carousel/delete', data).then(res => {
+        return Promise.resolve(res)
+    }).catch(err => {
+        console.log(err);
+    })
+}

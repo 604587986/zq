@@ -7,22 +7,24 @@
     <!-- 表格筛选 -->
     <div class="table-filter">
       <router-link to="/pages/editor/editor/add_carousel"><el-button type="primary" size="mini">添加轮播图</el-button></router-link>
-      <el-cascader v-model="categoryValue" :options="categoryList" clearable placeholder="分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class=" column-selection" @change="currentPaging.currentPage = 1;getData()">
-      </el-cascader>
+      <el-select v-model="categoryValue" placeholder="分类" clearable size="mini" class="state-selection" @change="currentPaging.currentPage = 1;getData()">
+          <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+      </el-select>
       <el-select v-model="type" placeholder="状态" clearable size="mini" class="state-selection" @change="currentPaging.currentPage = 1;getData()">
           <el-option label="启用" :value="1"></el-option>
           <el-option label="隐藏" :value="-1"></el-option>
       </el-select>
+      <el-button type="primary" size="mini" class="float-right" @click="categoryDialog = true">轮播图分类</el-button>
     </div>
     <div class="table-container">
         <!-- 表格 -->
         <div class="table-body carousel_container">
             <el-table ref="multipleTable" :data="tableInfo" stripe size="small" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column prop="id" label="ID" width="65"></el-table-column>
-                <el-table-column prop="title" label="标题"></el-table-column>
-                <el-table-column prop="category_title" label="分类"></el-table-column>
-                <el-table-column label="图片">
+                <el-table-column prop="title" label="标题" width="90"></el-table-column>
+                <el-table-column prop="category_title" label="分类" width="100"></el-table-column>
+                <el-table-column label="图片" width="150">
                     <div slot-scope="scope" class="carousel-img">
                         <img :src="scope.row.image_url" />
                     </div>
@@ -35,28 +37,29 @@
                         <el-input type="text" size="mini" @blur="sortBlur(scope.$index, carouselInfo)" :value="scope.row.count"></el-input>
                     </div>
                 </el-table-column> -->
-                <el-table-column label="是否显示" width="90">
+                <el-table-column label="是否显示" >
                   <div slot-scope="scope">
                     {{scope.row.type==1?'显示':'隐藏'}}
                   </div>
                 </el-table-column>
-                <el-table-column prop="create_time" label="添加时间" width="96"></el-table-column>
-                <el-table-column label="操作" width="130">
+                <el-table-column prop="create_time" label="添加时间"></el-table-column>
+                <el-table-column label="操作">
                     <div slot-scope="scope" class="control-btn">
                         <el-button size="small" @click="editDialog=true;form=scope.row">编辑</el-button>
-                        <el-button @click.native.prevent="deleteRow(scope.$index, carouselInfo)" size="small" class="control-btn-del">删除</el-button>
+                        <el-button @click.native.prevent="delCarousel(scope.row.id)" size="small" class="control-btn-del">删除</el-button>
                     </div>
                 </el-table-column>
             </el-table>
         </div>
         <!-- 表格筛选 -->
-      <div class="table-filter">
+      <!-- <div class="table-filter">
           <el-button type="primary" size="mini" @click="selection(tableInfo)">全选</el-button>
           <el-button type="primary" size="mini">批量删除</el-button>
-      </div>
+      </div> -->
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging" v-on="{sizeChange:handleSizeChange,currentChange:handleCurrentChange}"></Paging>
     </div>
+    <!-- 编辑轮播图 -->
     <el-dialog
         title="编辑"
         :visible.sync="editDialog"
@@ -66,9 +69,9 @@
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="分类:" class="form-item" prop="category_id">
-          <span v-show="!form.categoryValue || !form.categoryValue.length">原分类：{{form.category_title}}</span>
-          <el-cascader v-model="form.categoryValue" :options="categoryList" clearable placeholder="选择新分类" change-on-select :props="{value:'id',label:'title',children:'children'}" size="mini" class="column-selection" @change="currentPaging.currentPage = 1;getData()">
-          </el-cascader>
+            <el-select v-model="form.category_id" placeholder="分类" clearable size="mini" class="state-selection">
+            <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        </el-select>
         </el-form-item>
         <el-form-item label="图片:">
           <file-picker v-model="form.image_id" :allowType="['image']" :receiveImg="form.image_url"></file-picker>
@@ -82,13 +85,34 @@
         <el-form-item label="是否启用:">
           <el-radio-group v-model="form.type">
               <el-radio :label="1">显示</el-radio>
-              <el-radio :label="0">隐藏</el-radio>
+              <el-radio :label="-1">隐藏</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item class="form-control-btn">
           <el-button type="primary" @click="submitForm('form')" size="large" :loading="subLoading">提交</el-button>
         </el-form-item>
       </el-form>
+    </el-dialog>
+    <!-- 轮播图分类列表 -->
+    <el-dialog
+        title="轮播图分类管理"
+        :visible.sync="categoryDialog"
+       >
+       <el-row>
+         <el-button type="primary" size="mini" @click="addCategory">新增</el-button>
+       </el-row>
+      <el-table :data="gridData">
+        <el-table-column property="id" label="id"></el-table-column>
+        <el-table-column property="title" label="标题"></el-table-column>
+        <el-table-column label="操作">
+          <div slot-scope="scope" >
+           <el-button size="small" @click="editCategory(scope.row.id)">编辑</el-button>
+           <el-button size="small" @click="delCategory(scope.row.id)">删除</el-button>
+          </div>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <Paging :currentPaging="currentPaging2" v-on="{sizeChange:handleSizeChange2,currentChange:handleCurrentChange2}"></Paging>
     </el-dialog>
   </div>
 </template>
@@ -100,14 +124,20 @@ import Instructions from "@/components/Instructions";
 import Paging from "@/components/Paging";
 import FilePicker from "@/components/FilePicker";
 
-import { carouselList,editCarousel } from "@/api/carousel/carousel";
-import { getCategoryList } from "@/api/category/category";
+import {
+  carouselList,
+  editCarousel,
+  delCarousel
+} from "@/api/carousel/carousel";
+import { create, index, save, del } from "@/api/gallery_category/index";
 
 /* 轮播图列表 */
 export default {
   name: "CarouselList",
   data() {
     return {
+      // 表格中的分类列表
+      gridData: [],
       //面包屑
       crumbs: [
         {
@@ -137,11 +167,18 @@ export default {
         pageSizes: [10, 20, 30, 40],
         totals: null
       },
+      //分类列表分页数据
+      currentPaging2: {
+        currentPage: 1,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 40],
+        totals: null
+      },
       //表格loading
       table_loading: false,
       //分类列表
       categoryList: [],
-      categoryValue: [],
+      categoryValue: "",
       //轮播状态
       type: "",
       //检索
@@ -155,7 +192,9 @@ export default {
       //编辑form
       form: {},
       //提交按钮loading
-      subLoading: false
+      subLoading: false,
+      //轮播图列表弹出框
+      categoryDialog: false
     };
   },
   components: {
@@ -168,6 +207,13 @@ export default {
     this.getData();
     //获取分类列表
     this.getCategory();
+    //获取所有分类列表
+    this.getAllCategory();
+  },
+  watch: {
+    gridData: function() {
+      this.getAllCategory();
+    }
   },
   methods: {
     //获取表格信息
@@ -176,8 +222,8 @@ export default {
         page: this.currentPaging.currentPage,
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
-        type:this.type,
-        category_id: this.categoryValue[this.categoryValue.length - 1]
+        type: this.type,
+        category_id: this.categoryValue
       };
       this.table_loading = true;
       carouselList(data).then(res => {
@@ -185,7 +231,6 @@ export default {
         if (res.data.code == 200 || res.data.code == 404) {
           this.tableInfo = res.data.data.list;
           this.currentPaging.totals = res.data.data.count;
-          this.show_keyword = this.titleSearchValue;
         } else {
           this.$message.error(res.data.message);
         }
@@ -209,20 +254,6 @@ export default {
         that.$refs.multipleTable.clearSelection();
       }
     },
-    //获取分类列表
-    getCategory() {
-      let data = {
-        page: 0,
-        tree: 1
-      };
-      getCategoryList(data).then(res => {
-        if (res.data.code == 200 || res.data.code == 404) {
-          this.categoryList = res.data.data.list;
-        } else {
-          this.$message.error(res.data.message);
-        }
-      });
-    },
     //处理sizeChange
     handleSizeChange(val) {
       this.currentPaging.pageSize = val;
@@ -234,6 +265,17 @@ export default {
       this.currentPaging.currentPage = val;
       this.getData();
     },
+    //处理sizeChange2
+    handleSizeChange2(val) {
+      this.currentPaging2.pageSize = val;
+      this.currentPaging2.currentPage = 1;
+      this.getCategory();
+    },
+    //处理currentChange2
+    handleCurrentChange2(val) {
+      this.currentPaging2.currentPage = val;
+      this.getCategory();
+    },
     //表单提交(编辑)
     submitForm(formName) {
       var that = this;
@@ -241,20 +283,20 @@ export default {
         that.subLoading = true;
         if (valid) {
           let data = {
-            id:that.form.id,
-            title:that.form.title,
-            category_id:that.form.categoryValue || that.form.categoryValue.length?that.form.categoryValue[that.form.categoryValue.length-1]: that.form.category_id,
-            image_id:that.form.image_id,
-            link:that.form.link,
+            id: that.form.id,
+            title: that.form.title,
+            category_id: that.form.category_id,
+            image_id: that.form.image_id,
+            link: that.form.link,
             // sort:that.form.sort,
-            type:that.form.type
-          }
+            type: that.form.type
+          };
           editCarousel(data).then(res => {
             that.subLoading = false;
             if (res.data.code == 200) {
               that.$message.success("修改成功");
               that.editDialog = false;
-              that.getData()
+              that.getData();
             } else {
               that.$message.error(res.data.message);
             }
@@ -264,6 +306,109 @@ export default {
           that.$message.error("提交失败!");
           return false;
         }
+      });
+    },
+    //删除轮播
+    delCarousel(id) {
+      this.$confirm("此操作将会删除该轮播，是否继续", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delCarousel({ id: id }).then(res => {
+            if (res.data.code == 200) {
+              this.$message.success("删除成功");
+              this.getData();
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    //获取所有分类
+    getAllCategory() {
+      let data = {
+        page: 0,
+        type: 1
+      };
+      index(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.categoryList = res.data.data.list;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //获取分类
+    getCategory() {
+      let data = {
+        page: this.currentPaging2.currentPage,
+        size: this.currentPaging2.pageSize,
+        type: 1
+      };
+      index(data).then(res => {
+        if (res.data.code == 200 || res.data.code == 404) {
+          this.gridData = res.data.data.list;
+          this.currentPaging2.totals = res.data.data.count;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //新增轮播图分类
+    addCategory() {
+      this.$prompt("请输入标题", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /\S/,
+        inputErrorMessage: "不能为空"
+      }).then(({ value }) => {
+        let data = { title: value, type: 1 };
+        create(data).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("分类创建成功");
+            this.getCategory();
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
+      });
+    },
+    //删除分类
+    delCategory(id) {
+      del({ id: id }).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("分类删除成功");
+          this.getCategory();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+    //编辑分类
+    editCategory(id) {
+      this.$prompt("请输入新标题", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /\S/,
+        inputErrorMessage: "不能为空"
+      }).then(({ value }) => {
+        let data = { title: value, id: id };
+        save(data).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("分类修改成功");
+            this.getCategory();
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       });
     }
   }
