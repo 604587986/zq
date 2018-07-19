@@ -119,11 +119,6 @@ export default {
             entryUrl: "/pages/editor/editor/publish_article"
           },
           {
-            iconName: "icon-daishenwenzhang",
-            entryName: "待审文章",
-            entryUrl: "/pages/editor/editor/pending_article"
-          },
-          {
             iconName: "icon-wenzhangliebiao",
             entryName: "文章列表",
             entryUrl: "/pages/editor/editor/article_list"
@@ -137,6 +132,11 @@ export default {
             iconName: "icon-lanmuliebiao",
             entryName: "菜单列表",
             entryUrl: "/pages/editor/editor/column_list"
+          },
+          {
+            iconName: "icon-jiaoshifengcai",
+            entryName: "单页列表",
+            entryUrl: "/pages/editor/editor/singlepage_list"
           },
           {
             iconName: "icon-lanmuliebiao",
@@ -162,11 +162,6 @@ export default {
             iconName: "icon-huodongyugao",
             entryName: "活动预告",
             entryUrl: "/pages/editor/editor/activity_preview"
-          },
-          {
-            iconName: "icon-jiaoshifengcai",
-            entryName: "单页列表",
-            entryUrl: "/pages/editor/editor/singlepage_list"
           },
           {
             iconName: "icon-shujukanban",
