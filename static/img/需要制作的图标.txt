@@ -1,0 +1,6 @@
+
+尺寸 44*44  20*20 两套2套图标 png透明格式
+
+格式：word ，excel，ppt，jpg，rar，txt，gif，tif，raw，pdf，png，mp4，chm，zip，rar，psd
+
+还需要制作一个统一默认文档图标【44*44  20*20】
