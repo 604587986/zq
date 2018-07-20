@@ -76,7 +76,7 @@ import AddCarousel from '@/edit/carousel_list/AddCarousel'//添加轮播图
 import PendingArticle from '@/edit/pending_article/PendingArticle'
 //广告管理
 import AdvertisementList from '@/edit/advertisement_list/AdvertisementList'//广告列表
-import AddAdvertisement from '@/edit/advertisement_list/AddAdvertisement'//添加广告
+import AddAdvertisement from '@/edit/advertisement_list/AddAdvertise'//添加广告
 //活动预告
 import ActivityPreview from '@/edit/activity_preview/ActivityPreview'//活动列表
 import AddActivity from '@/edit/activity_preview/AddActivity'//添加活动
