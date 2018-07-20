@@ -174,11 +174,11 @@ export default {
             entryName: "广告管理",
             entryUrl: "/pages/editor/editor/advertisement_list"
           },
-          {
-            iconName: "icon-huodongyugao",
-            entryName: "活动预告",
-            entryUrl: "/pages/editor/editor/activity_preview"
-          },
+          // {
+          //   iconName: "icon-huodongyugao",
+          //   entryName: "活动预告",
+          //   entryUrl: "/pages/editor/editor/activity_preview"
+          // },
           {
             iconName: "icon-shujukanban",
             entryName: "数据看板",
