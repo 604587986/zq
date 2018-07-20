@@ -6,7 +6,7 @@
     <Instructions :instructionsInfo="instructionsInfo"></Instructions>
     <!-- 表格筛选 -->
     <div class="table-filter">
-      <router-link to="/pages/editor/editor/add_friendly_link"><el-button type="primary" size="mini">添加广告</el-button></router-link>
+      <router-link to="/pages/editor/editor/add_advertisement"><el-button type="primary" size="mini">添加广告</el-button></router-link>
       <el-select v-model="categoryValue" placeholder="分类" clearable size="mini" class="state-selection" @change="currentPaging.currentPage = 1;getData()">
           <el-option v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
       </el-select>
