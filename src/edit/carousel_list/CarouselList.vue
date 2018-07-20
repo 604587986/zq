@@ -99,20 +99,48 @@
         :visible.sync="categoryDialog"
        >
        <el-row>
-         <el-button type="primary" size="mini" @click="addCategory">新增</el-button>
+         <el-button type="primary" size="mini" @click="addDialog = true">新增</el-button>
        </el-row>
       <el-table :data="gridData">
         <el-table-column property="id" label="id"></el-table-column>
         <el-table-column property="title" label="标题"></el-table-column>
         <el-table-column label="操作">
           <div slot-scope="scope" >
-           <el-button size="small" @click="editCategory(scope.row.id)">编辑</el-button>
+           <el-button size="small" @click="editCategoryDialog= true;form3 = scope.row">编辑</el-button>
            <el-button size="small" @click="delCategory(scope.row.id)">删除</el-button>
           </div>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
       <Paging :currentPaging="currentPaging2" v-on="{sizeChange:handleSizeChange2,currentChange:handleCurrentChange2}"></Paging>
+    </el-dialog>
+    <!-- 新增分类 -->
+    <el-dialog
+        title="新增分类"
+        :visible.sync="addDialog"
+       >
+        <el-form ref="form2" :model="form2" status-icon label-width="150px" size="mini" label-position="right">
+          <el-form-item label="标题:">
+            <el-input v-model="form2.title"></el-input>
+          </el-form-item>
+          <el-form-item class="form-control-btn">
+            <el-button type="primary" @click="addCategory('form2')" size="mini" :loading="subLoading">提交</el-button>
+          </el-form-item>
+        </el-form>
+    </el-dialog>
+    <!-- 编辑分类 -->
+    <el-dialog
+        title="编辑分类"
+        :visible.sync="editCategoryDialog"
+       >
+        <el-form ref="form3" :model="form3" status-icon label-width="150px" size="mini" label-position="right">
+          <el-form-item label="标题:">
+            <el-input v-model="form3.title"></el-input>
+          </el-form-item>
+          <el-form-item class="form-control-btn">
+            <el-button type="primary" @click="editCategory('form3')" size="mini" :loading="subLoading">提交</el-button>
+          </el-form-item>
+        </el-form>
     </el-dialog>
   </div>
 </template>
@@ -194,7 +222,15 @@ export default {
       //提交按钮loading
       subLoading: false,
       //轮播图列表弹出框
-      categoryDialog: false
+      categoryDialog: false,
+      //新增分类弹出框
+      addDialog: false,
+      //新增分类时的表单
+      form2: {},
+      //编辑分类弹出框
+      editCategoryDialog: false,
+      //编辑分类时的表单
+      form3: {}
     };
   },
   components: {
@@ -363,22 +399,30 @@ export default {
       });
     },
     //新增轮播图分类
-    addCategory() {
-      this.$prompt("请输入标题", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /\S/,
-        inputErrorMessage: "不能为空"
-      }).then(({ value }) => {
-        let data = { title: value, type: 1 };
-        create(data).then(res => {
-          if (res.data.code == 200) {
-            this.$message.success("分类创建成功");
-            this.getCategory();
-          } else {
-            this.$message.error(res.data.message);
-          }
-        });
+    addCategory(formName) {
+      var that = this;
+      that.$refs[formName].validate(function(valid) {
+        that.subLoading = true;
+        if (valid) {
+          let data = {
+            title: that.form2.title,
+            type: 1
+          };
+          create(data).then(res => {
+            that.subLoading = false;
+            if (res.data.code == 200) {
+              that.$message.success("分类创建成功");
+              that.addDialog = false;
+              that.getCategory();
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        } else {
+          that.subLoading = false;
+          that.$message.error("提交失败!");
+          return false;
+        }
       });
     },
     //删除分类
@@ -393,22 +437,24 @@ export default {
       });
     },
     //编辑分类
-    editCategory(id) {
-      this.$prompt("请输入新标题", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /\S/,
-        inputErrorMessage: "不能为空"
-      }).then(({ value }) => {
-        let data = { title: value, id: id };
-        save(data).then(res => {
-          if (res.data.code == 200) {
-            this.$message.success("分类修改成功");
-            this.getCategory();
-          } else {
-            this.$message.error(res.data.message);
-          }
-        });
+    editCategory(formName) {
+      var that = this;
+      that.$refs[formName].validate(function(valid) {
+        if (valid) {
+          save(that.form3).then(res => {
+            if (res.data.code == 200) {
+              that.$message.success("分类修改成功");
+              that.getCategory();
+              that.editCategoryDialog = false;
+            } else {
+              that.$message.error(res.data.message);
+            }
+          });
+        } else {
+          that.subLoading = false;
+          that.$message.error("提交失败!");
+          return false;
+        }
       });
     }
   }
