@@ -250,20 +250,16 @@ export default {
         switch (mockGroup) {
           case "2":
             this.entryList = this.authority.main_admin;
-            localStorage.setItem("entryList", JSON.stringify(this.entryList));
-            return;
+            break;
           case "3":
             this.entryList = this.authority.sub_admin;
-            localStorage.setItem("entryList", JSON.stringify(this.entryList));
-            return;
+            break;
           case "4":
             this.entryList = this.authority.leader;
-            localStorage.setItem("entryList", JSON.stringify(this.entryList));
-            return;
+            break;
           case "5":
             this.entryList = this.authority.editor;
-            localStorage.setItem("entryList", JSON.stringify(this.entryList));
-            return;
+            break;
         }
       } else {
         if (group == 1) {

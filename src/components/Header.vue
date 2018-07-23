@@ -1,8 +1,8 @@
 <template>
   <div id="Header">
     <div class="header-container">
-      <div class="float-left header-left">
-        <p class="site float-left" v-if="site_title">
+      <div class="float-left header-left" v-if="site_title">
+        <p class="site float-left">
           <span class="float-left">所属站点：</span>
           <span class="float-left">{{site_title}}</span>
         </p>
