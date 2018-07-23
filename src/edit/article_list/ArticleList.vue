@@ -21,6 +21,16 @@
               <el-button slot="append" icon="el-icon-search" @click="currentPaging.currentPage = 1;getData()"></el-button>
           </el-input>
       </div>
+      <el-row>
+        <el-select v-model="pin_date" placeholder="是否置顶" clearable size="mini" @change="currentPaging.currentPage = 1;getData()" style="width:160px;margin-bottom:10px">
+            <el-option label="置顶" :value="1"></el-option>
+            <el-option label="置顶已过期" :value="0"></el-option>
+        </el-select>
+        <el-select v-model="recommend" placeholder="是否推荐" clearable size="mini" @change="currentPaging.currentPage = 1;getData()" style="width:160px;margin-bottom:10px">
+            <el-option label="推荐" :value="1"></el-option>
+            <el-option label="非推荐" :value="0"></el-option>
+        </el-select>
+      </el-row>
       <div class="notice" v-show="show_keyword">搜索到{{currentPaging.totals}}篇关于“{{show_keyword}}”的文章：</div>
       <!-- 表格 -->
       <div class="table-body">
@@ -180,7 +190,11 @@ export default {
       preview: {
         title: "",
         content: ""
-      }
+      },
+      // 是否置顶
+      pin_date:"",
+      // 是否推荐
+      recommend:"",
     };
   },
   components: {
@@ -200,7 +214,9 @@ export default {
         size: this.currentPaging.pageSize,
         keyword: this.titleSearchValue,
         state_verify: this.stateValue,
-        category_id: this.categoryValue[this.categoryValue.length - 1]
+        category_id: this.categoryValue[this.categoryValue.length - 1],
+        pin_date:this.pin_date,
+        recommend:this.recommend
       };
       this.table_loading = true;
       getArticleList(data).then(res => {
