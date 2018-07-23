@@ -57,11 +57,11 @@
               <el-table-column prop="release_time" label="发布时间"></el-table-column>
               <el-table-column prop="author" label="作者"></el-table-column>
               <!-- <el-table-column prop="count" label="浏览次数"></el-table-column> -->
-              <!-- <el-table-column label="排序">
+              <el-table-column label="排序">
                   <div slot-scope="scope" class="table-sort-input">
-                      <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>
+                      <el-tag type="info" size="mini">{{scope.row.sort}}</el-tag>&nbsp;&nbsp;<i class="el-icon-edit" style="cursor:pointer" @click="sort(scope.row.id,scope.$index)"></i>
                   </div>
-              </el-table-column> -->
+              </el-table-column>
               <el-table-column label="操作">
                   <div slot-scope="scope" class="control-btn">
                       <el-button size="small" @click="openDialog(scope.row.title,scope.row.content)">预览</el-button>
@@ -337,6 +337,25 @@ export default {
         } else {
           this.$message.error(res.data.message);
         }
+      });
+    },
+    //排序
+    sort(id, index) {
+      this.$prompt("请输入排序", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /[\d]/,
+        inputErrorMessage: "只能输入数字"
+      }).then(({ value }) => {
+        let data = { id: id, sort: value };
+        saveArticle(data).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("排序修改成功");
+            this.tableInfo[index].sort = value;
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       });
     }
   },

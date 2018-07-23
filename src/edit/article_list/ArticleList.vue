@@ -53,9 +53,9 @@
                       <el-tag close-transition size="mini" type="success" v-show="scope.row.state_verify==1">通过</el-tag>
                   </div>
               </el-table-column>
-              <el-table-column label="排序" width="65">
+              <el-table-column label="排序" width="100">
                   <div slot-scope="scope" class="table-sort-input">
-                      <el-input type="text" size="mini" @blur="sortBlur(scope.$index, tableInfo)" :value="scope.row.sort"></el-input>
+                      <el-tag type="info" size="mini">{{scope.row.sort}}</el-tag>&nbsp;&nbsp;<i class="el-icon-edit" style="cursor:pointer" @click="sort(scope.row.id,scope.$index)"></i>
                   </div>
               </el-table-column>
               <el-table-column label="操作" width="250">
@@ -106,7 +106,8 @@ import {
   getArticleList,
   verifyArticle,
   deleteArticle,
-  deleteAll
+  deleteAll,
+  saveArticle
 } from "@/api/article/ArticleList";
 import { getCategoryList } from "@/api/category/category";
 
@@ -241,11 +242,11 @@ export default {
       })
         .then(() => {
           let data = { id: this.tableList.join(",") };
-          deleteAll(data).then(res=>{
-            if(res.data.code == 200){
-              this.$message.success('批量删除成功');
-              this.getData()
-            }else{
+          deleteAll(data).then(res => {
+            if (res.data.code == 200) {
+              this.$message.success("批量删除成功");
+              this.getData();
+            } else {
               this.$message.error(res.data.message);
             }
           });
@@ -314,6 +315,25 @@ export default {
         } else {
           this.$message.error(res.data.message);
         }
+      });
+    },
+    //排序
+    sort(id, index) {
+      this.$prompt("请输入排序", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /[\d]/,
+        inputErrorMessage: "只能输入数字"
+      }).then(({ value }) => {
+        let data = { id: id, sort: value };
+        saveArticle(data).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("排序修改成功");
+            this.tableInfo[index].sort = value;
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       });
     }
   },
